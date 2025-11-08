@@ -6,4 +6,4 @@ obj/
 *.suo
 appsettings.*.json
 secrets.json
-Mymarket.WebApi.http
+*.http
