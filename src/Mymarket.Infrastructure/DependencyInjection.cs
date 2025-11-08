@@ -10,6 +10,7 @@ using Mymarket.Application.Common;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Users.Commands;
 using Mymarket.Application.Users.Validators;
+using Mymarket.Infrastructure.Authentication;
 using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;
 using System.Text;
@@ -40,6 +41,8 @@ public static class DependencyInjection
         ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 
         // Jwt authentication
+        builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
+
         var jwtSettings = builder.Configuration
             .GetSection("JwtSettings")
             .Get<JwtSettings>() ?? throw new InvalidOperationException("JwtSettings missing");
