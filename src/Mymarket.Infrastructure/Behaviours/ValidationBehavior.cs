@@ -14,11 +14,14 @@ public class ValidationBehavior<TRequest, TResponse>(
     {
         if(_validators.Any())
         {
-            var failures = _validators
-               .Select(validator => validator.Validate(request))
-               .SelectMany(result => result.Errors)
-               .Where(failure => failure != null)
-               .ToList();
+            var validationResults = await Task.WhenAll(
+                _validators.Select(v => v.ValidateAsync(request, cancellationToken))
+            );
+
+            var failures = validationResults
+                .SelectMany(r => r.Errors)
+                .Where(f => f != null)
+                .ToList();
 
             if (failures.Count != 0) throw new ValidationException(failures);
         }

@@ -61,11 +61,56 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid or expired code.
+        /// </summary>
+        public static string CodeInvalidOrExpired {
+            get {
+                return ResourceManager.GetString("CodeInvalidOrExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find code.
+        /// </summary>
+        public static string CodeNotFound {
+            get {
+                return ResourceManager.GetString("CodeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks like this email is already registered.
+        /// </summary>
+        public static string EmailAlreadyExists {
+            get {
+                return ResourceManager.GetString("EmailAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email is already verified.
+        /// </summary>
+        public static string EmailAlreadyVerified {
+            get {
+                return ResourceManager.GetString("EmailAlreadyVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email must not exceed 256 characters.
         /// </summary>
         public static string EmailMaxLength {
             get {
                 return ResourceManager.GetString("EmailMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required field.
+        /// </summary>
+        public static string EmailOrPhoneRequired {
+            get {
+                return ResourceManager.GetString("EmailOrPhoneRequired", resourceCulture);
             }
         }
         
@@ -88,20 +133,38 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password.
+        /// </summary>
+        public static string InvalidUserOrPassword {
+            get {
+                return ResourceManager.GetString("InvalidUserOrPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last name must not exceed 72 characters.
         /// </summary>
-        public static string LastNameMaxLength {
+        public static string LastnameMaxLength {
             get {
-                return ResourceManager.GetString("LastNameMaxLength", resourceCulture);
+                return ResourceManager.GetString("LastnameMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last name must contain only letters.
+        /// </summary>
+        public static string LastnameOnlyLetters {
+            get {
+                return ResourceManager.GetString("LastnameOnlyLetters", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Last name is required.
         /// </summary>
-        public static string LastNameRequired {
+        public static string LastnameRequired {
             get {
-                return ResourceManager.GetString("LastNameRequired", resourceCulture);
+                return ResourceManager.GetString("LastnameRequired", resourceCulture);
             }
         }
         
@@ -111,6 +174,15 @@ namespace Mymarket.Application.Resources {
         public static string NameMaxLength {
             get {
                 return ResourceManager.GetString("NameMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name must only contain letters.
+        /// </summary>
+        public static string NameOnlyLetters {
+            get {
+                return ResourceManager.GetString("NameOnlyLetters", resourceCulture);
             }
         }
         
@@ -205,11 +277,38 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Looks like this phone number is already in use.
+        /// </summary>
+        public static string PhoneNumberAlreadyExists {
+            get {
+                return ResourceManager.GetString("PhoneNumberAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone number is required.
         /// </summary>
         public static string PhoneRequired {
             get {
                 return ResourceManager.GetString("PhoneRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User with this email does not exist.
+        /// </summary>
+        public static string UserWithEmailDoesNotExist {
+            get {
+                return ResourceManager.GetString("UserWithEmailDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification code is required.
+        /// </summary>
+        public static string VerificationCodeRequired {
+            get {
+                return ResourceManager.GetString("VerificationCodeRequired", resourceCulture);
             }
         }
     }

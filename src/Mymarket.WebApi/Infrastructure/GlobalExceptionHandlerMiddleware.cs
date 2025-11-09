@@ -13,6 +13,24 @@ public class GlobalExceptionHandlerMiddleware(
         {
             await _next(context);
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/problem+json";
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = "Unauthorized",
+                Status = StatusCodes.Status401Unauthorized,
+                Detail = ex.Message,
+                Instance = $"{context.Request.Method} {context.Request.Path}"
+            };
+
+            problem.Extensions["Code"] = "UnauthorizedAccessError";
+
+            await context.Response.WriteAsJsonAsync(problem);
+        }
         catch (ValidationException ex)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -26,8 +44,11 @@ public class GlobalExceptionHandlerMiddleware(
             {
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
                 Title = "Validation Failed",
-                Status = StatusCodes.Status400BadRequest
+                Status = StatusCodes.Status400BadRequest,
+                Instance = $"{context.Request.Method} {context.Request.Path}"
             };
+
+            problem.Extensions["Code"] = "ValidationError";
 
             await context.Response.WriteAsJsonAsync(problem);
         }
@@ -40,10 +61,13 @@ public class GlobalExceptionHandlerMiddleware(
 
             var problem = new ProblemDetails
             {
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
                 Title = "An unexpected error occurred",
                 Status = StatusCodes.Status500InternalServerError,
-                Detail = ex.Message
+                Instance = $"{context.Request.Method} {context.Request.Path}"
             };
+
+            problem.Extensions["Code"] = "UnexpectedError";
 
             await context.Response.WriteAsJsonAsync(problem);
         }

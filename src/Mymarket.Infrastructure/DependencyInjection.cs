@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using Mymarket.Application.Users.Validators;
 using Mymarket.Infrastructure.Authentication;
 using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;
+using Mymarket.Infrastructure.Services;
 using System.Text;
 
 namespace Mymarket.Infrastructure;
@@ -42,6 +44,9 @@ public static class DependencyInjection
 
         // Jwt authentication
         builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
+
+        // Smtp
+        builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
         var jwtSettings = builder.Configuration
             .GetSection("JwtSettings")

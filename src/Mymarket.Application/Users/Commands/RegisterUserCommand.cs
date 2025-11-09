@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Mymarket.Application.Interfaces;
-using Mymarket.Application.Users.Common;
-using Mymarket.Domain.Models;
+using Mymarket.Application.Users.Common.Helpers;
+using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Users.Commands;
 
@@ -10,38 +10,25 @@ public record RegisterUserCommand(
     string Lastname, 
     string Email, 
     string PhoneNumber, 
-    string Password) : IRequest<AuthDto>;
+    string Password) : IRequest<Unit>;
 
-public class RegisterUserHandler(ITokenProvider _tokenProvider) : IRequestHandler<RegisterUserCommand, AuthDto>
+public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandler<RegisterUserCommand, Unit>
 {
-    public Task<AuthDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var user = new UserModel
+        var userToSave = new UserEntity
         {
             Name = request.Name,
-            Lastname = request.Lastname,
+            LastName = request.Lastname,
             Email = request.Email,
-            Password = request.Password,
             PhoneNumber = request.PhoneNumber,
-            EmailVerified = false
+            EmailVerified = false,
+            PasswordHash = CryptoHelper.HashPassword(request.Password),
         };
 
-        var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(user);
-        var refreshToken = _tokenProvider.CreateRefreshToken();
+        _context.Users.Add(userToSave);
+        await _context.SaveChangesAsync(cancellationToken);
 
-        var authDto = new AuthDto(
-            AccessToken: accessToken,
-            RefreshToken: refreshToken,
-            ExpiresAt: expiresAt,
-            User: new UserDto(
-                Id: 1,
-                Name: request.Name,
-                Lastname: request.Lastname,
-                Email: request.Email,
-                EmailVerified: false
-            )
-        );
-
-        return Task.FromResult(authDto);
+        return Unit.Value;
     }
 }

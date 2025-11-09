@@ -118,55 +118,87 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NameRequired" xml:space="preserve">
-  <value>Name is required</value>
-</data>
-<data name="NameMaxLength" xml:space="preserve">
-  <value>First name must not exceed 72 characters</value>
-</data>
-<data name="LastNameRequired" xml:space="preserve">
-  <value>Last name is required</value>
-</data>
-<data name="LastNameMaxLength" xml:space="preserve">
-  <value>Last name must not exceed 72 characters</value>
-</data>
-<data name="EmailRequired" xml:space="preserve">
-  <value>Email is required</value>
-</data>
-<data name="InvalidEmail" xml:space="preserve">
-  <value>Invalid email address</value>
-</data>
-<data name="EmailMaxLength" xml:space="preserve">
-  <value>Email must not exceed 256 characters</value>
-</data>
-<data name="PhoneRequired" xml:space="preserve">
-  <value>Phone number is required</value>
-</data>
-<data name="PhoneMinLength" xml:space="preserve">
-  <value>Invalid phone number</value>
-</data>
-<data name="PhoneMaxLength" xml:space="preserve">
-  <value>Phone number must not exceed 18 characters</value>
-</data>
-<data name="PasswordRequired" xml:space="preserve">
-  <value>Password is required</value>
-</data>
-<data name="PasswordMinLength" xml:space="preserve">
-  <value>Password must be at least 8 characters</value>
-</data>
-<data name="PasswordMaxLength" xml:space="preserve">
-  <value>Password must not exceed 64 characters</value>
-</data>
-<data name="PasswordNoSpaces" xml:space="preserve">
-  <value>Password cannot contain spaces</value>
-</data>
-<data name="PasswordUppercase" xml:space="preserve">
-  <value>Password must contain at least one uppercase letter</value>
-</data>
-<data name="PasswordNumber" xml:space="preserve">
-  <value>Password must contain at least one number</value>
-</data>
-<data name="PasswordSpecial" xml:space="preserve">
-  <value>Password must contain at least one special character</value>
-</data>
-
+    <value>Name is required</value>
+  </data>
+  <data name="NameMaxLength" xml:space="preserve">
+    <value>First name must not exceed 72 characters</value>
+  </data>
+  <data name="LastnameRequired" xml:space="preserve">
+    <value>Last name is required</value>
+  </data>
+  <data name="LastnameMaxLength" xml:space="preserve">
+    <value>Last name must not exceed 72 characters</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Invalid email address</value>
+  </data>
+  <data name="EmailMaxLength" xml:space="preserve">
+    <value>Email must not exceed 256 characters</value>
+  </data>
+  <data name="PhoneRequired" xml:space="preserve">
+    <value>Phone number is required</value>
+  </data>
+  <data name="PhoneMinLength" xml:space="preserve">
+    <value>Invalid phone number</value>
+  </data>
+  <data name="PhoneMaxLength" xml:space="preserve">
+    <value>Phone number must not exceed 18 characters</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="PasswordMinLength" xml:space="preserve">
+    <value>Password must be at least 8 characters</value>
+  </data>
+  <data name="PasswordMaxLength" xml:space="preserve">
+    <value>Password must not exceed 64 characters</value>
+  </data>
+  <data name="PasswordNoSpaces" xml:space="preserve">
+    <value>Password cannot contain spaces</value>
+  </data>
+  <data name="PasswordUppercase" xml:space="preserve">
+    <value>Password must contain at least one uppercase letter</value>
+  </data>
+  <data name="PasswordNumber" xml:space="preserve">
+    <value>Password must contain at least one number</value>
+  </data>
+  <data name="PasswordSpecial" xml:space="preserve">
+    <value>Password must contain at least one special character</value>
+  </data>
+  <data name="UserWithEmailDoesNotExist" xml:space="preserve">
+    <value>User with this email does not exist</value>
+  </data>
+  <data name="EmailAlreadyVerified" xml:space="preserve">
+    <value>Email is already verified</value>
+  </data>
+  <data name="VerificationCodeRequired" xml:space="preserve">
+    <value>Verification code is required</value>
+  </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>Looks like this email is already registered</value>
+  </data>
+  <data name="PhoneNumberAlreadyExists" xml:space="preserve">
+    <value>Looks like this phone number is already in use</value>
+  </data>
+  <data name="NameOnlyLetters" xml:space="preserve">
+    <value>Name must only contain letters</value>
+  </data>
+  <data name="LastnameOnlyLetters" xml:space="preserve">
+    <value>Last name must contain only letters</value>
+  </data>
+  <data name="EmailOrPhoneRequired" xml:space="preserve">
+    <value>Required field</value>
+  </data>
+  <data name="CodeNotFound" xml:space="preserve">
+    <value>Unable to find code</value>
+  </data>
+  <data name="CodeInvalidOrExpired" xml:space="preserve">
+    <value>Invalid or expired code</value>
+  </data>
+  <data name="InvalidUserOrPassword" xml:space="preserve">
+    <value>Invalid username or password</value>
+  </data>
 </root>
