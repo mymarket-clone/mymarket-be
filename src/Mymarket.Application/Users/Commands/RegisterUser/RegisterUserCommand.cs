@@ -3,7 +3,7 @@ using Mymarket.Application.Interfaces;
 using Mymarket.Application.Users.Common.Helpers;
 using Mymarket.Domain.Entities;
 
-namespace Mymarket.Application.Users.Commands;
+namespace Mymarket.Application.Users.Commands.RegisterUser;
 
 public record RegisterUserCommand(
     string Name, 

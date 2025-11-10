@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Users.Commands;
+using Mymarket.Application.Users.Commands.LoginUser;
+using Mymarket.Application.Users.Commands.RegisterUser;
+using Mymarket.Application.Users.Commands.SendVerificationEmail;
+using Mymarket.Application.Users.Commands.VerifyCode;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;

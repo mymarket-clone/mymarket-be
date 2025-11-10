@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
-using Mymarket.Application.Users.Commands;
 
-namespace Mymarket.Application.Users.Validators;
+namespace Mymarket.Application.Users.Commands.LoginUser;
 
 public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 {

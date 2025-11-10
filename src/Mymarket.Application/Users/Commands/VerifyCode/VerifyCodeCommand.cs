@@ -7,7 +7,7 @@ using Mymarket.Application.Users.Common.Helpers;
 using Mymarket.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mymarket.Application.Users.Commands;
+namespace Mymarket.Application.Users.Commands.VerifyCode;
 
 public record VerifyCodeCommand(string Email, int Code) : IRequest<AuthDto>;
 

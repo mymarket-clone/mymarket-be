@@ -7,7 +7,7 @@ using Mymarket.Application.Users.Common.Dto;
 using Mymarket.Application.Users.Common.Helpers;
 using Mymarket.Domain.Models;
 
-namespace Mymarket.Application.Users.Commands;
+namespace Mymarket.Application.Users.Commands.LoginUser;
 
 public record LoginUserCommand(string EmailOrPhone, string password) : IRequest<AuthDto>;
 

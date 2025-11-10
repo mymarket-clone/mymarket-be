@@ -6,7 +6,7 @@ using Mymarket.Domain.Entities;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Mymarket.Application.Users.Commands;
+namespace Mymarket.Application.Users.Commands.SendVerificationEmail;
 
 public record SendVerificationEmailCommand(string Email) : IRequest<Unit>;
 
