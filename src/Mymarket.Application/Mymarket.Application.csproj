@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Users\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Resources\SharedResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -106,6 +106,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please verify email first.
+        /// </summary>
+        public static string EmailNotVerified {
+            get {
+                return ResourceManager.GetString("EmailNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Required field.
         /// </summary>
         public static string EmailOrPhoneRequired {
@@ -192,6 +201,15 @@ namespace Mymarket.Application.Resources {
         public static string NameRequired {
             get {
                 return ResourceManager.GetString("NameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password does not match.
+        /// </summary>
+        public static string PasswordDoesnotMatch {
+            get {
+                return ResourceManager.GetString("PasswordDoesnotMatch", resourceCulture);
             }
         }
         

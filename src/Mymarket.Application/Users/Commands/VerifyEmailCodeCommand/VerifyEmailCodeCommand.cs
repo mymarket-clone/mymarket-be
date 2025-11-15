@@ -5,20 +5,20 @@ using Mymarket.Application.Resources;
 using Mymarket.Application.Users.Common.Dto;
 using Mymarket.Application.Users.Common.Helpers;
 using Mymarket.Domain.Models;
-using System.ComponentModel.DataAnnotations;
+using Mymarket.Domain.Constants;
+using FluentValidation;
 
-namespace Mymarket.Application.Users.Commands.VerifyCode;
+namespace Mymarket.Application.Users.Commands.VerifyEmailCodeCommand;
 
-public record VerifyCodeCommand(string Email, int Code) : IRequest<AuthDto>;
+public record VerifyEmailCodeCommand(string Email, int Code) : IRequest<AuthDto>;
 
-public class VerifyCodeCommandHandle(IApplicationDbContext _context, ITokenProvider _tokenProvider) : IRequestHandler<VerifyCodeCommand, AuthDto>
+public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, ITokenProvider _tokenProvider) : IRequestHandler<VerifyEmailCodeCommand, AuthDto>
 {
-    public async Task<AuthDto> Handle(VerifyCodeCommand request, CancellationToken cancellationToken)
+    public async Task<AuthDto> Handle(VerifyEmailCodeCommand request, CancellationToken cancellationToken)
     {
-        var record = await _context.EmailVerification
+        var record = await _context.VerificationCode
             .Include(x => x.User)
-            .Where(x => x.User!.Email == request.Email)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(x => x.User!.Email == request.Email && x.CodeType == CodeType.EmailVerification, cancellationToken);
 
         if (record is null) 
             throw new ValidationException(SharedResources.CodeNotFound);
@@ -51,9 +51,9 @@ public class VerifyCodeCommandHandle(IApplicationDbContext _context, ITokenProvi
         var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(userModel);
         var refreshToken = _tokenProvider.CreateRefreshToken();
 
-        user.RefreshToken = refreshToken;
+        record.IsVerified = true;
 
-        _context.EmailVerification.Remove(record);
+        user.RefreshToken = refreshToken;
         await _context.SaveChangesAsync(cancellationToken);
 
         return new AuthDto

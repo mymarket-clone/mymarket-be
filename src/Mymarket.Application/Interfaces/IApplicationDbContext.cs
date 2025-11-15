@@ -6,6 +6,6 @@ namespace Mymarket.Application.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<UserEntity> Users { get; }
-    DbSet<EmailVerificationEntity> EmailVerification { get; }
+    DbSet<VerificationCode> VerificationCode { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

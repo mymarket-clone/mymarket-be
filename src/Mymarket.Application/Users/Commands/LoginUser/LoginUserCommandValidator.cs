@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
 
@@ -13,9 +14,16 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
         _context = context;
 
         RuleFor(x => x.EmailOrPhone)
-            .NotEmpty().WithMessage(SharedResources.EmailOrPhoneRequired);
+            .NotEmpty().WithMessage(SharedResources.EmailOrPhoneRequired)
+            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailNotVerified);
 
-        RuleFor(x => x.password)
+        RuleFor(x => x.Password)
             .NotEmpty().WithMessage(SharedResources.PasswordRequired);
+    }
+
+    private async Task<bool> EmailNotVerified(string email, CancellationToken cancellationToken)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email), cancellationToken);
+        return user != null && user.EmailVerified;
     }
 }

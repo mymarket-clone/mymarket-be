@@ -201,4 +201,10 @@
   <data name="InvalidUserOrPassword" xml:space="preserve">
     <value>Неправильное имя пользователя или пароль</value>
   </data>
+  <data name="EmailNotVerified" xml:space="preserve">
+    <value>Адрес электронной почты не верифицирован</value>
+  </data>
+  <data name="PasswordDoesnotMatch" xml:space="preserve">
+    <value>Пароль не совпадает</value>
+  </data>
 </root>

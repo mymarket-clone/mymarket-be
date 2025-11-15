@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
@@ -9,7 +8,7 @@ using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.Users.Commands.LoginUser;
 
-public record LoginUserCommand(string EmailOrPhone, string password) : IRequest<AuthDto>;
+public record LoginUserCommand(string EmailOrPhone, string Password) : IRequest<AuthDto>;
 
 public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvider _tokenProvider) : IRequestHandler<LoginUserCommand, AuthDto>
 {
@@ -17,12 +16,14 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
     {
         var user = await _context.Users
             .AsNoTracking()
-           .FirstOrDefaultAsync(x => x.Email.ToLower() == request.EmailOrPhone.ToLower()
-                       || x.PhoneNumber == request.EmailOrPhone, cancellationToken);
+            .FirstOrDefaultAsync(
+                x => x.Email.ToLower().Equals(request.EmailOrPhone.ToLower()) || x.PhoneNumber == request.EmailOrPhone,
+                cancellationToken
+            );
 
         if (user is null) throw new UnauthorizedAccessException(SharedResources.InvalidUserOrPassword);
 
-        var isPasswordRight = CryptoHelper.VerifyPassword(user.PasswordHash, request.password);
+        var isPasswordRight = CryptoHelper.VerifyPassword(user.PasswordHash, request.Password);
 
         if (!isPasswordRight) throw new UnauthorizedAccessException(SharedResources.InvalidUserOrPassword);
 

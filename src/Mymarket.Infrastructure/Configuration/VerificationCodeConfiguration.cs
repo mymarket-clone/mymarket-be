@@ -4,9 +4,9 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-public class EmailVerificationConfiguration : IEntityTypeConfiguration<EmailVerificationEntity>
+public class VerificationCodeConfiguration : IEntityTypeConfiguration<VerificationCode>
 {
-    public void Configure(EntityTypeBuilder<EmailVerificationEntity> builder)
+    public void Configure(EntityTypeBuilder<VerificationCode> builder)
     {
         builder
             .HasOne(x => x.User)
@@ -17,5 +17,7 @@ public class EmailVerificationConfiguration : IEntityTypeConfiguration<EmailVeri
         builder.Property(x => x.CodeHash).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.ExpiresAt).IsRequired();
+        builder.Property(x => x.CodeType).IsRequired();
+        builder.Property(x => x.IsVerified).IsRequired();
     }
 }

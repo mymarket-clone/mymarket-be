@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
 
-namespace Mymarket.Application.Users.Commands.SendVerificationEmail;
+namespace Mymarket.Application.Users.Commands.SendPasswordRecoveryCode;
 
-public class SendVerificationEmailCommandValidator : AbstractValidator<SendVerificationEmailCommand>
+public class SendPasswordRecoveryCommandValidator : AbstractValidator<SendPasswordRecoveryCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public SendVerificationEmailCommandValidator(IApplicationDbContext context)
+    public SendPasswordRecoveryCommandValidator(IApplicationDbContext context)
     {
         _context = context;
 
@@ -17,7 +17,7 @@ public class SendVerificationEmailCommandValidator : AbstractValidator<SendVerif
             .NotEmpty().WithMessage(SharedResources.EmailRequired)
             .EmailAddress().WithMessage(SharedResources.InvalidEmail)
             .MustAsync(EmailDoesNotExist).WithMessage(SharedResources.UserWithEmailDoesNotExist)
-            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailAlreadyVerified);
+            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailNotVerified);
     }
 
     private async Task<bool> EmailDoesNotExist(string email, CancellationToken cancellationToken)
@@ -28,6 +28,6 @@ public class SendVerificationEmailCommandValidator : AbstractValidator<SendVerif
     private async Task<bool> EmailNotVerified(string email, CancellationToken cancellationToken)
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email), cancellationToken);
-        return user != null && !user.EmailVerified;
+        return user != null && user.EmailVerified;
     }
 }

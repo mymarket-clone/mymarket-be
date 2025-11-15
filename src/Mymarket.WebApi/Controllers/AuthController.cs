@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Users.Commands.LoginUser;
+using Mymarket.Application.Users.Commands.PasswordRecovery;
 using Mymarket.Application.Users.Commands.RegisterUser;
-using Mymarket.Application.Users.Commands.SendVerificationEmail;
-using Mymarket.Application.Users.Commands.VerifyCode;
+using Mymarket.Application.Users.Commands.SendEmailVerificationCode;
+using Mymarket.Application.Users.Commands.SendPasswordRecoveryCode;
+using Mymarket.Application.Users.Commands.VerifyEmailCodeCommand;
+using Mymarket.Application.Users.Commands.VerifyPasswodRecoveryCodeCommand;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -21,8 +24,8 @@ public class AuthController(IMediator _mediator) : BaseController
     }
 
     [HttpPost]
-    [Route("SendVerificationEmail")]
-    public async Task<IActionResult> SendVerificationEmail(SendVerificationEmailCommand sendVerificationEmailCommand)
+    [Route("SendEmailVerificationCode")]
+    public async Task<IActionResult> SendEmailVerificationCode(SendEmailVerificationCodeCommand sendVerificationEmailCommand)
     {
         await _mediator.Send(sendVerificationEmailCommand);
 
@@ -30,10 +33,10 @@ public class AuthController(IMediator _mediator) : BaseController
     }
 
     [HttpPost]
-    [Route("VerifyCode")]
-    public async Task<IActionResult> VerifyCode(VerifyCodeCommand verifyCodeCommand)
+    [Route("VerifyEmailCode")]
+    public async Task<IActionResult> VerifyCode(VerifyEmailCodeCommand verifyEmailCodeCommand)
     {
-        var response = await _mediator.Send(verifyCodeCommand);
+        var response = await _mediator.Send(verifyEmailCodeCommand);
 
         return Ok(response);
     }
@@ -45,5 +48,32 @@ public class AuthController(IMediator _mediator) : BaseController
         var response = await _mediator.Send(loginUserCommand);
 
         return Ok(response);
+    }
+
+    [HttpPost]
+    [Route("SendPasswordRecovery")]
+    public async Task<IActionResult> PasswordRecovery(SendPasswordRecoveryCommand passwordRecoveryCommand)
+    {
+        await _mediator.Send(passwordRecoveryCommand);
+
+        return NoContent();
+    }
+
+    [HttpPost]
+    [Route("VerifyPasswordCode")]
+    public async Task<IActionResult> VerifyPasswordCode(VerifyPasswordRecoveryCodeCommand verifyPasswordRecoveryCodeCommand)
+    {
+        await _mediator.Send(verifyPasswordRecoveryCodeCommand);
+
+        return NoContent();
+    }
+
+    [HttpPost]
+    [Route("PasswordRecovery")]
+    public async Task<IActionResult> PasswordRecovery(PasswordRecoveryCommand passwordRecoveryCommand)
+    {
+        await _mediator.Send(passwordRecoveryCommand);
+
+        return NoContent();
     }
 }

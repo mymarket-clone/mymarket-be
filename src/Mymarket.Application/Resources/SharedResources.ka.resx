@@ -201,4 +201,10 @@
   <data name="InvalidUserOrPassword" xml:space="preserve">
     <value>არასწორი სახელი ან პაროლი</value>
   </data>
+  <data name="EmailNotVerified" xml:space="preserve">
+    <value>ელფოსტა არ არის ვერიფიცირებული</value>
+  </data>
+  <data name="PasswordDoesnotMatch" xml:space="preserve">
+    <value>პაროლი არ ემთხვევა</value>
+  </data>
 </root>

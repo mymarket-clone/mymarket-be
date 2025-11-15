@@ -3,18 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
 
-namespace Mymarket.Application.Users.Commands.VerifyCode;
+namespace Mymarket.Application.Users.Commands.SendEmailVerificationCode;
 
-public class VerifyCodeCommandValidator : AbstractValidator<VerifyCodeCommand>
+public class SendEmailVerificationCodeValidator : AbstractValidator<SendEmailVerificationCodeCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public VerifyCodeCommandValidator(IApplicationDbContext context)
+    public SendEmailVerificationCodeValidator(IApplicationDbContext context)
     {
         _context = context;
-
-        RuleFor(x => x.Code)
-            .NotEmpty().WithMessage(SharedResources.VerificationCodeRequired);
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage(SharedResources.EmailRequired)
