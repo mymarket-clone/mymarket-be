@@ -15,15 +15,16 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 
         RuleFor(x => x.EmailOrPhone)
             .NotEmpty().WithMessage(SharedResources.EmailOrPhoneRequired)
-            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailNotVerified);
+            .MustAsync(UserNotVerified).WithMessage(SharedResources.EmailNotVerified);
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage(SharedResources.PasswordRequired);
     }
 
-    private async Task<bool> EmailNotVerified(string email, CancellationToken cancellationToken)
+    private async Task<bool> UserNotVerified(string emailOrPhone, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email), cancellationToken);
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Email == emailOrPhone || x.PhoneNumber == emailOrPhone, cancellationToken);
         return user != null && user.EmailVerified;
     }
 }
