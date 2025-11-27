@@ -38,7 +38,9 @@ public static class MiddlewareConfiguration
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
         app.UseHttpsRedirection();
+        app.UseCors("CorsPolicy");
         app.UseAuthorization();
         app.MapControllers();
+
     }
 }

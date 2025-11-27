@@ -207,4 +207,7 @@
   <data name="PasswordDoesnotMatch" xml:space="preserve">
     <value>Password does not match</value>
   </data>
+  <data name="CodeAlreadySent" xml:space="preserve">
+    <value>Code have already sent</value>
+  </data>
 </root>

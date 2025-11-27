@@ -207,4 +207,7 @@
   <data name="PasswordDoesnotMatch" xml:space="preserve">
     <value>პაროლი არ ემთხვევა</value>
   </data>
+  <data name="CodeAlreadySent" xml:space="preserve">
+    <value>კოდი უკვე გამოგზავნილია</value>
+  </data>
 </root>

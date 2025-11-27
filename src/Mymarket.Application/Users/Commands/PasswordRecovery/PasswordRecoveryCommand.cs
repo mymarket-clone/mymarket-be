@@ -11,9 +11,13 @@ public class PasswordRecoveryCommandHandler(IApplicationDbContext _context) : IR
 {
     public async Task<Unit> Handle(PasswordRecoveryCommand request, CancellationToken cancellationToken)
     {
+        var codeHash = CryptoHelper.HashVerificationCode(request.Code.ToString());
+
         var user = await _context.VerificationCode
             .Include(x => x.User)
-            .FirstOrDefaultAsync(x => x.User!.Id.Equals(x.UserId));
+            .FirstOrDefaultAsync(
+                x => x.CodeHash == codeHash && x.CodeType == Domain.Constants.CodeType.PasswordRecovery,
+                cancellationToken);
 
         if (user is not null)
         {

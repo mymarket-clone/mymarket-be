@@ -61,6 +61,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Code have already sent.
+        /// </summary>
+        public static string CodeAlreadySent {
+            get {
+                return ResourceManager.GetString("CodeAlreadySent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid or expired code.
         /// </summary>
         public static string CodeInvalidOrExpired {

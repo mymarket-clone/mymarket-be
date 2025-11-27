@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
+using Mymarket.Application.Users.Common.Helpers;
 
 namespace Mymarket.Application.Users.Commands.LoginUser;
 
@@ -15,16 +16,41 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 
         RuleFor(x => x.EmailOrPhone)
             .NotEmpty().WithMessage(SharedResources.EmailOrPhoneRequired)
-            .MustAsync(UserNotVerified).WithMessage(SharedResources.EmailNotVerified);
-
-        RuleFor(x => x.Password)
-            .NotEmpty().WithMessage(SharedResources.PasswordRequired);
+            .MustAsync(UserExists).WithMessage(SharedResources.InvalidUserOrPassword)
+            .MustAsync(UserIsVerified).WithMessage(SharedResources.EmailNotVerified)
+            .MustAsync(PasswordMatches).WithMessage(SharedResources.InvalidUserOrPassword);
     }
 
-    private async Task<bool> UserNotVerified(string emailOrPhone, CancellationToken cancellationToken)
+    private async Task<bool> UserExists(string emailOrPhone, CancellationToken cancellationToken)
     {
         var user = await _context.Users
-            .FirstOrDefaultAsync(x => x.Email == emailOrPhone || x.PhoneNumber == emailOrPhone, cancellationToken);
-        return user != null && user.EmailVerified;
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Email.ToLower() == emailOrPhone.ToLower() || x.PhoneNumber == emailOrPhone,
+                cancellationToken);
+
+        return user != null;
+    }
+
+    private async Task<bool> UserIsVerified(LoginUserCommand cmd, string emailOrPhone, CancellationToken cancellationToken)
+    {
+        var user = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Email.ToLower() == emailOrPhone.ToLower() ||  x.PhoneNumber == emailOrPhone,
+                cancellationToken);
+
+        return user is not null && user.EmailVerified;
+    }
+
+    private async Task<bool> PasswordMatches(LoginUserCommand cmd, string emailOrPhone, CancellationToken cancellationToken)
+    {
+        var user = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Email.ToLower() == emailOrPhone.ToLower() || x.PhoneNumber == emailOrPhone,
+                cancellationToken);
+
+        return user is not null && CryptoHelper.VerifyPassword(user.PasswordHash, cmd.Password);
     }
 }

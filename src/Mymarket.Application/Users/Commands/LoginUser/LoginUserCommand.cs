@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
-using Mymarket.Application.Resources;
 using Mymarket.Application.Users.Common.Dto;
-using Mymarket.Application.Users.Common.Helpers;
 using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.Users.Commands.LoginUser;
@@ -17,19 +15,12 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
         var user = await _context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                x => x.Email.ToLower().Equals(request.EmailOrPhone.ToLower()) || x.PhoneNumber == request.EmailOrPhone,
-                cancellationToken
-            );
-
-        if (user is null) throw new UnauthorizedAccessException(SharedResources.InvalidUserOrPassword);
-
-        var isPasswordRight = CryptoHelper.VerifyPassword(user.PasswordHash, request.Password);
-
-        if (!isPasswordRight) throw new UnauthorizedAccessException(SharedResources.InvalidUserOrPassword);
+                x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
+                cancellationToken);
 
         var userModel = new UserModel
         {
-            Name = user.Name,
+            Name = user!.Name,
             Lastname = user.LastName,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
