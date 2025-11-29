@@ -9,8 +9,8 @@ public record RegisterUserCommand(
     string Name, 
     string Lastname, 
     string Email, 
-    string PhoneNumber, 
-    string Password) : IRequest<Unit>;
+    string Password,
+    string PasswordConfirm) : IRequest<Unit>;
 
 public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandler<RegisterUserCommand, Unit>
 {
@@ -21,7 +21,6 @@ public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandl
             Name = request.Name,
             LastName = request.Lastname,
             Email = request.Email,
-            PhoneNumber = request.PhoneNumber,
             EmailVerified = false,
             PasswordHash = CryptoHelper.HashPassword(request.Password),
         };

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
-using Mymarket.Application.Users.Common.Helpers;
 
 namespace Mymarket.Application.Users.Commands.VerifyPasswodRecoveryCodeCommand;
 

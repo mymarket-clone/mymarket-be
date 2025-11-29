@@ -19,7 +19,7 @@ public class SendEmailVerificationCodeHandler(
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.Email.ToLower().Equals(request.Email.ToLower()),
-                cancellationToken: cancellationToken
+                cancellationToken
             );
 
         if (user is not null)
@@ -32,7 +32,7 @@ public class SendEmailVerificationCodeHandler(
                 var existingRecord = await _context.VerificationCode
                     .FirstOrDefaultAsync(
                         x => x.UserId.Equals(user.Id) && x.CodeType == CodeType.EmailVerification,
-                        cancellationToken: cancellationToken
+                        cancellationToken
                     );
 
                 if (existingRecord is not null)

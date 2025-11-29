@@ -11,7 +11,6 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.HasKey(x => x.Id);
 
         builder.HasIndex(x => x.Email).IsUnique();
-        builder.HasIndex(x => x.PhoneNumber).IsUnique();
 
         builder.Property(x => x.Name)
             .IsRequired()
@@ -24,10 +23,6 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(x => x.Email)
             .IsRequired()
             .HasMaxLength(256);
-
-        builder.Property(x => x.PhoneNumber)
-            .IsRequired()
-            .HasMaxLength(18);
 
         builder.Property(x => x.PasswordHash)
             .IsRequired();

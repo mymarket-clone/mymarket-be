@@ -19,7 +19,7 @@ public class SendPasswordRecoveryCommandHandler(
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.Email.ToLower().Equals(request.Email.ToLower()),
-                cancellationToken: cancellationToken
+                cancellationToken
             );
 
         if (user is not null)
@@ -32,7 +32,7 @@ public class SendPasswordRecoveryCommandHandler(
                 var existingRecord = await _context.VerificationCode
                     .FirstOrDefaultAsync(
                         x => x.UserId.Equals(user.Id) && x.CodeType == CodeType.PasswordRecovery,
-                        cancellationToken: cancellationToken
+                        cancellationToken
                     );
 
                 if (existingRecord is not null)

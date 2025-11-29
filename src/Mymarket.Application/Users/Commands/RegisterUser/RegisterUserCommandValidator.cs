@@ -29,12 +29,6 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .MaximumLength(256).WithMessage(SharedResources.EmailMaxLength)
             .MustAsync(EmailAlreadyExist).WithMessage(SharedResources.EmailAlreadyExists);
 
-        RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage(SharedResources.PhoneRequired)
-            .MinimumLength(6).WithMessage(SharedResources.PhoneMinLength)
-            .MaximumLength(18).WithMessage(SharedResources.PhoneMaxLength)
-            .MustAsync(PhoneAlreadyExists).WithMessage(SharedResources.PhoneNumberAlreadyExists);
-
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage(SharedResources.PasswordRequired)
             .MinimumLength(8).WithMessage(SharedResources.PasswordMinLength)
@@ -43,15 +37,14 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .Matches(@"[A-Z]").WithMessage(SharedResources.PasswordUppercase)
             .Matches(@"\d").WithMessage(SharedResources.PasswordNumber)
             .Matches(@"[\W_]").WithMessage(SharedResources.PasswordSpecial);
+
+        RuleFor(x => x.PasswordConfirm)
+            .NotEmpty().WithMessage(SharedResources.PasswordRequired)
+            .Equal(x => x.Password).WithMessage(SharedResources.PasswordDoesnotMatch);
     }
 
     private async Task<bool> EmailAlreadyExist(string email, CancellationToken cancellationToken)
     {
         return !await _context.Users.AnyAsync(x => x.Email.Equals(email), cancellationToken);
-    }
-
-    private async Task<bool> PhoneAlreadyExists(string phoneNumber, CancellationToken cancellationToken)
-    {
-        return !await _context.Users.AnyAsync(x => x.PhoneNumber.Equals(phoneNumber), cancellationToken);
     }
 }
