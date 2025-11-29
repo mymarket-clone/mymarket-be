@@ -80,7 +80,7 @@ public class AuthController(IMediator _mediator) : BaseController
 
     [HttpGet]
     [Route("UserExists")]
-    public async Task<IActionResult> UserExists(UserExistsQuery userExistsQuery)
+    public async Task<IActionResult> UserExists([FromQuery] UserExistsQuery userExistsQuery)
     {
         var result = await _mediator.Send(userExistsQuery);
 
