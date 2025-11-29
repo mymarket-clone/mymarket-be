@@ -2,7 +2,7 @@
 using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Users.Queries.UserExists;
-internal class UserExistsQueryValidator : AbstractValidator<UserExistsQuery>
+public class UserExistsQueryValidator : AbstractValidator<UserExistsQuery>
 {
     public UserExistsQueryValidator()
     {
