@@ -190,7 +190,7 @@
     <value>გვარი უნდა მოიცავდეს მხოლოდ ასოებს</value>
   </data>
   <data name="EmailOrPhoneRequired" xml:space="preserve">
-    <value>სავალდებულო ველი</value>
+    <value>აუცილებელი ველი</value>
   </data>
   <data name="CodeNotFound" xml:space="preserve">
     <value>კოდი ვერ მოიძებნა</value>
@@ -209,5 +209,14 @@
   </data>
   <data name="CodeAlreadySent" xml:space="preserve">
     <value>კოდი უკვე გამოგზავნილია</value>
+  </data>
+  <data name="BirthDateRequired" xml:space="preserve">
+    <value>აუცილებელი ველი</value>
+  </data>
+  <data name="InvalidBirthYear" xml:space="preserve">
+    <value>არასწორი ფორმატი</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>აუცილებელი ველი</value>
   </data>
 </root>

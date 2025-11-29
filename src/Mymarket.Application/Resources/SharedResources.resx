@@ -210,4 +210,13 @@
   <data name="CodeAlreadySent" xml:space="preserve">
     <value>Code have already sent</value>
   </data>
+  <data name="BirthDateRequired" xml:space="preserve">
+    <value>Required field</value>
+  </data>
+  <data name="InvalidBirthYear" xml:space="preserve">
+    <value>Invalid birth year</value>
+  </data>
+  <data name="GenderRequired" xml:space="preserve">
+    <value>Required field</value>
+  </data>
 </root>

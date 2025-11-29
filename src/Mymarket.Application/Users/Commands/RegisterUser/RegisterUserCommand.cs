@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Users.Common.Helpers;
+using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Users.Commands.RegisterUser;
@@ -9,6 +10,9 @@ public record RegisterUserCommand(
     string Name, 
     string Lastname, 
     string Email, 
+    GenderType Gender, 
+    int BirthYear,
+    string PhoneNumber,
     string Password,
     string PasswordConfirm) : IRequest<Unit>;
 
@@ -21,6 +25,9 @@ public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandl
             Name = request.Name,
             LastName = request.Lastname,
             Email = request.Email,
+            Gender = request.Gender,
+            BirthYear = request.BirthYear,
+            PhoneNumber = request.PhoneNumber,
             EmailVerified = false,
             PasswordHash = CryptoHelper.HashPassword(request.Password),
         };

@@ -12,6 +12,8 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.HasIndex(x => x.Email).IsUnique();
 
+        builder.HasIndex(x => x.PhoneNumber).IsUnique();
+
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(72);
@@ -24,7 +26,17 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .HasMaxLength(256);
 
+        builder.Property(x => x.Gender)
+            .IsRequired();
+
+        builder.Property(x => x.BirthYear)
+            .IsRequired()
+            .HasMaxLength(4);
+
         builder.Property(x => x.PasswordHash)
+            .IsRequired();
+
+        builder.Property(x => x.EmailVerified)
             .IsRequired();
     }
 }

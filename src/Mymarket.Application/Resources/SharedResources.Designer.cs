@@ -61,6 +61,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required field.
+        /// </summary>
+        public static string BirthDateRequired {
+            get {
+                return ResourceManager.GetString("BirthDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code have already sent.
         /// </summary>
         public static string CodeAlreadySent {
@@ -138,6 +147,24 @@ namespace Mymarket.Application.Resources {
         public static string EmailRequired {
             get {
                 return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required field.
+        /// </summary>
+        public static string GenderRequired {
+            get {
+                return ResourceManager.GetString("GenderRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid birth year.
+        /// </summary>
+        public static string InvalidBirthYear {
+            get {
+                return ResourceManager.GetString("InvalidBirthYear", resourceCulture);
             }
         }
         

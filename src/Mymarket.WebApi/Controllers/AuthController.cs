@@ -7,6 +7,7 @@ using Mymarket.Application.Users.Commands.SendEmailVerificationCode;
 using Mymarket.Application.Users.Commands.SendPasswordRecoveryCode;
 using Mymarket.Application.Users.Commands.VerifyEmailCodeCommand;
 using Mymarket.Application.Users.Commands.VerifyPasswodRecoveryCodeCommand;
+using Mymarket.Application.Users.Queries.UserExists;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -75,5 +76,16 @@ public class AuthController(IMediator _mediator) : BaseController
         await _mediator.Send(passwordRecoveryCommand);
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("UserExists")]
+    public async Task<IActionResult> UserExists(UserExistsQuery userExistsQuery)
+    {
+        var result = await _mediator.Send(userExistsQuery);
+
+        if (result) return NoContent();
+
+        return NotFound();
     }
 }

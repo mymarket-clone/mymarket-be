@@ -29,6 +29,14 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .MaximumLength(256).WithMessage(SharedResources.EmailMaxLength)
             .MustAsync(EmailAlreadyExist).WithMessage(SharedResources.EmailAlreadyExists);
 
+        RuleFor(x => x.Gender)
+            .NotEmpty().WithMessage(SharedResources.GenderRequired);
+
+        RuleFor(x => x.BirthYear)
+            .NotEmpty().WithMessage(SharedResources.BirthDateRequired)
+            .InclusiveBetween(1900, DateTime.UtcNow.Year - 16)
+            .WithMessage(SharedResources.InvalidBirthYear);
+
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage(SharedResources.PasswordRequired)
             .MinimumLength(8).WithMessage(SharedResources.PasswordMinLength)
