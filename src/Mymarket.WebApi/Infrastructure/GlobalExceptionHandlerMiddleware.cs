@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Mymarket.Application.Common.Exceptions;
 
 namespace Mymarket.WebApi.Infrastructure;
 
@@ -27,7 +28,7 @@ public class GlobalExceptionHandlerMiddleware(
                 Instance = $"{context.Request.Method} {context.Request.Path}"
             };
 
-            problem.Extensions["Code"] = "UnauthorizedAccessError";
+            problem.Extensions["code"] = "UnauthorizedAccessError";
 
             await context.Response.WriteAsJsonAsync(problem);
         }
@@ -48,7 +49,23 @@ public class GlobalExceptionHandlerMiddleware(
                 Instance = $"{context.Request.Method} {context.Request.Path}"
             };
 
-            problem.Extensions["Code"] = "ValidationError";
+            problem.Extensions["code"] = "ValidationError";
+
+            await context.Response.WriteAsJsonAsync(problem);
+        }
+        catch (EmailNotVerifiedException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            var problem = new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = "Email not verified",
+                Status = StatusCodes.Status401Unauthorized,
+                Instance = $"{context.Request.Method} {context.Request.Path}"
+            };
+
+            problem.Extensions["email"] = ex.Email;
+            problem.Extensions["code"] = "EmailNotVerified";
 
             await context.Response.WriteAsJsonAsync(problem);
         }
@@ -67,7 +84,7 @@ public class GlobalExceptionHandlerMiddleware(
                 Instance = $"{context.Request.Method} {context.Request.Path}"
             };
 
-            problem.Extensions["Code"] = "UnexpectedError";
+            problem.Extensions["code"] = "UnexpectedError";
 
             await context.Response.WriteAsJsonAsync(problem);
         }

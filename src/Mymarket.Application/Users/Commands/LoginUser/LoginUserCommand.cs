@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Common.Exceptions;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Users.Common.Dto;
 using Mymarket.Domain.Models;
@@ -17,6 +18,12 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
             .FirstOrDefaultAsync(
                 x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
                 cancellationToken);
+
+
+        if(user is not null && !user.EmailVerified)
+        {
+            throw new EmailNotVerifiedException(user.Email);
+        }
 
         var userModel = new UserModel
         {

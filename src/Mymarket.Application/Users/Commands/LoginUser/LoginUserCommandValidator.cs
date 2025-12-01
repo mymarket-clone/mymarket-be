@@ -17,7 +17,7 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
         RuleFor(x => x.EmailOrPhone)
             .NotEmpty().WithMessage(SharedResources.EmailOrPhoneRequired)
             .MustAsync(UserExists).WithMessage(SharedResources.InvalidUserOrPassword)
-            .MustAsync(UserIsVerified).WithMessage(SharedResources.EmailNotVerified)
+            //.MustAsync(UserIsVerified).WithMessage(SharedResources.EmailNotVerified)
             .MustAsync(PasswordMatches).WithMessage(SharedResources.InvalidUserOrPassword);
     }
 
