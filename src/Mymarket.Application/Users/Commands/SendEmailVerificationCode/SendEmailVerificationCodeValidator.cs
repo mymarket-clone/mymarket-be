@@ -18,8 +18,8 @@ public class SendEmailVerificationCodeValidator : AbstractValidator<SendEmailVer
             .NotEmpty().WithMessage(SharedResources.EmailRequired)
             .EmailAddress().WithMessage(SharedResources.InvalidEmail)
             .MustAsync(EmailDoesNotExist).WithMessage(SharedResources.UserWithEmailDoesNotExist)
-            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailAlreadyVerified)
-            .MustAsync(NoActiveCode).WithMessage(SharedResources.CodeAlreadySent);
+            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailAlreadyVerified);
+            //.MustAsync(NoActiveCode).WithMessage(SharedResources.CodeAlreadySent);
     }
 
     private async Task<bool> EmailDoesNotExist(string email, CancellationToken cancellationToken)
@@ -33,21 +33,20 @@ public class SendEmailVerificationCodeValidator : AbstractValidator<SendEmailVer
         return user != null && !user.EmailVerified;
     }
 
-    private async Task<bool> NoActiveCode(string email, CancellationToken cancellationToken)
-    {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+    //private async Task<bool> NoActiveCode(string email, CancellationToken cancellationToken)
+    //{
+    //    var user = await _context.Users
+    //        .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
-        if (user == null) return true;
+    //    if (user == null) return true;
 
-        var activeCode = await _context.VerificationCode
-            .AnyAsync(x =>
-                x.UserId == user.Id &&
-                x.CodeType == CodeType.EmailVerification &&
-                x.ExpiresAt > DateTime.UtcNow,
-                cancellationToken);
+    //    var activeCode = await _context.VerificationCode
+    //        .AnyAsync(x =>
+    //            x.UserId == user.Id &&
+    //            x.CodeType == CodeType.EmailVerification &&
+    //            x.ExpiresAt > DateTime.UtcNow,
+    //            cancellationToken);
 
-        return !activeCode;
-    }
-
+    //    return !activeCode;
+    //}
 }
