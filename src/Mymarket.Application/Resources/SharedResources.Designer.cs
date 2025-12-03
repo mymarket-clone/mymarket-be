@@ -160,15 +160,6 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid birth year.
-        /// </summary>
-        public static string InvalidBirthYear {
-            get {
-                return ResourceManager.GetString("InvalidBirthYear", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Invalid email address.
         /// </summary>
         public static string InvalidEmail {

@@ -33,9 +33,11 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .NotEmpty().WithMessage(SharedResources.GenderRequired);
 
         RuleFor(x => x.BirthYear)
-            .NotEmpty().WithMessage(SharedResources.BirthDateRequired)
-            .InclusiveBetween(1900, DateTime.UtcNow.Year - 16)
-            .WithMessage(SharedResources.InvalidBirthYear);
+            .NotEmpty().WithMessage(SharedResources.BirthDateRequired);
+
+        RuleFor(x => x.PhoneNumber)
+            .NotEmpty().WithMessage(SharedResources.PhoneRequired)
+            .MustAsync(PhoneNumberAlreadyExist).WithMessage(SharedResources.PhoneNumberAlreadyExists);
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage(SharedResources.PasswordRequired)
@@ -55,4 +57,10 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
     {
         return !await _context.Users.AnyAsync(x => x.Email.Equals(email), cancellationToken);
     }
+
+    private async Task<bool> PhoneNumberAlreadyExist(string phoneNumber, CancellationToken cancellationToken)
+    {
+        return !await _context.Users.AnyAsync(x => x.PhoneNumber == phoneNumber, cancellationToken);
+    }
+
 }

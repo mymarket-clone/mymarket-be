@@ -213,9 +213,6 @@
   <data name="BirthDateRequired" xml:space="preserve">
     <value>обязательное поле</value>
   </data>
-  <data name="InvalidBirthYear" xml:space="preserve">
-    <value>Неверный формат</value>
-  </data>
   <data name="GenderRequired" xml:space="preserve">
     <value>обязательное поле</value>
   </data>

@@ -213,9 +213,6 @@
   <data name="BirthDateRequired" xml:space="preserve">
     <value>აუცილებელი ველი</value>
   </data>
-  <data name="InvalidBirthYear" xml:space="preserve">
-    <value>არასწორი ფორმატი</value>
-  </data>
   <data name="GenderRequired" xml:space="preserve">
     <value>აუცილებელი ველი</value>
   </data>
