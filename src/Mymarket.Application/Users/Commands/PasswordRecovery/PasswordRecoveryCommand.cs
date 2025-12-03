@@ -5,7 +5,7 @@ using Mymarket.Application.Users.Common.Helpers;
 
 namespace Mymarket.Application.Users.Commands.PasswordRecovery;
 
-public record PasswordRecoveryCommand(int Code, string Password, string PasswordConfirm) : IRequest<Unit>;
+public record PasswordRecoveryCommand(string Code, string Password, string PasswordConfirm) : IRequest<Unit>;
 
 public class PasswordRecoveryCommandHandler(IApplicationDbContext _context) : IRequestHandler<PasswordRecoveryCommand, Unit>
 {

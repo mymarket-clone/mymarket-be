@@ -32,7 +32,7 @@ public class PasswordRecoveryCommandValidator : AbstractValidator<PasswordRecove
             .Must((command, passwordConfirm) => passwordConfirm == command.Password).WithMessage(SharedResources.PasswordDoesnotMatch);
     }
 
-    private async Task<bool> CodeIsValid(int code, CancellationToken cancellationToken)
+    private async Task<bool> CodeIsValid(string code, CancellationToken cancellationToken)
     {
         var codeHash = CryptoHelper.HashVerificationCode(code.ToString());
 
