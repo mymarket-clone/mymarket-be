@@ -7,13 +7,13 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Users.Commands.SendPasswordRecoveryCode;
 
-public record SendPasswordRecoveryCommand(string Email) : IRequest<Unit>;
+public record SendPasswordRecoveryCommand(string Email) : IRequest;
 
 public class SendPasswordRecoveryCommandHandler(
     IApplicationDbContext _context,
-    IEmailSender _emailSender) : IRequestHandler<SendPasswordRecoveryCommand, Unit>
+    IEmailSender _emailSender) : IRequestHandler<SendPasswordRecoveryCommand>
 {
-    public async Task<Unit> Handle(SendPasswordRecoveryCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SendPasswordRecoveryCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
             .AsNoTracking()
@@ -67,7 +67,5 @@ public class SendPasswordRecoveryCommandHandler(
                 throw new ApplicationException("Failed to send password recovery email", ex);
             }
         }
-
-        return await Task.FromResult(Unit.Value);
     }
 }

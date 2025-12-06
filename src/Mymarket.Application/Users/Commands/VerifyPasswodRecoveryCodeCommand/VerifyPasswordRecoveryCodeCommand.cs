@@ -8,11 +8,11 @@ using Mymarket.Domain.Constants;
 
 namespace Mymarket.Application.Users.Commands.VerifyPasswodRecoveryCodeCommand;
 
-public record VerifyPasswordRecoveryCodeCommand(string Email, int Code) : IRequest<Unit>;
+public record VerifyPasswordRecoveryCodeCommand(string Email, int Code) : IRequest;
 
-public class VerifyPasswordRecoveryCodeCommandHandler(IApplicationDbContext _context) : IRequestHandler<VerifyPasswordRecoveryCodeCommand, Unit>
+public class VerifyPasswordRecoveryCodeCommandHandler(IApplicationDbContext _context) : IRequestHandler<VerifyPasswordRecoveryCodeCommand>
 {
-    public async Task<Unit> Handle(VerifyPasswordRecoveryCodeCommand request, CancellationToken cancellationToken)
+    public async Task Handle(VerifyPasswordRecoveryCodeCommand request, CancellationToken cancellationToken)
     {
         var record = await _context.VerificationCode
             .Include(x => x.User)
@@ -38,7 +38,5 @@ public class VerifyPasswordRecoveryCodeCommandHandler(IApplicationDbContext _con
         record.IsVerified = true;
 
         await _context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

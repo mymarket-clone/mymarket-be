@@ -7,13 +7,13 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Users.Commands.SendEmailVerificationCode;
 
-public record SendEmailVerificationCodeCommand(string Email) : IRequest<Unit>;
+public record SendEmailVerificationCodeCommand(string Email) : IRequest;
 
 public class SendEmailVerificationCodeHandler(
     IApplicationDbContext _context, 
-    IEmailSender _emailSender) : IRequestHandler<SendEmailVerificationCodeCommand, Unit>
+    IEmailSender _emailSender) : IRequestHandler<SendEmailVerificationCodeCommand>
 {
-    public async Task<Unit> Handle(SendEmailVerificationCodeCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SendEmailVerificationCodeCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
             .AsNoTracking()
@@ -67,7 +67,5 @@ public class SendEmailVerificationCodeHandler(
                 throw new ApplicationException("Failed to send email verification email", ex);
             }
         }
-
-        return await Task.FromResult(Unit.Value);
     }
 }
