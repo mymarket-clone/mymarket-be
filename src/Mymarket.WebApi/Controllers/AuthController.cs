@@ -21,7 +21,7 @@ public class AuthController(IMediator _mediator) : BaseController
     {
         await _mediator.Send(registerUserCommand);
 
-        return NoContent();
+        return Created();
     }
 
     [HttpPost]
