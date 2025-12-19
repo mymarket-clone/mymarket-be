@@ -50,7 +50,7 @@ public class SendPasswordRecoveryCommandHandler(
                     TextContent: verificationCode
                 );
 
-                var verificationCodeEntity = new VerificationCode
+                var verificationCodeEntity = new VerificationCodeEntity
                 {
                     UserId = user.Id,
                     CodeHash = hashedVerificationCode,

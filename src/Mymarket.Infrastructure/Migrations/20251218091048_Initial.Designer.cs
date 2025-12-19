@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251129161151_ChangeUserEntity")]
-    partial class ChangeUserEntity
+    [Migration("20251218091048_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,58 @@ namespace Mymarket.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Mymarket.Domain.Entities.Category.CategoryEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("Mymarket.Domain.Entities.Category.CategoryEntityTranslations", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId", "LanguageCode")
+                        .IsUnique();
+
+                    b.ToTable("CategoriesTranslations", (string)null);
+                });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.UserEntity", b =>
                 {
@@ -77,10 +129,10 @@ namespace Mymarket.Infrastructure.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("Mymarket.Domain.Entities.VerificationCode", b =>
+            modelBuilder.Entity("Mymarket.Domain.Entities.VerificationCodeEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,10 +160,31 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("VerificationCode");
+                    b.ToTable("VerificationCodes", (string)null);
                 });
 
-            modelBuilder.Entity("Mymarket.Domain.Entities.VerificationCode", b =>
+            modelBuilder.Entity("Mymarket.Domain.Entities.Category.CategoryEntity", b =>
+                {
+                    b.HasOne("Mymarket.Domain.Entities.Category.CategoryEntity", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Mymarket.Domain.Entities.Category.CategoryEntityTranslations", b =>
+                {
+                    b.HasOne("Mymarket.Domain.Entities.Category.CategoryEntity", "Category")
+                        .WithMany("Translations")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Mymarket.Domain.Entities.VerificationCodeEntity", b =>
                 {
                     b.HasOne("Mymarket.Domain.Entities.UserEntity", "User")
                         .WithMany()
@@ -120,6 +193,13 @@ namespace Mymarket.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Mymarket.Domain.Entities.Category.CategoryEntity", b =>
+                {
+                    b.Navigation("Children");
+
+                    b.Navigation("Translations");
                 });
 #pragma warning restore 612, 618
         }

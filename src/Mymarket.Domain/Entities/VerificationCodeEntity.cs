@@ -3,7 +3,7 @@ using Mymarket.Domain.Constants;
 
 namespace Mymarket.Domain.Entities;
 
-public class VerificationCode : BaseEntity<int>
+public class VerificationCodeEntity : BaseEntity<int>
 {
     public required int UserId { get; set; }
     public required string CodeHash { get; set; }

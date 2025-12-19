@@ -4,10 +4,12 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-public class VerificationCodeConfiguration : IEntityTypeConfiguration<VerificationCode>
+public class VerificationCodeEntityConfiguration : IEntityTypeConfiguration<VerificationCodeEntity>
 {
-    public void Configure(EntityTypeBuilder<VerificationCode> builder)
+    public void Configure(EntityTypeBuilder<VerificationCodeEntity> builder)
     {
+        builder.ToTable("VerificationCodes");
+
         builder
             .HasOne(x => x.User)
             .WithMany()

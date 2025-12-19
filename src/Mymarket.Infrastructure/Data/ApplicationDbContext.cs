@@ -8,7 +8,7 @@ namespace Mymarket.Infrastructure.Data;
 public class ApplicationDbContext(DbContextOptions options) : DbContext(options), IApplicationDbContext
 {
     public DbSet<UserEntity> Users => Set<UserEntity>();
-    public DbSet<VerificationCode> VerificationCode => Set<VerificationCode>();
+    public DbSet<VerificationCodeEntity> VerificationCode => Set<VerificationCodeEntity>();
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
