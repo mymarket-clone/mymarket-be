@@ -216,4 +216,7 @@
   <data name="GenderRequired" xml:space="preserve">
     <value>აუცილებელი ველი</value>
   </data>
+  <data name="CodeLength" xml:space="preserve">
+    <value>ერთჯერადი კოდი უნდა შეიცავდეს 6 სიმბოლოს</value>
+  </data>
 </root>

@@ -216,4 +216,7 @@
   <data name="GenderRequired" xml:space="preserve">
     <value>обязательное поле</value>
   </data>
+  <data name="CodeLength" xml:space="preserve">
+    <value>Одноразовый код должен содержать 6 символов</value>
+  </data>
 </root>

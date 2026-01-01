@@ -5,7 +5,7 @@ namespace Mymarket.Domain.Entities;
 
 public class UserEntity : BaseEntity<int>
 {
-    public required string Name { get; set; }
+    public required string Firstname { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
     public required GenderType Gender { get; set; }

@@ -88,6 +88,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One-time code must contain 6 symbols.
+        /// </summary>
+        public static string CodeLength {
+            get {
+                return ResourceManager.GetString("CodeLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to find code.
         /// </summary>
         public static string CodeNotFound {

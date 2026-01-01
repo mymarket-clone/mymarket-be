@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Common.Exceptions;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Users.Common.Helpers;
 using Mymarket.Domain.Constants;
@@ -7,13 +8,13 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Users.Commands.SendPasswordRecoveryCode;
 
-public record SendPasswordRecoveryCommand(string Email) : IRequest;
+public record SendPasswordRecoveryCommand(string Email) : IRequest<Unit>;
 
 public class SendPasswordRecoveryCommandHandler(
     IApplicationDbContext _context,
-    IEmailSender _emailSender) : IRequestHandler<SendPasswordRecoveryCommand>
+    IEmailSender _emailSender) : IRequestHandler<SendPasswordRecoveryCommand, Unit>
 {
-    public async Task Handle(SendPasswordRecoveryCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendPasswordRecoveryCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
             .AsNoTracking()
@@ -24,6 +25,11 @@ public class SendPasswordRecoveryCommandHandler(
 
         if (user is not null)
         {
+            if (!user.EmailVerified)
+            {
+                throw new EmailNotVerifiedException(user.Email);
+            }
+
             try
             {
                 var verificationCode = CryptoHelper.CreateVerificationCode();
@@ -44,7 +50,7 @@ public class SendPasswordRecoveryCommandHandler(
                 _emailSender.SendEmail(
                     SenderName: "Mymarket",
                     SenderEmail: "noreply@mymarket.info",
-                    ToName: user.Name,
+                    ToName: user.Firstname,
                     ToEmail: request.Email,
                     Subject: "Password recovery verification code",
                     TextContent: verificationCode
@@ -67,5 +73,7 @@ public class SendPasswordRecoveryCommandHandler(
                 throw new ApplicationException("Failed to send password recovery email", ex);
             }
         }
+
+        return Unit.Value;
     }
 }

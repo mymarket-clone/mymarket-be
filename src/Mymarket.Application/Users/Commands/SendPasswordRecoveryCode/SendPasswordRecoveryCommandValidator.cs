@@ -16,18 +16,11 @@ public class SendPasswordRecoveryCommandValidator : AbstractValidator<SendPasswo
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage(SharedResources.EmailRequired)
             .EmailAddress().WithMessage(SharedResources.InvalidEmail)
-            .MustAsync(EmailDoesNotExist).WithMessage(SharedResources.UserWithEmailDoesNotExist)
-            .MustAsync(EmailNotVerified).WithMessage(SharedResources.EmailNotVerified);
+            .MustAsync(EmailDoesNotExist).WithMessage(SharedResources.UserWithEmailDoesNotExist);
     }
 
     private async Task<bool> EmailDoesNotExist(string email, CancellationToken cancellationToken)
     {
         return await _context.Users.AnyAsync(x => x.Email.Equals(email), cancellationToken);
-    }
-
-    private async Task<bool> EmailNotVerified(string email, CancellationToken cancellationToken)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email), cancellationToken);
-        return user != null && user.EmailVerified;
     }
 }

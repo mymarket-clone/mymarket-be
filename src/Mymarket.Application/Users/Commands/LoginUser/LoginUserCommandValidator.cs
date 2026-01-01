@@ -17,7 +17,6 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
         RuleFor(x => x.EmailOrPhone)
             .NotEmpty().WithMessage(SharedResources.EmailOrPhoneRequired)
             .MustAsync(UserExists).WithMessage(SharedResources.InvalidUserOrPassword)
-            //.MustAsync(UserIsVerified).WithMessage(SharedResources.EmailNotVerified)
             .MustAsync(PasswordMatches).WithMessage(SharedResources.InvalidUserOrPassword);
     }
 
@@ -30,17 +29,6 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
                 cancellationToken);
 
         return user != null;
-    }
-
-    private async Task<bool> UserIsVerified(LoginUserCommand cmd, string emailOrPhone, CancellationToken cancellationToken)
-    {
-        var user = await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(
-                x => x.Email.ToLower() == emailOrPhone.ToLower() ||  x.PhoneNumber == emailOrPhone,
-                cancellationToken);
-
-        return user is not null && user.EmailVerified;
     }
 
     private async Task<bool> PasswordMatches(LoginUserCommand cmd, string emailOrPhone, CancellationToken cancellationToken)

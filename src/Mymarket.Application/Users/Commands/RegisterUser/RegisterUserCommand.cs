@@ -7,22 +7,22 @@ using Mymarket.Domain.Entities;
 namespace Mymarket.Application.Users.Commands.RegisterUser;
 
 public record RegisterUserCommand(
-    string Name, 
+    string Firstname, 
     string Lastname, 
     string Email, 
     GenderType Gender, 
     int BirthYear,
     string PhoneNumber,
     string Password,
-    string PasswordConfirm) : IRequest;
+    string PasswordConfirm) : IRequest<Unit>;
 
-public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandler<RegisterUserCommand>
+public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandler<RegisterUserCommand, Unit>
 {
-    public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var userToSave = new UserEntity
         {
-            Name = request.Name,
+            Firstname = request.Firstname,
             LastName = request.Lastname,
             Email = request.Email,
             Gender = request.Gender,
@@ -34,5 +34,7 @@ public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandl
 
         _context.Users.Add(userToSave);
         await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }

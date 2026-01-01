@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mymarket.Domain.Entities;
 
-namespace Mymarket.Infrastructure.Configuration.Category;
+namespace Mymarket.Infrastructure.Configuration;
 
 internal class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
 {
@@ -19,10 +19,5 @@ internal class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEn
             .WithMany(x => x.Children)
             .HasForeignKey(x => x.ParentId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder
-            .HasMany(x => x.Translations)
-            .WithOne(t => t.Category)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

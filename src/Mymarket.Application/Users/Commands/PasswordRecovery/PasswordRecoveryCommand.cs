@@ -5,11 +5,11 @@ using Mymarket.Application.Users.Common.Helpers;
 
 namespace Mymarket.Application.Users.Commands.PasswordRecovery;
 
-public record PasswordRecoveryCommand(string Code, string Password, string PasswordConfirm) : IRequest;
+public record PasswordRecoveryCommand(string Code, string Password, string PasswordConfirm) : IRequest<Unit>;
 
-public class PasswordRecoveryCommandHandler(IApplicationDbContext _context) : IRequestHandler<PasswordRecoveryCommand>
+public class PasswordRecoveryCommandHandler(IApplicationDbContext _context) : IRequestHandler<PasswordRecoveryCommand, Unit>
 {
-    public async Task Handle(PasswordRecoveryCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(PasswordRecoveryCommand request, CancellationToken cancellationToken)
     {
         var codeHash = CryptoHelper.HashVerificationCode(request.Code.ToString());
 
@@ -24,5 +24,7 @@ public class PasswordRecoveryCommandHandler(IApplicationDbContext _context) : IR
             user.User!.PasswordHash = CryptoHelper.HashPassword(request.Password);
             await _context.SaveChangesAsync(cancellationToken);
         }
+
+        return Unit.Value;
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Users.Queries.UserExists;
+
 public record UserExistsQuery(string Email): IRequest<bool>;
 
 public class UserExistsQueryHandler(IApplicationDbContext _context) : IRequestHandler<UserExistsQuery, bool>

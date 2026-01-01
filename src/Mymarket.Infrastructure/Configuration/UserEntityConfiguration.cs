@@ -14,7 +14,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.HasIndex(x => x.PhoneNumber).IsUnique();
 
-        builder.Property(x => x.Name)
+        builder.Property(x => x.Firstname)
             .IsRequired()
             .HasMaxLength(72);
 

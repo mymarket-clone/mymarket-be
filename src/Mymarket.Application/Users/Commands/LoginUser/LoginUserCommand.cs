@@ -20,14 +20,14 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
                 cancellationToken);
 
 
-        if(user is not null && !user.EmailVerified)
+        if (user is not null && !user.EmailVerified)
         {
             throw new EmailNotVerifiedException(user.Email);
         }
 
         var userModel = new UserModel
         {
-            Name = user!.Name,
+            Name = user!.Firstname,
             Lastname = user.LastName,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
@@ -46,7 +46,7 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
             User: new UserDto
             (
                 Id: user.Id,
-                Name: user.Name,
+                Name: user.Firstname,
                 Lastname: user.LastName,
                 Email: user.Email,
                 EmailVerified: user.EmailVerified

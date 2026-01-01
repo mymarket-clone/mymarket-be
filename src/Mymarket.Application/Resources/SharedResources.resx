@@ -216,4 +216,7 @@
   <data name="GenderRequired" xml:space="preserve">
     <value>Required field</value>
   </data>
+  <data name="CodeLength" xml:space="preserve">
+    <value>One-time code must contain 6 symbols</value>
+  </data>
 </root>

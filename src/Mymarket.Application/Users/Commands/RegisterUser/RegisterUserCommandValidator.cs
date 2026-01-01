@@ -13,7 +13,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
     {
         _context = context;
 
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Firstname)
             .NotEmpty().WithMessage(SharedResources.NameRequired)
             .MaximumLength(72).WithMessage(SharedResources.NameMaxLength)
             .Matches(@"^\p{L}+$").WithMessage(SharedResources.NameOnlyLetters);
