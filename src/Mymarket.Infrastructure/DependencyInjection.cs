@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Mymarket.Application.Common;
+using Mymarket.Application.features.Users.Commands.RegisterUser;
 using Mymarket.Application.Interfaces;
-using Mymarket.Application.Users.Commands.RegisterUser;
 using Mymarket.Infrastructure.Authentication;
 using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;

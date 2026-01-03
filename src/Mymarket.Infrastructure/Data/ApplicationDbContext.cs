@@ -9,6 +9,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<VerificationCodeEntity> VerificationCode => Set<VerificationCodeEntity>();
+    public DbSet<PostEntity> Posts => Set<PostEntity>();
+    public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

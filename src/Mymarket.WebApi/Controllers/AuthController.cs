@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Users.Commands.LoginUser;
-using Mymarket.Application.Users.Commands.PasswordRecovery;
-using Mymarket.Application.Users.Commands.RegisterUser;
-using Mymarket.Application.Users.Commands.SendEmailVerificationCode;
-using Mymarket.Application.Users.Commands.SendPasswordRecoveryCode;
-using Mymarket.Application.Users.Commands.VerifyEmailCodeCommand;
-using Mymarket.Application.Users.Commands.VerifyPasswodRecoveryCodeCommand;
-using Mymarket.Application.Users.Queries.UserExists;
+using Mymarket.Application.features.Users.Commands.LoginUser;
+using Mymarket.Application.features.Users.Commands.PasswordRecovery;
+using Mymarket.Application.features.Users.Commands.RegisterUser;
+using Mymarket.Application.features.Users.Commands.SendEmailVerificationCode;
+using Mymarket.Application.features.Users.Commands.SendPasswordRecoveryCode;
+using Mymarket.Application.features.Users.Commands.VerifyEmailCodeCommand;
+using Mymarket.Application.features.Users.Commands.VerifyPasswodRecoveryCodeCommand;
+using Mymarket.Application.features.Users.Queries.UserExists;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
