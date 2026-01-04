@@ -18,6 +18,6 @@ internal class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEn
             .HasOne(x => x.Parent)
             .WithMany(x => x.Children)
             .HasForeignKey(x => x.ParentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

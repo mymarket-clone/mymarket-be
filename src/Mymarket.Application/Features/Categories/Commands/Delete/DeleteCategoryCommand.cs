@@ -11,11 +11,9 @@ public class DeleteCategoryCommandHandler(IApplicationDbContext _context) : IReq
     public async Task<Unit> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = await _context.Categories
-            .Include(c => c.Children) 
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
-        _context.Categories.Remove(category!);
-
+        _context.Categories.Remove(category);
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
