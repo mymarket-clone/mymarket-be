@@ -27,6 +27,7 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
 
         var userModel = new UserModel
         {
+            Id = user!.Id,
             Name = user!.Firstname,
             Lastname = user.LastName,
             Email = user.Email,

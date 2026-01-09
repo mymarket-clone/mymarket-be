@@ -40,6 +40,7 @@ public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, IToke
 
         var userModel = new UserModel
         {
+            Id = user.Id,
             Name = user.Firstname,
             Lastname = user.LastName,
             Email = user.Email,
