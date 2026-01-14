@@ -1,4 +1,5 @@
-﻿using Mymarket.Domain.Entities;
+﻿using AutoMapper;
+using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.Categories.Models;
 
@@ -10,7 +11,7 @@ public class CategoryDto
     public string? NameEn { get; set; } = null;
     public string? NameRu { get; set; } = null;
     public bool HasChildren { get; set; }
-    public sealed class Mapping : AutoMapper.Profile
+    public sealed class Mapping : Profile
     {
         public Mapping()
         {

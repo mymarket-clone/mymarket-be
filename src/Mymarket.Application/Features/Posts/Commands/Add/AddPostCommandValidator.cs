@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.features.Posts.Commands.CreatePost;
 using Mymarket.Application.Interfaces;
 
-namespace Mymarket.Application.features.Posts.Commands.CreatePost;
+namespace Mymarket.Application.Features.Posts.Commands.Add;
 
 public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 {

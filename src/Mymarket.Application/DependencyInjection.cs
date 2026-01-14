@@ -12,7 +12,7 @@ public static class DependencyInjection
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddAutoMapper( Assembly.GetExecutingAssembly());
+        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ILanguageContext, LanguageContext>();
     }

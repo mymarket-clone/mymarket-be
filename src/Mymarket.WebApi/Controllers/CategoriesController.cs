@@ -6,7 +6,6 @@ using Mymarket.Application.Features.Categories.Commands.Edit;
 using Mymarket.Application.Features.Categories.Queries.Get;
 using Mymarket.Application.Features.Categories.Queries.GetAll;
 using Mymarket.Application.Features.Categories.Queries.GetById;
-using Mymarket.Application.Features.Categories.Queries.GetByIdWithChildren;
 using Mymarket.Application.Features.Categories.Queries.GetFlat;
 using Mymarket.WebApi.Infrastructure;
 
@@ -35,17 +34,6 @@ public class CategoriesController(IMediator _mediator) : BaseController
     public async Task<IActionResult> GetAllCategories([FromQuery] GetCategoryByIdQuery getCategoryByIdQuery)
     {
         var result = await _mediator.Send(getCategoryByIdQuery);
-
-        if (result is null) return NotFound();
-
-        return Ok(result);
-    }
-
-    [HttpGet]
-    [Route("GetByIdWithChildren")]
-    public async Task<IActionResult> GetByIdWithChildren([FromQuery] GetCategoriesByIdWithChildrenQuery getCategoriesByIdWithChildrenQuery)
-    {
-        var result = await _mediator.Send(getCategoriesByIdWithChildrenQuery);
 
         if (result is null) return NotFound();
 
