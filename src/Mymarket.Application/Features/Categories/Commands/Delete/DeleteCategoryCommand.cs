@@ -13,7 +13,7 @@ public class DeleteCategoryCommandHandler(IApplicationDbContext _context) : IReq
         var category = await _context.Categories
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
-        _context.Categories.Remove(category);
+        _context.Categories.Remove(category!);
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

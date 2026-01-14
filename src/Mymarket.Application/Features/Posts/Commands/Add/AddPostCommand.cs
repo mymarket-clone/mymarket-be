@@ -5,9 +5,10 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.features.Posts.Commands.CreatePost;
 
-public record CreatePostCommand(
+public record AddPostCommand(
     PostType PostType,
     int CategoryId,
+    ConditionType ConditionType,
     string Title,
     string Description,
     string? TitleEn,
@@ -28,9 +29,9 @@ public record CreatePostCommand(
     bool AutoRenewal
 ) : IRequest<Unit>;
 
-public class CreatePostCommandHandler(IApplicationDbContext _context) : IRequestHandler<CreatePostCommand, Unit>
+public class AddPostCommandHandler(IApplicationDbContext _context) : IRequestHandler<AddPostCommand, Unit>
 {
-    public async Task<Unit> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
         var post = new PostEntity
         {

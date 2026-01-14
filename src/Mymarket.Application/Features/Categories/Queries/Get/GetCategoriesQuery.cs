@@ -5,16 +5,16 @@ using Mymarket.Application.Common;
 using Mymarket.Application.features.Categories.Models;
 using Mymarket.Application.Interfaces;
 
-namespace Mymarket.Application.features.Categories.Queries.GetCategories;
+namespace Mymarket.Application.Features.Categories.Queries.Get;
 
-public record GetCategoriesQuery : IRequest<IReadOnlyList<CategoryTreeDto>>;
+public record GetCategoriesQuery : IRequest<IEnumerable<CategoryTreeDto>>;
 
 public class GetCategoriesQueryHandler(
     IApplicationDbContext _context,
     IMapper _mapper,
-    ILanguageContext _languageContext) : IRequestHandler<GetCategoriesQuery, IReadOnlyList<CategoryTreeDto>>
+    ILanguageContext _languageContext) : IRequestHandler<GetCategoriesQuery, IEnumerable<CategoryTreeDto>>
 {
-    public async Task<IReadOnlyList<CategoryTreeDto>> Handle(
+    public async Task<IEnumerable<CategoryTreeDto>> Handle(
         GetCategoriesQuery request,
         CancellationToken cancellationToken)
     {

@@ -6,6 +6,7 @@ using Mymarket.Application.Features.Categories.Models;
 using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Categories.Queries.GetFlat;
+
 public record GetFlatCategoriesQuery : IRequest<CategoryDto[]>;
 
 public class GetFlatCateogiresQueryHandler(

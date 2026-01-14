@@ -4,11 +4,11 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.features.Posts.Commands.CreatePost;
 
-public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
+public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public CreatePostCommandValidator(IApplicationDbContext context)
+    public AddPostCommandValidator(IApplicationDbContext context)
     {
         _context = context;
         
