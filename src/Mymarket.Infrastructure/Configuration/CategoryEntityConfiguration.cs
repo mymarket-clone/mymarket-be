@@ -12,7 +12,12 @@ internal class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEn
 
         builder
             .Property(x => x.Name)
-            .HasMaxLength(100);
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder
+            .Property(x => x.CategoryPostType)
+            .IsRequired();
 
         builder
             .HasOne(x => x.Parent)

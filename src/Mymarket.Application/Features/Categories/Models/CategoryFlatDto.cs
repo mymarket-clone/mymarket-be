@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.Categories.Models;
@@ -8,6 +9,7 @@ public class CategoryFlatDto
     public int Id { get; set; }
     public int? ParentId { get; set; } = null;
     public required string Name { get; set; }
+    public CategoryPostType CategoryPostType { get; set; }
     public sealed class Mapping : Profile
     {
         public Mapping()

@@ -44,5 +44,11 @@ internal class PostEntityConfiguration : IEntityTypeConfiguration<PostEntity>
         builder
             .Property(x => x.PhoneNumber)
             .IsRequired();
+
+        builder
+            .HasOne(p => p.City)
+            .WithMany(c => c.Posts)
+            .HasForeignKey(p => p.CityId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

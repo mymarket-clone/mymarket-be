@@ -8,7 +8,7 @@ namespace Mymarket.Application.features.Posts.Commands.CreatePost;
 public record AddPostCommand(
     PostType PostType,
     int CategoryId,
-    ConditionType ConditionType,
+    ConditionType? ConditionType,
     string Title,
     string Description,
     string? TitleEn,

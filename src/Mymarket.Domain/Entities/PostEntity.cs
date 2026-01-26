@@ -6,7 +6,7 @@ public class PostEntity : BaseEntity<int>
 {
     public PostType PostType { get; set; }
     public int CategoryId { get; set; }
-    public ConditionType ConditionType { get; set; }
+    public ConditionType? ConditionType { get; set; }
     public CategoryEntity? Category { get; set; }
     public required string Title { get; set; }
     public required string Description { get; set; }
@@ -20,6 +20,8 @@ public class PostEntity : BaseEntity<int>
     public byte SalePercentage { get; set; }
     public bool CanOfferPrice { get; set; } = false;
     public bool IsNegotiable { get; set; } = false;
+    public int CityId { get; set; }
+    public CityEntity? City { get; set; }
     public required string Name { get; set; }
     public required string PhoneNumber { get; set; }
     public int UserId { get; set; }

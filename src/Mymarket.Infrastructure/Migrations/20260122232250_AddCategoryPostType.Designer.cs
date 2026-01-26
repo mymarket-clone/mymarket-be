@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260122232250_AddCategoryPostType")]
+    partial class AddCategoryPostType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,23 +57,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("Mymarket.Domain.Entities.CityEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cities", (string)null);
-                });
-
             modelBuilder.Entity("Mymarket.Domain.Entities.PostEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -88,10 +74,7 @@ namespace Mymarket.Infrastructure.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ConditionType")
+                    b.Property<int>("ConditionType")
                         .HasColumnType("integer");
 
                     b.Property<int>("CurrencyType")
@@ -159,8 +142,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
@@ -271,12 +252,6 @@ namespace Mymarket.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mymarket.Domain.Entities.CityEntity", "City")
-                        .WithMany("Posts")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Mymarket.Domain.Entities.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -284,8 +259,6 @@ namespace Mymarket.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("City");
 
                     b.Navigation("User");
                 });
@@ -304,11 +277,6 @@ namespace Mymarket.Infrastructure.Migrations
             modelBuilder.Entity("Mymarket.Domain.Entities.CategoryEntity", b =>
                 {
                     b.Navigation("Children");
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.CityEntity", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }
