@@ -13,13 +13,11 @@ public class GetPostByIdQueryHandler(
     IApplicationDbContext _context,
     IConfigurationProvider _mapper) : IRequestHandler<GetPostByIdQuery, PostDto?>
 {
-    public Task<PostDto?> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<PostDto?> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
-        var post = _context.Posts
+        return await _context.Posts
             .AsNoTracking()
             .ProjectTo<PostDto>(_mapper)
-            .FirstOrDefaultAsync(x => x.Id == request.Id);
-
-        return post;
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
     }
 }

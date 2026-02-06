@@ -9,5 +9,6 @@ public interface IApplicationDbContext
     DbSet<VerificationCodeEntity> VerificationCode { get; }
     DbSet<PostEntity> Posts { get; }
     DbSet<CategoryEntity> Categories { get; }
+    DbSet<CityEntity> Cities { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

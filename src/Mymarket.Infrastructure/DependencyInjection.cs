@@ -13,6 +13,7 @@ using Mymarket.Infrastructure.Authentication;
 using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;
 using Mymarket.Infrastructure.Services;
+using Supabase;
 using System.Text;
 
 namespace Mymarket.Infrastructure;
@@ -72,5 +73,25 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                 };
             });
+
+        // Supabase
+        builder.Services.AddSingleton(provider =>
+        {
+            var config = builder.Configuration.GetSection("Supabase");
+
+            var options = new SupabaseOptions
+            {
+                AutoConnectRealtime = true
+            };
+
+            var client = new Client(
+                config["Url"]!,
+                config["AnonKey"]!,
+                options
+            );
+
+            client.InitializeAsync().GetAwaiter().GetResult();
+            return client;
+        });
     }
 }

@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Mymarket.Application.features.Posts.Commands.CreatePost;
+using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Interfaces;
-
-namespace Mymarket.Application.Features.Posts.Commands.Add;
 
 public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 {
@@ -12,7 +10,7 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
     public AddPostCommandValidator(IApplicationDbContext context)
     {
         _context = context;
-        
+
         RuleFor(x => x.CategoryId)
             .NotEmpty().WithMessage("Choose category")
             .MustAsync(CategoryExists).WithMessage("Selected category does not exist.");
@@ -27,20 +25,23 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 
         RuleFor(x => x.TitleEn)
             .MaximumLength(255)
-            .WithMessage("English title cannot exceed 255 characters")
-            .When(x => !string.IsNullOrEmpty(x.TitleEn));
+            .When(x => !string.IsNullOrEmpty(x.TitleEn))
+            .WithMessage("English title cannot exceed 255 characters");
 
         RuleFor(x => x.DescriptionEn)
-            .MaximumLength(4000).WithMessage("English description cannot exceed 4000 characters")
-            .When(x => !string.IsNullOrEmpty(x.DescriptionEn));
+            .MaximumLength(4000)
+            .When(x => !string.IsNullOrEmpty(x.DescriptionEn))
+            .WithMessage("English description cannot exceed 4000 characters");
 
         RuleFor(x => x.TitleRu)
-            .MaximumLength(255).WithMessage("Russian title cannot exceed 255 characters")
-            .When(x => !string.IsNullOrEmpty(x.TitleRu));
+            .MaximumLength(255)
+            .When(x => !string.IsNullOrEmpty(x.TitleRu))
+            .WithMessage("Russian title cannot exceed 255 characters");
 
         RuleFor(x => x.DescriptionRu)
-            .MaximumLength(4000).WithMessage("Russian description cannot exceed 4000 characters")
-            .When(x => !string.IsNullOrEmpty(x.DescriptionRu));
+            .MaximumLength(4000)
+            .When(x => !string.IsNullOrEmpty(x.DescriptionRu))
+            .WithMessage("Russian description cannot exceed 4000 characters");
 
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Enter name")
@@ -49,40 +50,54 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("Enter phone number");
 
-        RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("User is required")
-            .MustAsync(UserExists).WithMessage("User does not exist.");
-
         RuleFor(x => x.Price)
-            .NotEmpty().WithMessage("Enter price")
+            .NotNull().WithMessage("Enter price")
             .GreaterThanOrEqualTo(0).WithMessage("Price cannot be negative");
 
         RuleFor(x => x.PostType)
-            .NotEmpty().WithMessage("Enter post type")
             .IsInEnum().WithMessage("Invalid post type");
 
         RuleFor(x => x.CurrencyType)
-            .NotEmpty().WithMessage("Enter currency")
             .IsInEnum().WithMessage("Invalid currency type");
 
-        RuleFor(x => x.CanOfferPrice).NotNull();
+        RuleFor(x => x.AutoRenewalOnceIn)
+            .Must((x, v) => x.AutoRenewal ? v != null : v == null)
+            .WithMessage("Auto renewal interval must be set only when auto renewal is enabled.");
 
-        RuleFor(x => x.IsNegotiable).NotNull();
+        RuleFor(x => x.AutoRenewalAtTime)
+            .Must((x, v) => x.AutoRenewal ? v != null : v == null)
+            .WithMessage("Auto renewal time must be set only when auto renewal is enabled.");
 
-        RuleFor(x => x.ForDisabledPerson).NotNull();
+        RuleFor(x => x.AutoRenewalOnceIn)
+            .GreaterThan(0)
+            .When(x => x.AutoRenewalOnceIn.HasValue);
 
-        RuleFor(x => x.IsColored).NotNull();
+        RuleFor(x => x.PromoDays)
+            .Must((x, v) => x.PromoType != null ? v != null : v == null)
+            .WithMessage("Promo days must be set only when promo type is selected.");
 
-        RuleFor(x => x.AutoRenewal).NotNull();
+        RuleFor(x => x.PromoDays)
+            .GreaterThan(0)
+            .When(x => x.PromoDays.HasValue);
+
+        RuleFor(x => x.ColorDays)
+            .Must((x, v) => x.IsColored ? v != null : v == null)
+            .WithMessage("Color days must be set only when coloring is enabled.");
+
+        RuleFor(x => x.ColorDays)
+            .GreaterThan(0)
+            .When(x => x.ColorDays.HasValue);
     }
 
     private async Task<bool> CategoryExists(int categoryId, CancellationToken cancellationToken)
     {
-        return await _context.Categories.AnyAsync(c => c.Id == categoryId, cancellationToken);
+        return await _context.Categories
+            .AnyAsync(c => c.Id == categoryId, cancellationToken);
     }
 
     private async Task<bool> UserExists(int userId, CancellationToken cancellationToken)
     {
-        return await _context.Users.AnyAsync(u => u.Id == userId, cancellationToken);
+        return await _context.Users
+            .AnyAsync(u => u.Id == userId, cancellationToken);
     }
 }

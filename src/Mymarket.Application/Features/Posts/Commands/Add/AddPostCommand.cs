@@ -1,14 +1,18 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
+using Mymarket.Domain.Services;
 
-namespace Mymarket.Application.features.Posts.Commands.CreatePost;
+namespace Mymarket.Application.Features.Posts.Commands.Add;
 
-public record AddPostCommand(
+public sealed record AddPostCommand(
     PostType PostType,
     int CategoryId,
     ConditionType? ConditionType,
+    List<IFormFile> Images,
+    IFormFile MainImage,
     string Title,
     string Description,
     string? TitleEn,
@@ -23,44 +27,56 @@ public record AddPostCommand(
     bool IsNegotiable,
     string Name,
     string PhoneNumber,
-    int UserId,
     PromoType? PromoType,
+    int? PromoDays,
     bool IsColored,
-    bool AutoRenewal
+    int? ColorDays,
+    bool AutoRenewal,
+    int? AutoRenewalOnceIn,
+    int? AutoRenewalAtTime
 ) : IRequest<Unit>;
 
-public class AddPostCommandHandler(IApplicationDbContext _context) : IRequestHandler<AddPostCommand, Unit>
+public sealed class AddPostCommandHandler(IApplicationDbContext _context, ImageService _image) : IRequestHandler<AddPostCommand, Unit>
 {
     public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
-        var post = new PostEntity
+        try
         {
-            PostType = request.PostType,
-            CategoryId = request.CategoryId,
-            Title = request.Title,
-            Description = request.Description,
-            TitleEn = request.TitleEn,
-            DescriptionEn = request.DescriptionEn,
-            TitleRu = request.TitleRu,
-            DescriptionRu = request.DescriptionRu,
-            ForDisabledPerson = request.ForDisabledPerson,
-            Price = request.Price,
-            CurrencyType = request.CurrencyType,
-            SalePercentage = request.SalePercentage,
-            CanOfferPrice = request.CanOfferPrice,
-            IsNegotiable = request.IsNegotiable,
-            Name = request.Name,
-            PhoneNumber = request.PhoneNumber,
-            UserId = request.UserId,
-            PromoType = request.PromoType,
-            IsColored = request.IsColored,
-            AutoRenewal = request.AutoRenewal
-        };
+            await _image.Upload(request.Images, cancellationToken);
 
-        _context.Posts.Add(post);
+            var post = new PostEntity
+            {
+                PostType = request.PostType,
+                CategoryId = request.CategoryId,
+                Title = request.Title,
+                Description = request.Description,
+                TitleEn = request.TitleEn,
+                DescriptionEn = request.DescriptionEn,
+                TitleRu = request.TitleRu,
+                DescriptionRu = request.DescriptionRu,
+                ForDisabledPerson = request.ForDisabledPerson,
+                Price = request.Price,
+                CurrencyType = request.CurrencyType,
+                SalePercentage = request.SalePercentage,
+                CanOfferPrice = request.CanOfferPrice,
+                IsNegotiable = request.IsNegotiable,
+                Name = request.Name,
+                PhoneNumber = request.PhoneNumber,
+                UserId = 1,
+                PromoType = request.PromoType,
+                IsColored = request.IsColored,
+                AutoRenewal = request.AutoRenewal
+            };
 
-        await _context.SaveChangesAsync(cancellationToken);
+            _context.Posts.Add(post);
 
-        return Unit.Value;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
+        }
+        catch
+        {
+            throw new Exception("An error occurred while adding the post.");
+        }
     }
 }

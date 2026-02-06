@@ -15,7 +15,7 @@ public class PostEntity : BaseEntity<int>
     public string? TitleRu { get; set; }
     public string? DescriptionRu { get; set; }
     public bool ForDisabledPerson { get; set; } = false;
-    public double Price { get; set; }
+    public double? Price { get; set; }
     public CurrencyType CurrencyType { get; set; }
     public byte SalePercentage { get; set; }
     public bool CanOfferPrice { get; set; } = false;
@@ -27,6 +27,10 @@ public class PostEntity : BaseEntity<int>
     public int UserId { get; set; }
     public UserEntity? User { get; set; }
     public PromoType? PromoType { get; set; }
+    public int? PromoDays { get; set; }
     public bool IsColored { get; set; } = false;
+    public int? ColorDays { get; set; }
     public bool AutoRenewal { get; set; } = false;
+    public int? AutoRenewalOnceIn { get; set; }
+    public int? AutoRenewalAtTime { get; set; }
 }

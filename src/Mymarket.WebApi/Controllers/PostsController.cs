@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.features.Posts.Commands.CreatePost;
+using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Features.Posts.Queries.GetById;
 using Mymarket.WebApi.Infrastructure;
 
