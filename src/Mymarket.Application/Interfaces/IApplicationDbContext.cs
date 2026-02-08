@@ -10,5 +10,6 @@ public interface IApplicationDbContext
     DbSet<PostEntity> Posts { get; }
     DbSet<CategoryEntity> Categories { get; }
     DbSet<CityEntity> Cities { get; }
+    DbSet<ImageEntity> Images { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -4,7 +4,7 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-internal class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
+public class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
 {
     public void Configure(EntityTypeBuilder<CategoryEntity> builder)
     {

@@ -7,9 +7,10 @@ using Mymarket.Domain.Services;
 
 namespace Mymarket.Application.Features.Posts.Commands.Add;
 
-public sealed record AddPostCommand(
+public record AddPostCommand(
     PostType PostType,
     int CategoryId,
+    string? YoutubeLink,
     ConditionType? ConditionType,
     List<IFormFile> Images,
     IFormFile MainImage,
@@ -25,8 +26,10 @@ public sealed record AddPostCommand(
     byte SalePercentage,
     bool CanOfferPrice,
     bool IsNegotiable,
+    int CityId,
     string Name,
     string PhoneNumber,
+    int UserId,
     PromoType? PromoType,
     int? PromoDays,
     bool IsColored,
@@ -36,18 +39,23 @@ public sealed record AddPostCommand(
     int? AutoRenewalAtTime
 ) : IRequest<Unit>;
 
-public sealed class AddPostCommandHandler(IApplicationDbContext _context, ImageService _image) : IRequestHandler<AddPostCommand, Unit>
+
+public sealed class AddPostCommandHandler(
+    IApplicationDbContext _context,
+    ImageService _image) : IRequestHandler<AddPostCommand, Unit>
 {
     public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            await _image.Upload(request.Images, cancellationToken);
+            var uploadedImages = await _image.Upload(request.Images, cancellationToken);
 
             var post = new PostEntity
             {
                 PostType = request.PostType,
                 CategoryId = request.CategoryId,
+                YoutubeLink = request.YoutubeLink,
+                ConditionType = request.ConditionType,
                 Title = request.Title,
                 Description = request.Description,
                 TitleEn = request.TitleEn,
@@ -60,23 +68,40 @@ public sealed class AddPostCommandHandler(IApplicationDbContext _context, ImageS
                 SalePercentage = request.SalePercentage,
                 CanOfferPrice = request.CanOfferPrice,
                 IsNegotiable = request.IsNegotiable,
+                CityId = request.CityId,
                 Name = request.Name,
                 PhoneNumber = request.PhoneNumber,
                 UserId = 1,
                 PromoType = request.PromoType,
+                PromoDays = request.PromoDays,
                 IsColored = request.IsColored,
-                AutoRenewal = request.AutoRenewal
+                ColorDays = request.ColorDays,
+                AutoRenewal = request.AutoRenewal,
+                AutoRenewalOnceIn = request.AutoRenewalOnceIn,
+                AutoRenewalAtTime = request.AutoRenewalAtTime
             };
 
             _context.Posts.Add(post);
 
+            for (int i = 0; i < uploadedImages.Count; i++)
+            {
+                post.PostsImages.Add(new PostsImages
+                {
+                    Post = post,
+                    Image = uploadedImages[i],
+                    Order = i + 1
+                });
+            }
+
+            _context.Posts.Add(post);
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }
-        catch
+        catch (Exception ex)
         {
-            throw new Exception("An error occurred while adding the post.");
+            Console.WriteLine($"AddPostCommand failed: {ex}");
+            throw;
         }
     }
 }

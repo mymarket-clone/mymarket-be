@@ -5,7 +5,7 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-internal class CityEntityConfiguration : IEntityTypeConfiguration<CityEntity>
+public class CityEntityConfiguration : IEntityTypeConfiguration<CityEntity>
 {
     public void Configure(EntityTypeBuilder<CityEntity> builder)
     {

@@ -12,6 +12,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PostEntity> Posts => Set<PostEntity>();
     public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
     public DbSet<CityEntity> Cities => Set<CityEntity>();
+    public DbSet<ImageEntity> Images => Set<ImageEntity>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
 

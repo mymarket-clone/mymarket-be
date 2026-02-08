@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260208135051_AddImages")]
+    partial class AddImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,13 +82,16 @@ namespace Mymarket.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("UniqueId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -201,32 +207,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts", (string)null);
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.PostsImages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ImageId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImageId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostsImages", (string)null);
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.UserEntity", b =>
@@ -352,25 +332,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Mymarket.Domain.Entities.PostsImages", b =>
-                {
-                    b.HasOne("Mymarket.Domain.Entities.ImageEntity", "Image")
-                        .WithMany("PostsImages")
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mymarket.Domain.Entities.PostEntity", "Post")
-                        .WithMany("PostsImages")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Image");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("Mymarket.Domain.Entities.VerificationCodeEntity", b =>
                 {
                     b.HasOne("Mymarket.Domain.Entities.UserEntity", "User")
@@ -390,16 +351,6 @@ namespace Mymarket.Infrastructure.Migrations
             modelBuilder.Entity("Mymarket.Domain.Entities.CityEntity", b =>
                 {
                     b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.ImageEntity", b =>
-                {
-                    b.Navigation("PostsImages");
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.PostEntity", b =>
-                {
-                    b.Navigation("PostsImages");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Interfaces;
+
+namespace Mymarket.Application.Features.Posts.Commands.Add;
 
 public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 {
@@ -49,6 +50,10 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("Enter phone number");
+
+        RuleFor(x => x.CityId)
+            .NotEmpty().WithMessage("Choose city")
+            .MustAsync(CityExists).WithMessage("Selected city does not exist.");
 
         RuleFor(x => x.Price)
             .NotNull().WithMessage("Enter price")
@@ -99,5 +104,11 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
     {
         return await _context.Users
             .AnyAsync(u => u.Id == userId, cancellationToken);
+    }
+
+    private async Task<bool> CityExists(int cityId, CancellationToken cancellationToken)
+    {
+        return await _context.Cities
+            .AnyAsync(c => c.Id == cityId, cancellationToken);
     }
 }

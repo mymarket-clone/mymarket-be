@@ -4,7 +4,7 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-internal class PostEntityConfiguration : IEntityTypeConfiguration<PostEntity>
+public class PostEntityConfiguration : IEntityTypeConfiguration<PostEntity>
 {
     public void Configure(EntityTypeBuilder<PostEntity> builder)
     {

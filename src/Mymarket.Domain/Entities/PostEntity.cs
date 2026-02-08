@@ -6,8 +6,10 @@ public class PostEntity : BaseEntity<int>
 {
     public PostType PostType { get; set; }
     public int CategoryId { get; set; }
+    public string? YoutubeLink { get; set; }
     public ConditionType? ConditionType { get; set; }
     public CategoryEntity? Category { get; set; }
+    public ICollection<PostsImages> PostsImages { get; set; } = [];
     public required string Title { get; set; }
     public required string Description { get; set; }
     public string? TitleEn { get; set; }

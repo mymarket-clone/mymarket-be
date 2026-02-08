@@ -1,32 +1,38 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Mymarket.Domain.Entities;
 using Supabase;
 
 namespace Mymarket.Domain.Services;
 
 public class ImageService(Client _client)
 {
-    public async Task<List<string>> Upload(List<IFormFile> Images, CancellationToken cancellationToken)
+    public async Task<List<ImageEntity>> Upload(List<IFormFile> Images, CancellationToken cancellationToken)
     {
-        var uploadedImageUrls = new List<string>();
+        var uploadedImages = new List<ImageEntity>();
 
         try
         {
             foreach (var image in Images)
             {
+                var uniqueId = Guid.NewGuid();
                 using var memoryStream = new MemoryStream();
                 await image.CopyToAsync(memoryStream, cancellationToken);
 
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
+                var fileName = $"{uniqueId}{Path.GetExtension(image.FileName)}";
                 await _client.Storage.From("Images").Upload(
                     memoryStream.ToArray(),
                     fileName
                 );
 
                 var url = _client.Storage.From("Images").GetPublicUrl(fileName);
-                uploadedImageUrls.Add(url);
+                uploadedImages.Add(new ImageEntity
+                {
+                    Url = url,        
+                    UniqueId = uniqueId
+                });
             }
 
-            return uploadedImageUrls;
+            return uploadedImages;
         }
         catch (Exception ex)
         {
