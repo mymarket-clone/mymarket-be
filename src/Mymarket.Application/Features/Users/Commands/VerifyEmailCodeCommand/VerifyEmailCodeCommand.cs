@@ -55,6 +55,8 @@ public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, IToke
         record.IsVerified = true;
 
         user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiry = expiresAt;
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return new AuthDto

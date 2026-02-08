@@ -1,29 +1,23 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Mymarket.Application.Common.Exceptions;
 using Mymarket.Application.features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Models;
 
-namespace Mymarket.Application.features.Users.Commands.LoginUser;
+namespace Mymarket.Application.Features.Users.Commands.RefreshUser;
 
-public record LoginUserCommand(string EmailOrPhone, string Password) : IRequest<AuthDto>;
+public record RefreshUserCommand(
+    string RefreshToken
+) : IRequest<AuthDto>;
 
-public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvider _tokenProvider) : IRequestHandler<LoginUserCommand, AuthDto>
+public class RefreshUserCommandHandler(
+    IApplicationDbContext _context,
+    ITokenProvider _tokenProvider) : IRequestHandler<RefreshUserCommand, AuthDto>
 {
-    public async Task<AuthDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    public async Task<AuthDto> Handle(RefreshUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(
-                x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
-                cancellationToken);
-
-
-        if (user is not null && !user.EmailVerified)
-        {
-            throw new EmailNotVerifiedException(user.Email);
-        }
+            .FirstOrDefaultAsync(x => x.RefreshToken == request.RefreshToken, cancellationToken);
 
         var userModel = new UserModel
         {
@@ -36,7 +30,7 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(userModel);
+        var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(userModel!);
         var refreshToken = _tokenProvider.CreateRefreshToken();
 
         user.RefreshToken = refreshToken;

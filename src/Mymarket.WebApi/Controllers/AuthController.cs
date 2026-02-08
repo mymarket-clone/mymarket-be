@@ -8,6 +8,7 @@ using Mymarket.Application.features.Users.Commands.SendPasswordRecoveryCode;
 using Mymarket.Application.features.Users.Commands.VerifyEmailCodeCommand;
 using Mymarket.Application.features.Users.Commands.VerifyPasswodRecoveryCodeCommand;
 using Mymarket.Application.features.Users.Queries.UserExists;
+using Mymarket.Application.Features.Users.Commands.RefreshUser;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -78,6 +79,15 @@ public class AuthController(IMediator _mediator) : BaseController
         return NoContent();
     }
 
+    [HttpPost]
+    [Route("RefreshUser")]
+    public async Task<IActionResult> RefreshUser(RefreshUserCommand refreshUserCommand)
+    {
+        var response = await _mediator.Send(refreshUserCommand);
+
+        return Ok(response);
+    }
+
     [HttpGet]
     [Route("UserExists")]
     public async Task<IActionResult> UserExists([FromQuery] UserExistsQuery userExistsQuery)
@@ -88,4 +98,5 @@ public class AuthController(IMediator _mediator) : BaseController
 
         return NotFound();
     }
+
 }
