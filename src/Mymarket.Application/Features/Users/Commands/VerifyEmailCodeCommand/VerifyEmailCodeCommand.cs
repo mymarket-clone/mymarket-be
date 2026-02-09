@@ -49,13 +49,13 @@ public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, IToke
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(userModel);
-        var refreshToken = _tokenProvider.CreateRefreshToken();
+        var (accessToken, accessTokenTtl) = _tokenProvider.CreateAccessToken(userModel!);
+        var (refreshToken, refreshTokenTtl) = _tokenProvider.CreateRefreshToken();
 
         record.IsVerified = true;
 
         user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = expiresAt;
+        user.RefreshTokenExpiry = refreshTokenTtl;
 
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -63,7 +63,7 @@ public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, IToke
         (
             AccessToken: accessToken,
             RefreshToken: refreshToken,
-            ExpiresAt: expiresAt,
+            ExpiresAt: accessTokenTtl,
             User: new UserDto
             (
                 Id: user.Id,

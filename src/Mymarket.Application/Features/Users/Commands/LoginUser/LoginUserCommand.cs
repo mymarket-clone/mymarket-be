@@ -14,7 +14,6 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
     public async Task<AuthDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
-            .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
                 cancellationToken);
@@ -36,11 +35,11 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(userModel);
-        var refreshToken = _tokenProvider.CreateRefreshToken();
+        var (accessToken, accessTokenTtl) = _tokenProvider.CreateAccessToken(userModel);
+        var (refreshToken, refreshTokenTtl) = _tokenProvider.CreateRefreshToken();
 
         user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = expiresAt;
+        user.RefreshTokenExpiry = refreshTokenTtl;
 
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -48,7 +47,7 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
         (
             AccessToken: accessToken,
             RefreshToken: refreshToken,
-            ExpiresAt: expiresAt,
+            ExpiresAt: accessTokenTtl,
             User: new UserDto
             (
                 Id: user.Id,

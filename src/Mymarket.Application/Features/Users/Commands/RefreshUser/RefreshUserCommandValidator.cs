@@ -13,7 +13,7 @@ public class RefreshUserCommandValidator : AbstractValidator<RefreshUserCommand>
 
         RuleFor(x => x.RefreshToken)
             .NotEmpty().WithMessage("Valid refresh token is required")
-            .MustAsync(TokenExistsAndValid).WithMessage("Refresh token is invalid or expired");
+            .MustAsync(TokenExistsAndValid).WithMessage("Refresh token is invalid");
     }
 
     private async Task<bool> TokenExistsAndValid(string refreshToken, CancellationToken cancellationToken)

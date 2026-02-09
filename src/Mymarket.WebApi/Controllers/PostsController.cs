@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Features.Posts.Queries.GetById;
@@ -9,6 +10,7 @@ namespace Mymarket.WebApi.Controllers;
 [Route("api/posts")]
 public class PostsController(IMediator _mediator) : BaseController
 {
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> AddPost([FromForm] AddPostCommand createPostCommand)
     {
@@ -17,6 +19,7 @@ public class PostsController(IMediator _mediator) : BaseController
         return Created();
     }
 
+    [Authorize]
     [HttpPost]
     [Route("GetById")]
     public async Task<IActionResult> GetPostById(GetPostByIdQuery getPostByIdQuery)

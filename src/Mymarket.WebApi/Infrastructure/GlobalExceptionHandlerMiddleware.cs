@@ -13,6 +13,23 @@ public class GlobalExceptionHandlerMiddleware(
         try
         {
             await _next(context);
+
+            if (context.Response.StatusCode == StatusCodes.Status401Unauthorized && !context.Response.HasStarted)
+            {
+                context.Response.ContentType = "application/problem+json";
+
+                var problem = new ProblemDetails
+                {
+                    Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                    Title = "Unauthorized",
+                    Status = StatusCodes.Status401Unauthorized,
+                    Detail = "You are not authorized to access this resource.",
+                    Instance = $"{context.Request.Method} {context.Request.Path}"
+                };
+                problem.Extensions["code"] = "UnauthorizedAccessError";
+
+                await context.Response.WriteAsJsonAsync(problem);
+            }
         }
         catch (UnauthorizedAccessException ex)
         {

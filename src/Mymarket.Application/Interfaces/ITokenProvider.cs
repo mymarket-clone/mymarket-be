@@ -5,5 +5,5 @@ namespace Mymarket.Application.Interfaces;
 public interface ITokenProvider
 {
     (string, DateTime) CreateAccessToken(UserModel user);
-    string CreateRefreshToken();
+    (string, DateTime) CreateRefreshToken();
 }

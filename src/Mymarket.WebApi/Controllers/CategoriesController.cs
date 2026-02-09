@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Categories.Commands.Add;
 using Mymarket.Application.Features.Categories.Commands.Delete;
@@ -14,6 +15,7 @@ namespace Mymarket.WebApi.Controllers;
 [Route("api/categories")]
 public class CategoriesController(IMediator _mediator) : BaseController
 {
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCategories()
     {
@@ -21,6 +23,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("GetAll")]
     public async Task<IActionResult> GetAllCategories()
@@ -29,6 +32,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("GetById")]
     public async Task<IActionResult> GetAllCategories([FromQuery] GetCategoryByIdQuery getCategoryByIdQuery)
@@ -40,6 +44,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("GetFlat")]
     public async Task<IActionResult> GetFlatCategories()
@@ -51,6 +56,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPatch]
     [Route("Edit")]
     public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand editCategoryCommand)
@@ -59,6 +65,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryCommand deleteCategoryCommand)
     {
@@ -66,7 +73,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok();
     }
 
-
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand addCategoryCommand)
     {

@@ -61,14 +61,12 @@ public static class DependencyInjection
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ClockSkew = TimeSpan.Zero,
                     ValidateIssuer = true,
-                    ValidIssuer = jwtSettings.Issuer,
-
                     ValidateAudience = true,
-                    ValidAudience = jwtSettings.Audience,
-
                     ValidateLifetime = true,
-
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                 };

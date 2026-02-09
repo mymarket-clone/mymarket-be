@@ -7,6 +7,7 @@ using Mymarket.Domain.Models;
 namespace Mymarket.Application.Features.Users.Commands.RefreshUser;
 
 public record RefreshUserCommand(
+    string AccessToken,
     string RefreshToken
 ) : IRequest<AuthDto>;
 
@@ -30,11 +31,11 @@ public class RefreshUserCommandHandler(
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, expiresAt) = _tokenProvider.CreateAccessToken(userModel!);
-        var refreshToken = _tokenProvider.CreateRefreshToken();
+        var (accessToken, accessTokenTtl) = _tokenProvider.CreateAccessToken(userModel!);
+        var (refreshToken, refreshTokenTtl) = _tokenProvider.CreateRefreshToken();
 
         user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = expiresAt;
+        user.RefreshTokenExpiry = refreshTokenTtl;
 
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -42,7 +43,7 @@ public class RefreshUserCommandHandler(
         (
             AccessToken: accessToken,
             RefreshToken: refreshToken,
-            ExpiresAt: expiresAt,
+            ExpiresAt: accessTokenTtl,
             User: new UserDto
             (
                 Id: user.Id,
