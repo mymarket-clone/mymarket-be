@@ -23,13 +23,11 @@ public class AttributesOptionsEntityConfiguration : IEntityTypeConfiguration<Att
         builder
             .Property(x => x.NameEn)
             .HasColumnType("text")
-            .HasMaxLength(255)
-            .IsRequired();
+            .HasMaxLength(255);
 
         builder
             .Property(x => x.NameRu)
             .HasColumnType("text")
-            .HasMaxLength(255)
-            .IsRequired();
+            .HasMaxLength(255);
     }
 }

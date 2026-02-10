@@ -222,4 +222,25 @@
   <data name="InvalidRefreshOrUser" xml:space="preserve">
     <value>სესიას ვადა გაუვიდა</value>
   </data>
+  <data name="LabelLength" xml:space="preserve">
+    <value>სახელის სიგრძე არ უნდა აღემატებოდეს 255 სიმბოლოს</value>
+  </data>
+  <data name="LabelRequired" xml:space="preserve">
+    <value>სავალდებულო ველი</value>
+  </data>
+  <data name="AttributeCodeRequired" xml:space="preserve">
+    <value>სავალდებულო ველი</value>
+  </data>
+  <data name="AttributeCodeLength" xml:space="preserve">
+    <value>სახელის სიგრძე არ უნდა აღემატებოდეს 255 სიმბოლოს</value>
+  </data>
+  <data name="AttributeTypeRequired" xml:space="preserve">
+    <value>სავალდებულო ველო</value>
+  </data>
+  <data name="AttributeCodeExists" xml:space="preserve">
+    <value>ატრიბუტი მსგავსი კოდის უკვე არსებობს</value>
+  </data>
+  <data name="AttributeTypeInvalid" xml:space="preserve">
+    <value>არასწორი ატრიბუტის ტიპი</value>
+  </data>
 </root>

@@ -222,4 +222,25 @@
   <data name="InvalidRefreshOrUser" xml:space="preserve">
     <value>Session expired</value>
   </data>
+  <data name="LabelLength" xml:space="preserve">
+    <value>Label length must not exceed 255 characters</value>
+  </data>
+  <data name="LabelRequired" xml:space="preserve">
+    <value>Label is requied</value>
+  </data>
+  <data name="AttributeCodeRequired" xml:space="preserve">
+    <value>Attribute code is required</value>
+  </data>
+  <data name="AttributeCodeLength" xml:space="preserve">
+    <value>Attribute code must not exceed 255 charactes</value>
+  </data>
+  <data name="AttributeTypeRequired" xml:space="preserve">
+    <value>Attribute type is required</value>
+  </data>
+  <data name="AttributeCodeExists" xml:space="preserve">
+    <value>Attribute with this code already exists</value>
+  </data>
+  <data name="AttributeTypeInvalid" xml:space="preserve">
+    <value>Invalid attribute type</value>
+  </data>
 </root>

@@ -4,9 +4,9 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-public class AttributesEntityConfiguration : IEntityTypeConfiguration<AttributesEntity>
+public class AttributeEntityConfiguration : IEntityTypeConfiguration<AttributeEntity>
 {
-    public void Configure(EntityTypeBuilder<AttributesEntity> builder)
+    public void Configure(EntityTypeBuilder<AttributeEntity> builder)
     {
         builder.ToTable("Attributes");
 
@@ -33,6 +33,9 @@ public class AttributesEntityConfiguration : IEntityTypeConfiguration<Attributes
             .HasColumnType("text")
             .HasMaxLength(255)
             .IsRequired();
+
+        builder.HasIndex(x => x.Code)
+            .IsUnique();
 
         builder
             .Property(x => x.AttributeType)

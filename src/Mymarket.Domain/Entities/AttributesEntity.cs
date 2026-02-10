@@ -3,7 +3,7 @@ using Mymarket.Domain.Constants;
 
 namespace Mymarket.Domain.Entities;
 
-public class AttributesEntity : BaseEntity<int>
+public class AttributeEntity : BaseEntity<int>
 {
     public required string Code { get; set; }
     public required string Name { get; set; }

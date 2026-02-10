@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 using Mymarket.Domain.Constants;
 
 namespace Mymarket.Application.Features.Categories.Commands.Add;
@@ -17,14 +18,16 @@ public class AddCategoryCommandValidator : AbstractValidator<AddCategoryCommand>
             .MustAsync(ParentExists).WithMessage("Parent category does not exist");
 
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Name is required")
-            .MaximumLength(72).WithMessage("Name cannot exceed 72 characters");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameEn)
-            .MaximumLength(72).WithMessage("NameEn cannot exceed 72 characters");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameRu)
-            .MaximumLength(72).WithMessage("NameRu cannot exceed 72 characters");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.CategoryPostType)
             .IsInEnum()

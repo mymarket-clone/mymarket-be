@@ -61,6 +61,51 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute with this code already exists.
+        /// </summary>
+        public static string AttributeCodeExists {
+            get {
+                return ResourceManager.GetString("AttributeCodeExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute code must not exceed 255 charactes.
+        /// </summary>
+        public static string AttributeCodeLength {
+            get {
+                return ResourceManager.GetString("AttributeCodeLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute code is required.
+        /// </summary>
+        public static string AttributeCodeRequired {
+            get {
+                return ResourceManager.GetString("AttributeCodeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid attribute type.
+        /// </summary>
+        public static string AttributeTypeInvalid {
+            get {
+                return ResourceManager.GetString("AttributeTypeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute type is required.
+        /// </summary>
+        public static string AttributeTypeRequired {
+            get {
+                return ResourceManager.GetString("AttributeTypeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Required field.
         /// </summary>
         public static string BirthDateRequired {
@@ -192,6 +237,24 @@ namespace Mymarket.Application.Resources {
         public static string InvalidUserOrPassword {
             get {
                 return ResourceManager.GetString("InvalidUserOrPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label length must not exceed 255 characters.
+        /// </summary>
+        public static string LabelLength {
+            get {
+                return ResourceManager.GetString("LabelLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label is requied.
+        /// </summary>
+        public static string LabelRequired {
+            get {
+                return ResourceManager.GetString("LabelRequired", resourceCulture);
             }
         }
         

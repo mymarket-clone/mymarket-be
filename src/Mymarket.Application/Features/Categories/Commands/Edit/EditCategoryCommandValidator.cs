@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Categories.Commands.Edit;
 
@@ -21,14 +22,16 @@ public class AddCategoryCommandValidator : AbstractValidator<EditCategoryCommand
             .MustAsync(NoCircularReference).WithMessage("Parent category cannot be a descendant of this category");
 
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Name is required")
-            .MaximumLength(72).WithMessage("Name cannot exceed 72 characters");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameEn)
-            .MaximumLength(72).WithMessage("NameEn cannot exceed 72 characters");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameRu)
-            .MaximumLength(72).WithMessage("NameRu cannot exceed 72 characters");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)
