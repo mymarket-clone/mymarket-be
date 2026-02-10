@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
+using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
 using System.Reflection;
 
@@ -13,6 +14,10 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
     public DbSet<CityEntity> Cities => Set<CityEntity>();
     public DbSet<ImageEntity> Images => Set<ImageEntity>();
+    public DbSet<AttributesEntity> Attributes => Set<AttributesEntity>();
+    public DbSet<AttributesOptionsEntity> AttributesOptions => Set<AttributesOptionsEntity>();
+    public DbSet<CategoryAttributesEntity> CategoryAttributes => Set<CategoryAttributesEntity>();
+    public DbSet<PostAttributesEntity> PostAttributes => Set<PostAttributesEntity>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
 

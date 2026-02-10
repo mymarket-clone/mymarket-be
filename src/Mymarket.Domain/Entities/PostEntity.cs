@@ -35,4 +35,5 @@ public class PostEntity : BaseEntity<int>
     public bool AutoRenewal { get; set; } = false;
     public int? AutoRenewalOnceIn { get; set; }
     public int? AutoRenewalAtTime { get; set; }
+    public ICollection<PostAttributesEntity> Attributes { get; set; } = [];
 }
