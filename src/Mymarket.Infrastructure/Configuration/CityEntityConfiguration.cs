@@ -12,6 +12,7 @@ public class CityEntityConfiguration : IEntityTypeConfiguration<CityEntity>
 
         builder
             .Property(x => x.Name)
+            .HasColumnType("text")
             .IsRequired();
     }
 }

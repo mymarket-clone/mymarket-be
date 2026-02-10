@@ -16,10 +16,25 @@ public class VerificationCodeEntityConfiguration : IEntityTypeConfiguration<Veri
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.CodeHash).IsRequired();
-        builder.Property(x => x.UserId).IsRequired();
-        builder.Property(x => x.ExpiresAt).IsRequired();
-        builder.Property(x => x.CodeType).IsRequired();
-        builder.Property(x => x.IsVerified).IsRequired();
+        builder
+            .Property(x => x.CodeHash)
+            .HasColumnType("text")
+            .IsRequired();
+
+        builder
+            .Property(x => x.UserId)
+            .IsRequired();
+
+        builder
+            .Property(x => x.ExpiresAt)
+            .IsRequired();
+
+        builder
+            .Property(x => x.CodeType)
+            .IsRequired();
+
+        builder
+            .Property(x => x.IsVerified)
+            .IsRequired();
     }
 }

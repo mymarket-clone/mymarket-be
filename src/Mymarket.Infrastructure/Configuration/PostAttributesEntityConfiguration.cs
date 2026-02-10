@@ -27,6 +27,7 @@ public class PostAttributesEntityConfiguration : IEntityTypeConfiguration<PostAt
 
         builder.Property(x => x.ValueText)
                .HasMaxLength(500)
+               .HasColumnType("text")
                .IsUnicode(true)
                .IsRequired(false);
 

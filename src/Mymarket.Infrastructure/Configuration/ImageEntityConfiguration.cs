@@ -12,6 +12,7 @@ public class ImageEntityConfiguration : IEntityTypeConfiguration<ImageEntity>
 
         builder
             .Property(x => x.Url)
+            .HasColumnType("text")
             .IsRequired()
             .HasMaxLength(500);
 

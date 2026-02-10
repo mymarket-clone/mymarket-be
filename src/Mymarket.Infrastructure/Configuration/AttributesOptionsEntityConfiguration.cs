@@ -15,12 +15,21 @@ public class AttributesOptionsEntityConfiguration : IEntityTypeConfiguration<Att
             .IsRequired();
 
         builder
-            .Property(x => x.Label)
+            .Property(x => x.Name)
+            .HasColumnType("text")
             .HasMaxLength(255)
             .IsRequired();
 
         builder
-            .Property(x => x.Label)
+            .Property(x => x.NameEn)
+            .HasColumnType("text")
+            .HasMaxLength(255)
+            .IsRequired();
+
+        builder
+            .Property(x => x.NameRu)
+            .HasColumnType("text")
+            .HasMaxLength(255)
             .IsRequired();
     }
 }

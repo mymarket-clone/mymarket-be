@@ -16,13 +16,16 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Property(x => x.Firstname)
             .IsRequired()
+            .HasColumnType("text")
             .HasMaxLength(72);
 
         builder.Property(x => x.LastName)
+            .HasColumnType("text")
             .IsRequired()
             .HasMaxLength(72);
 
         builder.Property(x => x.Email)
+            .HasColumnType("text")
             .IsRequired()
             .HasMaxLength(256);
 
@@ -34,6 +37,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
             .HasMaxLength(4);
 
         builder.Property(x => x.PasswordHash)
+            .HasColumnType("text")
             .IsRequired();
 
         builder.Property(x => x.EmailVerified)

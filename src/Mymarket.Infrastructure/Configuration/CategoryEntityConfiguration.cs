@@ -13,7 +13,18 @@ public class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEnti
         builder
             .Property(x => x.Name)
             .HasMaxLength(100)
+            .HasColumnType("text")
             .IsRequired();
+
+        builder
+            .Property(x => x.NameEn)
+            .HasMaxLength(100)
+            .HasColumnType("text");
+
+        builder
+            .Property(x => x.NameRu)
+            .HasMaxLength(100)
+            .HasColumnType("text");
 
         builder
             .Property(x => x.CategoryPostType)
