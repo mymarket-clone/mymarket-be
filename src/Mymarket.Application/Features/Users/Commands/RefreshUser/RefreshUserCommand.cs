@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.Features.Users.Commands.RefreshUser;
@@ -18,7 +19,12 @@ public class RefreshUserCommandHandler(
     public async Task<AuthDto> Handle(RefreshUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _context.Users
-            .FirstOrDefaultAsync(x => x.RefreshToken == request.RefreshToken, cancellationToken);
+            .FirstOrDefaultAsync(
+                x => x.RefreshToken == request.RefreshToken && x.RefreshTokenExpiry > DateTime.UtcNow,
+                cancellationToken);
+
+        if (user is null)
+            throw new UnauthorizedAccessException(SharedResources.InvalidRefreshOrUser);
 
         var userModel = new UserModel
         {

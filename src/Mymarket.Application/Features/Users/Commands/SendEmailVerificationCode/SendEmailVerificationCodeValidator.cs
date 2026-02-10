@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
-using Mymarket.Domain.Constants;
 
 namespace Mymarket.Application.features.Users.Commands.SendEmailVerificationCode;
 

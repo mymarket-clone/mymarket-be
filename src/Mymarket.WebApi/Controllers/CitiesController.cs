@@ -6,14 +6,13 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
+[Authorize]
 [Route("api/cities")]
 [ApiController]
 public class CitiesController(IMediator _mediator) : BaseController
 {
 
-    [Authorize]
-    [HttpGet]
-    [Route("GetAll")]
+    [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllCategories()
     {
         var result = await _mediator.Send(new GetAllCitiesQuery());

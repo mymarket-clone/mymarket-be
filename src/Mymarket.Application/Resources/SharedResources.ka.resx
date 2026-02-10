@@ -219,4 +219,7 @@
   <data name="CodeLength" xml:space="preserve">
     <value>ერთჯერადი კოდი უნდა შეიცავდეს 6 სიმბოლოს</value>
   </data>
+  <data name="InvalidRefreshOrUser" xml:space="preserve">
+    <value>სესიას ვადა გაუვიდა</value>
+  </data>
 </root>

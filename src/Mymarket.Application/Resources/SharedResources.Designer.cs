@@ -178,6 +178,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session expired.
+        /// </summary>
+        public static string InvalidRefreshOrUser {
+            get {
+                return ResourceManager.GetString("InvalidRefreshOrUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid username or password.
         /// </summary>
         public static string InvalidUserOrPassword {

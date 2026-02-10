@@ -16,26 +16,21 @@ namespace Mymarket.WebApi.Controllers;
 [Route("api/auth")]
 public class AuthController(IMediator _mediator) : BaseController
 {
-    [HttpPost]
-    [Route("RegisterUser")]
+    [HttpPost("RegisterUser")]
     public async Task<IActionResult> Register(RegisterUserCommand registerUserCommand)
     {
         await _mediator.Send(registerUserCommand);
-
         return Created();
     }
 
-    [HttpPost]
-    [Route("SendEmailVerificationCode")]
+    [HttpPost("SendEmailVerificationCode")]
     public async Task<IActionResult> SendEmailVerificationCode(SendEmailVerificationCodeCommand sendVerificationEmailCommand)
     {
         await _mediator.Send(sendVerificationEmailCommand);
-
         return NoContent();
     }
 
-    [HttpPost]
-    [Route("VerifyEmailCode")]
+    [HttpPost("VerifyEmailCode")]
     public async Task<IActionResult> VerifyCode(VerifyEmailCodeCommand verifyEmailCodeCommand)
     {
         var response = await _mediator.Send(verifyEmailCodeCommand);
@@ -43,59 +38,47 @@ public class AuthController(IMediator _mediator) : BaseController
         return Ok(response);
     }
 
-    [HttpPost]
-    [Route("LoginUser")]
+    [HttpPost("LoginUser")]
     public async Task<IActionResult> LoginUser(LoginUserCommand loginUserCommand)
     {
         var response = await _mediator.Send(loginUserCommand);
-
         return Ok(response);
     }
 
-    [HttpPost]
-    [Route("SendPasswordRecovery")]
+    [HttpPost("SendPasswordRecovery")]
     public async Task<IActionResult> PasswordRecovery(SendPasswordRecoveryCommand passwordRecoveryCommand)
     {
         await _mediator.Send(passwordRecoveryCommand);
-
         return NoContent();
     }
 
-    [HttpPost]
-    [Route("VerifyPasswordCode")]
+    [HttpPost("VerifyPasswordCode")]
     public async Task<IActionResult> VerifyPasswordCode(VerifyPasswordRecoveryCodeCommand verifyPasswordRecoveryCodeCommand)
     {
         await _mediator.Send(verifyPasswordRecoveryCodeCommand);
-
         return NoContent();
     }
 
-    [HttpPost]
-    [Route("PasswordRecovery")]
+    [HttpPost("PasswordRecovery")]
     public async Task<IActionResult> PasswordRecovery(PasswordRecoveryCommand passwordRecoveryCommand)
     {
         await _mediator.Send(passwordRecoveryCommand);
-
         return NoContent();
     }
 
-    [HttpPost]
-    [Route("RefreshUser")]
+    [HttpPost("RefreshUser")]
     public async Task<IActionResult> RefreshUser(RefreshUserCommand refreshUserCommand)
     {
         var response = await _mediator.Send(refreshUserCommand);
-
         return Ok(response);
     }
 
-    [HttpGet]
-    [Route("UserExists")]
+    [HttpGet("UserExists")]
     public async Task<IActionResult> UserExists([FromQuery] UserExistsQuery userExistsQuery)
     {
         var result = await _mediator.Send(userExistsQuery);
 
         if (result) return NoContent();
-
         return NotFound();
     }
 

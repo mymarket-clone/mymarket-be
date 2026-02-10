@@ -66,8 +66,11 @@ public class SendEmailVerificationCodeHandler(
             {
                 throw new ApplicationException("Failed to send email verification email", ex);
             }
+        } 
+        else {
+            throw new ApplicationException("User not provided");
         }
-
+        
         return Unit.Value;
     }
 }

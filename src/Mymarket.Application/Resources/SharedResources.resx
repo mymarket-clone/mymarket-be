@@ -219,4 +219,7 @@
   <data name="CodeLength" xml:space="preserve">
     <value>One-time code must contain 6 symbols</value>
   </data>
+  <data name="InvalidRefreshOrUser" xml:space="preserve">
+    <value>Session expired</value>
+  </data>
 </root>

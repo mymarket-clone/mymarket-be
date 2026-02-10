@@ -47,6 +47,9 @@ public static class DependencyInjection
         // Smtp
         builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
+        // Custom services
+        builder.Services.AddScoped<IImageService, ImageService>();
+
         var jwtSettings = builder.Configuration
             .GetSection("JwtSettings")
             .Get<JwtSettings>() ?? throw new InvalidOperationException("JwtSettings missing");

@@ -7,27 +7,23 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
+[Authorize]
 [Route("api/posts")]
 public class PostsController(IMediator _mediator) : BaseController
 {
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> AddPost([FromForm] AddPostCommand createPostCommand)
     {
         await _mediator.Send(createPostCommand);
-
         return Created();
     }
 
-    [Authorize]
-    [HttpPost]
-    [Route("GetById")]
-    public async Task<IActionResult> GetPostById(GetPostByIdQuery getPostByIdQuery)
+    [HttpGet("GetById")]
+    public async Task<IActionResult> GetPostById([FromQuery] int id)
     {
-        var result = await _mediator.Send(getPostByIdQuery);
+        var result = await _mediator.Send(new GetPostByIdQuery(id));
 
         if (result is null) return NotFound();
-
         return Ok(result);
     }
 }

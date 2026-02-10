@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
 using Supabase;
 
-namespace Mymarket.Domain.Services;
+namespace Mymarket.Infrastructure.Services;
 
-public class ImageService(Client _client)
+public class ImageService(Client _client) : IImageService
 {
     public async Task<List<ImageEntity>> Upload(List<IFormFile> Images, CancellationToken cancellationToken)
     {

@@ -219,4 +219,7 @@
   <data name="CodeLength" xml:space="preserve">
     <value>Одноразовый код должен содержать 6 символов</value>
   </data>
+  <data name="InvalidRefreshOrUser" xml:space="preserve">
+    <value>Срок сессии истёк</value>
+  </data>
 </root>

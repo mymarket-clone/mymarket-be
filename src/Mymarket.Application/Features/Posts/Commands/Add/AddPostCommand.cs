@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
-using Mymarket.Domain.Services;
 
 namespace Mymarket.Application.Features.Posts.Commands.Add;
 
@@ -42,7 +41,7 @@ public record AddPostCommand(
 
 public sealed class AddPostCommandHandler(
     IApplicationDbContext _context,
-    ImageService _image) : IRequestHandler<AddPostCommand, Unit>
+    IImageService _image) : IRequestHandler<AddPostCommand, Unit>
 {
     public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
