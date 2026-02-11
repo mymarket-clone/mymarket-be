@@ -14,7 +14,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/categories")]
+[Route("api/Categories")]
 public class CategoriesController(IMediator _mediator) : BaseController
 {
     [HttpGet]
@@ -22,6 +22,27 @@ public class CategoriesController(IMediator _mediator) : BaseController
     {
         var result = await _mediator.Send(new GetCategoriesQuery());
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand addCategoryCommand)
+    {
+        var result = await _mediator.Send(addCategoryCommand);
+        return Ok(result);
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand editCategoryCommand)
+    {
+        await _mediator.Send(editCategoryCommand);
+        return Ok();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryCommand deleteCategoryCommand)
+    {
+        await _mediator.Send(deleteCategoryCommand);
+        return Ok();
     }
 
     [HttpGet("GetAll")]
@@ -55,27 +76,6 @@ public class CategoriesController(IMediator _mediator) : BaseController
         var result = await _mediator.Send(new GetFlatCategoriesQuery());
 
         if (result is null) return NotFound();
-        return Ok(result);
-    }
-
-    [HttpPatch("Edit")]
-    public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand editCategoryCommand)
-    {
-        await _mediator.Send(editCategoryCommand);
-        return Ok();
-    }
-
-    [HttpDelete]
-    public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryCommand deleteCategoryCommand)
-    {
-        await _mediator.Send(deleteCategoryCommand);
-        return Ok();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand addCategoryCommand)
-    {
-        var result = await _mediator.Send(addCategoryCommand);
         return Ok(result);
     }
 }

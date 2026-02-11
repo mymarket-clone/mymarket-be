@@ -19,14 +19,12 @@ public class AttributeEntityConfiguration : IEntityTypeConfiguration<AttributeEn
         builder
             .Property(x => x.NameEn)
             .HasColumnType("text")
-            .HasMaxLength(255)
-            .IsRequired();
+            .HasMaxLength(255);
 
         builder
             .Property(x => x.NameRu)
             .HasColumnType("text")
-            .HasMaxLength(255)
-            .IsRequired();
+            .HasMaxLength(255);
 
         builder
             .Property(x => x.Code)
@@ -40,5 +38,17 @@ public class AttributeEntityConfiguration : IEntityTypeConfiguration<AttributeEn
         builder
             .Property(x => x.AttributeType)
             .IsRequired();
+
+        builder
+            .HasOne(x => x.Unit)
+            .WithMany(x => x.Attributes)
+            .HasForeignKey(x => x.UnitId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasMany(x => x.PostAttributes)
+            .WithOne(x => x.Attribute)
+            .HasForeignKey(x => x.AttributeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

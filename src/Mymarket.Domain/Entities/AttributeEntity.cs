@@ -7,9 +7,10 @@ public class AttributeEntity : BaseEntity<int>
 {
     public required string Code { get; set; }
     public required string Name { get; set; }
-    public required string NameEn { get; set; }
-    public required string NameRu { get; set; }
-    public required bool IsRequired { get; set; } = false;
+    public string? NameEn { get; set; }
+    public string? NameRu { get; set; }
     public required AttributeType AttributeType { get; set; }
+    public int? UnitId { get; set; }
+    public AttributeUnitEntity? Unit { get; set; }
     public ICollection<PostAttributesEntity> PostAttributes { get; set; } = [];
 }

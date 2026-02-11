@@ -18,12 +18,10 @@ public class AddAttributeCommandValidator : AbstractValidator<AddAttributeComman
             .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameEn)
-            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
-            .NotEmpty().WithMessage(SharedResources.LabelRequired);
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength);
 
         RuleFor(x => x.NameRu)
-            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
-            .NotEmpty().WithMessage(SharedResources.LabelRequired);
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength);
 
         RuleFor(x => x.Code)
             .MustAsync(AttributeCodeDoesnotExist).WithMessage(SharedResources.AttributeCodeExists)
@@ -37,6 +35,6 @@ public class AddAttributeCommandValidator : AbstractValidator<AddAttributeComman
 
     private async Task<bool> AttributeCodeDoesnotExist(string code, CancellationToken cancellationToken)
     {
-        return await _context.Attributes.AnyAsync(c => c.Code == code, cancellationToken);
+        return !await _context.Attributes.AnyAsync(c => c.Code == code, cancellationToken);
     }
 }

@@ -7,8 +7,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/cities")]
-[ApiController]
+[Route("api/Cities")]
 public class CitiesController(IMediator _mediator) : BaseController
 {
 

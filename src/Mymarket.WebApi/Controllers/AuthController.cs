@@ -13,7 +13,7 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
-[Route("api/auth")]
+[Route("api/Auth")]
 public class AuthController(IMediator _mediator) : BaseController
 {
     [HttpPost("RegisterUser")]

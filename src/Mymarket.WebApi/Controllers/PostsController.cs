@@ -8,7 +8,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/posts")]
+[Route("api/Posts")]
 public class PostsController(IMediator _mediator) : BaseController
 {
     [HttpPost]

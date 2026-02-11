@@ -10,7 +10,7 @@ public record AddAttributeCommand(
     string NameEn,
     string NameRu,
     string Code,
-    bool IsRequired,
+    int? UnitId,
     AttributeType AttributeType
 ) : IRequest<Unit>;
 
@@ -25,7 +25,7 @@ public class AddAttributeCommandHandler(
             NameEn = request.NameEn,
             NameRu = request.NameRu,
             Code = request.Code,
-            IsRequired = request.IsRequired,
+            UnitId = request.UnitId,
             AttributeType = request.AttributeType
         };
 

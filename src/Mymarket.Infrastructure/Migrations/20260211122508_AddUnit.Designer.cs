@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260211122508_AddUnit")]
+    partial class AddUnit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,58 +41,34 @@ namespace Mymarket.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("text");
 
                     b.Property<string>("NameEn")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("text");
 
                     b.Property<string>("NameRu")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("text");
 
-                    b.Property<int?>("UnitId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Unit")
+                        .HasMaxLength(255)
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.HasIndex("UnitId");
-
                     b.ToTable("Attributes", (string)null);
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.AttributeUnitEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("text");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("text");
-
-                    b.Property<string>("NameRu")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AttributeUnits");
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.AttributesOptionsEntity", b =>
@@ -489,16 +468,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.ToTable("VerificationCodes", (string)null);
                 });
 
-            modelBuilder.Entity("Mymarket.Domain.Entities.AttributeEntity", b =>
-                {
-                    b.HasOne("Mymarket.Domain.Entities.AttributeUnitEntity", "Unit")
-                        .WithMany("Attributes")
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Unit");
-                });
-
             modelBuilder.Entity("Mymarket.Domain.Entities.AttributesOptionsEntity", b =>
                 {
                     b.HasOne("Mymarket.Domain.Entities.AttributeEntity", "Attribute")
@@ -625,11 +594,6 @@ namespace Mymarket.Infrastructure.Migrations
             modelBuilder.Entity("Mymarket.Domain.Entities.AttributeEntity", b =>
                 {
                     b.Navigation("PostAttributes");
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.AttributeUnitEntity", b =>
-                {
-                    b.Navigation("Attributes");
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.AttributesOptionsEntity", b =>

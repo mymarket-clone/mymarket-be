@@ -223,7 +223,7 @@
     <value>Срок сессии истёк</value>
   </data>
   <data name="LabelLength" xml:space="preserve">
-    <value>Имя не должно превышать 72 символа</value>
+    <value>Имя не должно превышать 255 символа</value>
   </data>
   <data name="LabelRequired" xml:space="preserve">
     <value>Обязательное поле</value>
@@ -242,5 +242,8 @@
   </data>
   <data name="AttributeTypeInvalid" xml:space="preserve">
     <value>Неверный тип атрибута</value>
+  </data>
+  <data name="UnitLength" xml:space="preserve">
+    <value>Единица измерения не должна превышать 255 символа</value>
   </data>
 </root>

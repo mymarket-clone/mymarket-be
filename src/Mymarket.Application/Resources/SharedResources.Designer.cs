@@ -169,7 +169,7 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email must not exceed 256 characters.
+        ///   Looks up a localized string similar to Email must not exceed 255 characters.
         /// </summary>
         public static string EmailMaxLength {
             get {
@@ -417,6 +417,15 @@ namespace Mymarket.Application.Resources {
         public static string PhoneRequired {
             get {
                 return ResourceManager.GetString("PhoneRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit must not exceed 255 characters.
+        /// </summary>
+        public static string UnitLength {
+            get {
+                return ResourceManager.GetString("UnitLength", resourceCulture);
             }
         }
         
