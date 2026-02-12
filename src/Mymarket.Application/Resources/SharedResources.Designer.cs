@@ -88,6 +88,33 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute does not exist.
+        /// </summary>
+        public static string AttributeDoesnotExist {
+            get {
+                return ResourceManager.GetString("AttributeDoesnotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute id is required.
+        /// </summary>
+        public static string AttributeIdRequired {
+            get {
+                return ResourceManager.GetString("AttributeIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option does not exist.
+        /// </summary>
+        public static string AttributeOptionDoesnotExist {
+            get {
+                return ResourceManager.GetString("AttributeOptionDoesnotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid attribute type.
         /// </summary>
         public static string AttributeTypeInvalid {
@@ -214,6 +241,24 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id does not exist.
+        /// </summary>
+        public static string IdDoesnotExist {
+            get {
+                return ResourceManager.GetString("IdDoesnotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id is required.
+        /// </summary>
+        public static string IdRequired {
+            get {
+                return ResourceManager.GetString("IdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid email address.
         /// </summary>
         public static string InvalidEmail {
@@ -309,6 +354,24 @@ namespace Mymarket.Application.Resources {
         public static string NameRequired {
             get {
                 return ResourceManager.GetString("NameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order is already used.
+        /// </summary>
+        public static string OrderAlreadyUsed {
+            get {
+                return ResourceManager.GetString("OrderAlreadyUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order is required.
+        /// </summary>
+        public static string OrderRequired {
+            get {
+                return ResourceManager.GetString("OrderRequired", resourceCulture);
             }
         }
         
@@ -417,6 +480,15 @@ namespace Mymarket.Application.Resources {
         public static string PhoneRequired {
             get {
                 return ResourceManager.GetString("PhoneRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Record not found.
+        /// </summary>
+        public static string RecordNotFound {
+            get {
+                return ResourceManager.GetString("RecordNotFound", resourceCulture);
             }
         }
         

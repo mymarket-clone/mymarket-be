@@ -35,14 +35,14 @@ public class CategoriesController(IMediator _mediator) : BaseController
     public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand editCategoryCommand)
     {
         await _mediator.Send(editCategoryCommand);
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryCommand deleteCategoryCommand)
     {
         await _mediator.Send(deleteCategoryCommand);
-        return Ok();
+        return NoContent();
     }
 
     [HttpGet("GetAll")]

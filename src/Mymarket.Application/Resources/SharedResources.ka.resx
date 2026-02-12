@@ -246,4 +246,28 @@
   <data name="UnitLength" xml:space="preserve">
     <value>საზომი ერთეულის სიგრძე არ უნდა აღემატებოდეს 255 სიმბოლოს</value>
   </data>
+  <data name="AttributeIdRequired" xml:space="preserve">
+    <value>სავალდებულო ველი</value>
+  </data>
+  <data name="AttributeDoesnotExist" xml:space="preserve">
+    <value>ატრიბუტი არ არსებობს</value>
+  </data>
+  <data name="RecordNotFound" xml:space="preserve">
+    <value>ჩანაწერი ვერ მოიძებნა</value>
+  </data>
+  <data name="OrderRequired" xml:space="preserve">
+    <value>აუცილებელი ველი</value>
+  </data>
+  <data name="OrderAlreadyUsed" xml:space="preserve">
+    <value>პოზიცია დაკავებულია</value>
+  </data>
+  <data name="IdRequired" xml:space="preserve">
+    <value>აუცილებელი ველი</value>
+  </data>
+  <data name="IdDoesnotExist" xml:space="preserve">
+    <value>ჩანაწერი ვერ მოიძებნა</value>
+  </data>
+  <data name="AttributeOptionDoesnotExist" xml:space="preserve">
+    <value>ჩანაწერი ვერ მოიძებნა</value>
+  </data>
 </root>

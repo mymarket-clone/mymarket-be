@@ -246,4 +246,28 @@
   <data name="UnitLength" xml:space="preserve">
     <value>Unit must not exceed 255 characters</value>
   </data>
+  <data name="AttributeIdRequired" xml:space="preserve">
+    <value>Attribute id is required</value>
+  </data>
+  <data name="AttributeDoesnotExist" xml:space="preserve">
+    <value>Attribute does not exist</value>
+  </data>
+  <data name="RecordNotFound" xml:space="preserve">
+    <value>Record not found</value>
+  </data>
+  <data name="OrderRequired" xml:space="preserve">
+    <value>Order is required</value>
+  </data>
+  <data name="OrderAlreadyUsed" xml:space="preserve">
+    <value>Order is already used</value>
+  </data>
+  <data name="IdRequired" xml:space="preserve">
+    <value>Id is required</value>
+  </data>
+  <data name="IdDoesnotExist" xml:space="preserve">
+    <value>Id does not exist</value>
+  </data>
+  <data name="AttributeOptionDoesnotExist" xml:space="preserve">
+    <value>Option does not exist</value>
+  </data>
 </root>

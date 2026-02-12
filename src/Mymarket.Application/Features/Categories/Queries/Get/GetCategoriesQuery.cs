@@ -7,7 +7,7 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Categories.Queries.Get;
 
-public record GetCategoriesQuery() : IRequest<IEnumerable<CategoryTreeDto>>;
+public record GetCategoriesQuery : IRequest<IEnumerable<CategoryTreeDto>>;
 
 public class GetCategoriesQueryHandler(
     IApplicationDbContext _context,

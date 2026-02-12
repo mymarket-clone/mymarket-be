@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using Mymarket.Application.Features.Units.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
 
@@ -8,11 +10,11 @@ public record AddUnitCommand(
     string Name,
     string NameEn,
     string NameRu
-): IRequest<Unit>;
+): IRequest<UnitDto>;
 
-public class AddUnitCommandhandler(IApplicationDbContext _context) : IRequestHandler<AddUnitCommand, Unit>
+public class AddUnitCommandhandler(IApplicationDbContext _context, IMapper _mapper) : IRequestHandler<AddUnitCommand, UnitDto>
 {
-    public async Task<Unit> Handle(AddUnitCommand request, CancellationToken cancellationToken)
+    public async Task<UnitDto> Handle(AddUnitCommand request, CancellationToken cancellationToken)
     {
         var AttributeUnit = new AttributeUnitEntity
         {
@@ -24,6 +26,6 @@ public class AddUnitCommandhandler(IApplicationDbContext _context) : IRequestHan
         await _context.AttributeUnits.AddAsync(AttributeUnit, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return _mapper.Map<UnitDto>(AttributeUnit);
     }
 }

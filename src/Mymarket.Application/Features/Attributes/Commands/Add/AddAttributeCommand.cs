@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using Mymarket.Application.Features.Attributes.Models;
+using Mymarket.Application.Features.Units.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
@@ -12,12 +15,12 @@ public record AddAttributeCommand(
     string Code,
     int? UnitId,
     AttributeType AttributeType
-) : IRequest<Unit>;
+) : IRequest<AttributeDto>;
 
 public class AddAttributeCommandHandler(
-    IApplicationDbContext _context) : IRequestHandler<AddAttributeCommand, Unit>
+    IApplicationDbContext _context, IMapper _mapper) : IRequestHandler<AddAttributeCommand, AttributeDto>
 {
-    public async Task<Unit> Handle(AddAttributeCommand request, CancellationToken cancellationToken)
+    public async Task<AttributeDto> Handle(AddAttributeCommand request, CancellationToken cancellationToken)
     {
         var attribute = new AttributeEntity
         {
@@ -32,6 +35,6 @@ public class AddAttributeCommandHandler(
         await _context.Attributes.AddAsync(attribute, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return _mapper.Map<AttributeDto>(attribute);
     }
 }
