@@ -26,7 +26,6 @@ public class GetCategoriesAllQueryHandler(
             x =>
             {
                 var dto = _mapper.Map<CategoryTreeAllDto>(x);
-                dto.Children = null;
                 return dto;
             });
 

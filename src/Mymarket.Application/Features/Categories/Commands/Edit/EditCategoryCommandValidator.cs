@@ -26,12 +26,10 @@ public class AddCategoryCommandValidator : AbstractValidator<EditCategoryCommand
             .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameEn)
-            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
-            .NotEmpty().WithMessage(SharedResources.LabelRequired);
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength);
 
         RuleFor(x => x.NameRu)
-            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
-            .NotEmpty().WithMessage(SharedResources.LabelRequired);
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength);
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)

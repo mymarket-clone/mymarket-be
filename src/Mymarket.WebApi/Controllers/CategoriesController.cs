@@ -31,10 +31,10 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok(result);
     }
 
-    [HttpPatch]
-    public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand editCategoryCommand)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> EditCategory([FromRoute] int id, [FromBody] EditCategoryCommand editCategoryCommand)
     {
-        await _mediator.Send(editCategoryCommand);
+        await _mediator.Send(editCategoryCommand with { Id = id });
         return NoContent();
     }
 

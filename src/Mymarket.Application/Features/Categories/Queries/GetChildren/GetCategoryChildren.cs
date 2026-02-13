@@ -15,8 +15,16 @@ public class GetCategoryChildrenHandler(
     public async Task<List<CategoryTreeAllDto>> Handle(GetCategoryChildren request, CancellationToken cancellationToken)
     {
         var entities = await _context.Categories
-            .AsNoTracking()
             .Where(x => x.ParentId == request.Id)
+            .Select(x => new CategoryTreeAllDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                NameEn = x.NameEn,
+                NameRu = x.NameRu,
+                HasChildren = _context.Categories.Any(c => c.ParentId == x.Id),
+                CategoryPostType = x.CategoryPostType
+            })
             .ToListAsync(cancellationToken);
 
         return _mapper.Map<List<CategoryTreeAllDto>>(entities);
