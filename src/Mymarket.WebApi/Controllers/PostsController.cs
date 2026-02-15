@@ -12,9 +12,9 @@ namespace Mymarket.WebApi.Controllers;
 public class PostsController(IMediator _mediator) : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromForm] AddPostCommand createPostCommand)
+    public async Task<IActionResult> AddPost([FromForm] AddPostCommand command)
     {
-        await _mediator.Send(createPostCommand);
+        await _mediator.Send(command);
         return Created();
     }
 

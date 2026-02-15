@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
-using Mymarket.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Categories.Commands.Delete;
 
@@ -14,7 +15,7 @@ public class DeleteCategoryCommandValidator : AbstractValidator<DeleteCategoryCo
 
         RuleFor(x => x.Id)
             .MustAsync(CategoryExists)
-            .WithMessage("Category with the specified Id does not exist.");
+            .WithMessage(SharedResources.IdDoesnotExist);
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)

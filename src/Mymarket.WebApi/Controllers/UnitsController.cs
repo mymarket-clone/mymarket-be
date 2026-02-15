@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Features.Attributes.Commands.Delete;
 using Mymarket.Application.Features.Units.Commands.Add;
 using Mymarket.Application.Features.Units.Commands.Delete;
 using Mymarket.Application.Features.Units.Commands.Edit;
@@ -16,18 +15,18 @@ namespace Mymarket.WebApi.Controllers;
 public class UnitsController(IMediator _mediator) : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> AddUnit(AddUnitCommand AddUnitCommand)
+    public async Task<IActionResult> AddUnit(AddUnitCommand command)
     {
-        await _mediator.Send(AddUnitCommand);
+        await _mediator.Send(command);
         return NoContent();
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> EditUnit(
         [FromRoute] int Id,
-        [FromBody] EditUnitCommand EditUnitCommand)
+        [FromBody] EditUnitCommand command)
     {
-        await _mediator.Send(EditUnitCommand with { Id = Id });
+        await _mediator.Send(command with { Id = Id });
         return NoContent();
     }
 

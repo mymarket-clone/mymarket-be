@@ -5,8 +5,6 @@ using Mymarket.Application.Features.AttributeOptions.Commands.Add;
 using Mymarket.Application.Features.AttributeOptions.Commands.Delete;
 using Mymarket.Application.Features.AttributeOptions.Commands.Edit;
 using Mymarket.Application.Features.AttributeOptions.Queries.GetAllById;
-using Mymarket.Application.Features.Attributes.Commands.Delete;
-using Mymarket.Application.Features.Units.Commands.Delete;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers
@@ -16,9 +14,9 @@ namespace Mymarket.WebApi.Controllers
     public class AttributesOptionsController(IMediator _mediator) : BaseController
     {
         [HttpPost]
-        public async Task<IActionResult> AddAttributeOption([FromBody] AddAttributeOptionCommand AddAttributeOptionCommand)
+        public async Task<IActionResult> AddAttributeOption([FromBody] AddAttributeOptionCommand command)
         {
-            var result = await _mediator.Send(AddAttributeOptionCommand);
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
 
@@ -32,9 +30,9 @@ namespace Mymarket.WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditAttributeOption(
             [FromRoute] int Id,
-            [FromBody] EditAttributeOptionCommand EditAttributeOptionCommand)
+            [FromBody] EditAttributeOptionCommand command)
         {
-            await _mediator.Send(EditAttributeOptionCommand with { Id = Id });
+            await _mediator.Send(command with { Id = Id });
             return NoContent();
         }
 

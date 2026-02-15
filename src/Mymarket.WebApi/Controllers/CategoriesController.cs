@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Categories.Commands.Add;
 using Mymarket.Application.Features.Categories.Commands.Delete;
 using Mymarket.Application.Features.Categories.Commands.Edit;
-using Mymarket.Application.Features.Categories.Queries.Get;
-using Mymarket.Application.Features.Categories.Queries.GetAll;
+using Mymarket.Application.Features.Categories.Queries.GetAllFlat;
 using Mymarket.Application.Features.Categories.Queries.GetById;
-using Mymarket.Application.Features.Categories.Queries.GetChildren;
 using Mymarket.Application.Features.Categories.Queries.GetFlat;
 using Mymarket.WebApi.Infrastructure;
 
@@ -21,35 +19,32 @@ public class CategoriesController(IMediator _mediator) : BaseController
     public async Task<IActionResult> GetCategories()
     {
         var result = await _mediator.Send(new GetCategoriesQuery());
+
+        if (result is null) return NotFound();
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand addCategoryCommand)
+    public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand command)
     {
-        var result = await _mediator.Send(addCategoryCommand);
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> EditCategory([FromRoute] int id, [FromBody] EditCategoryCommand editCategoryCommand)
+    public async Task<IActionResult> EditCategory(
+        [FromRoute] int id, 
+        [FromBody] EditCategoryCommand command)
     {
-        await _mediator.Send(editCategoryCommand with { Id = id });
+        await _mediator.Send(command with { Id = id });
         return NoContent();
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryCommand deleteCategoryCommand)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCategory(int id)
     {
-        await _mediator.Send(deleteCategoryCommand);
+        await _mediator.Send(new DeleteCategoryCommand(id));
         return NoContent();
-    }
-
-    [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllCategories()
-    {
-        var result = await _mediator.Send(new GetAllCategoriesQuery());
-        return Ok(result);
     }
 
     [HttpGet("GetById")]
@@ -61,19 +56,10 @@ public class CategoriesController(IMediator _mediator) : BaseController
         return Ok(result);
     }
 
-    [HttpGet("Children")]
-    public async Task<IActionResult> GetChildren([FromQuery] int? id)
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAllCategories()
     {
-        var result = await _mediator.Send(new GetCategoryChildren(id));
-
-        if (result is null) return NotFound();
-        return Ok(result);
-    }
-
-    [HttpGet("GetFlat")]
-    public async Task<IActionResult> GetFlatCategories()
-    {
-        var result = await _mediator.Send(new GetFlatCategoriesQuery());
+        var result = await _mediator.Send(new GetAllCategoriesQuery());
 
         if (result is null) return NotFound();
         return Ok(result);

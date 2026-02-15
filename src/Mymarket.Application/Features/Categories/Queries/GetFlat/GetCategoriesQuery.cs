@@ -6,15 +6,15 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Categories.Queries.GetFlat;
 
-public record GetFlatCategoriesQuery : IRequest<CategoryFlatDto[]>;
+public record GetCategoriesQuery : IRequest<List<CategoryFlatDto>>;
 
-public class GetFlatCateogiresQueryHandler(
+public class GetCategoriesQueryHandler(
     IApplicationDbContext _context,
     ILanguageContext _languageContext,
-    IMapper _mapper) : IRequestHandler<GetFlatCategoriesQuery, CategoryFlatDto[]>
+    IMapper _mapper) : IRequestHandler<GetCategoriesQuery, List<CategoryFlatDto>>
 {
-    public async Task<CategoryFlatDto[]> Handle(
-         GetFlatCategoriesQuery request,
+    public async Task<List<CategoryFlatDto>> Handle(
+         GetCategoriesQuery request,
          CancellationToken cancellationToken)
     {
         var entities = await _context.Categories
@@ -26,7 +26,7 @@ public class GetFlatCateogiresQueryHandler(
                 c,
                 opt => opt.Items["lang"] = _languageContext.Language
             ))
-            .ToArray();
+            .ToList();
 
         return categories;
     }

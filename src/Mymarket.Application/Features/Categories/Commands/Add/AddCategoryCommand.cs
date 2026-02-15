@@ -44,6 +44,7 @@ public class AddCategoryCommandHandler(IApplicationDbContext _context) : IReques
             Name = category.Name,
             NameEn = category.NameEn,
             NameRu = category.NameRu,
+            CategoryPostType = category.CategoryPostType
         };
 
         return dto;

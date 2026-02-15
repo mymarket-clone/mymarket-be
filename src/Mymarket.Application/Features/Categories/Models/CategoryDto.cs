@@ -12,6 +12,7 @@ public class CategoryDto
     public string? NameEn { get; set; } = null;
     public string? NameRu { get; set; } = null;
     public bool HasChildren { get; set; }
+    public CategoryPostType CategoryPostType { get; set; }
     public sealed class Mapping : Profile
     {
         public Mapping()
@@ -19,8 +20,7 @@ public class CategoryDto
             CreateMap<CategoryEntity, CategoryDto>()
                 .ForMember(
                     dest => dest.HasChildren,
-                    opt => opt.MapFrom(src => src.Children.Any())
-                );
+                    opt => opt.MapFrom(src => src.Children.Any()));
         }
     }
 }

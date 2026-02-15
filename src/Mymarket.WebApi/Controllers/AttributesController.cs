@@ -15,18 +15,18 @@ namespace Mymarket.WebApi.Controllers;
 public class AttributesController(IMediator _mediator) : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> AddAttribute(AddAttributeCommand AddAttributeCommand)
+    public async Task<IActionResult> AddAttribute(AddAttributeCommand command)
     {
-        var result = await _mediator.Send(AddAttributeCommand);
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> EditAttribute(
         [FromRoute] int Id,
-        [FromBody] EditAttributeCommand EditAttributeCommand)
+        [FromBody] EditAttributeCommand command)
     {
-        await _mediator.Send(EditAttributeCommand with { Id = Id });
+        await _mediator.Send(command with { Id = Id });
         return NoContent();
     }
 
@@ -38,17 +38,17 @@ public class AttributesController(IMediator _mediator) : BaseController
     }
 
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllAttribute([FromQuery] GetAllAttributeQuery GetAllAttributeQuery)
+    public async Task<IActionResult> GetAllAttribute([FromQuery] GetAllAttributeQuery command)
     {
-        var result = await _mediator.Send(GetAllAttributeQuery);
+        var result = await _mediator.Send(command);
         if (result is null) return NotFound();
         return Ok(result);
     }
 
     [HttpGet("GetById")]
-    public async Task<IActionResult> GetByIdAttribute([FromQuery] GetAttributeById GetAttributeById)
+    public async Task<IActionResult> GetByIdAttribute([FromQuery] GetAttributeById command)
     {
-        var result = await _mediator.Send(GetAttributeById);
+        var result = await _mediator.Send(command);
         if (result is null) return NotFound();
         return Ok(result);
     }
