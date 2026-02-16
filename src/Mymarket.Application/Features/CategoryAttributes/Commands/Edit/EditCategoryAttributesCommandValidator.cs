@@ -23,9 +23,7 @@ public class EditCategoryAttributesCommandValidator : AbstractValidator<EditCate
             .WithMessage(SharedResources.IdDoesnotExist);
 
         RuleFor(x => x.Order)
-            .GreaterThan(0)
-            .When(x => x.Order.HasValue)
-            .WithMessage(SharedResources.OrderRequired);
+            .NotEmpty().WithMessage(SharedResources.OrderRequired);
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)

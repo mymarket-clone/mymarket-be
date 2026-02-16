@@ -9,7 +9,6 @@ namespace Mymarket.Application.Features.AttributeOptions.Commands.Add;
 public class AddAttributeOptionCommandValidator : AbstractValidator<AddAttributeOptionCommand>
 {
     private readonly IApplicationDbContext _context;
-    private int _nextFreeOrder;
 
     public AddAttributeOptionCommandValidator(IApplicationDbContext context)
     {
@@ -21,25 +20,7 @@ public class AddAttributeOptionCommandValidator : AbstractValidator<AddAttribute
             .MustAsync(AttributeTypeIsValid).WithMessage(SharedResources.AttributeTypeInvalid);
 
         RuleFor(x => x.Order)
-            .NotEmpty().WithMessage(SharedResources.OrderRequired)
-            .MustAsync(async (command, order, cancellationToken) =>
-            {
-                var orders = await _context.AttributesOptions
-                    .Where(o => o.AttributeId == command.AttributeId)
-                    .Select(o => o.Order)
-                    .ToListAsync(cancellationToken);
-
-                if (!orders.Contains(command.Order))
-                    return true;
-
-                _nextFreeOrder = orders.Count == 0
-                    ? 1
-                    : orders.Max() + 1;
-
-                return false;
-            })
-            .WithMessage(x => string.Format(SharedResources.OrderAlreadyUsed, _nextFreeOrder));
-
+            .NotEmpty().WithMessage(SharedResources.OrderRequired);
 
         RuleFor(x => x.Name)
             .MaximumLength(255).WithMessage(SharedResources.LabelLength)

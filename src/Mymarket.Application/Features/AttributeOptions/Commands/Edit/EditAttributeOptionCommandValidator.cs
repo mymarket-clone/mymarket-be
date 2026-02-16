@@ -17,6 +17,9 @@ public class EditAttributeOptionCommandValidator : AbstractValidator<EditAttribu
             .NotEmpty().WithMessage(SharedResources.IdRequired)
             .MustAsync(OptionExists).WithMessage(SharedResources.IdDoesnotExist);
 
+        RuleFor(x => x.Order)
+            .NotEmpty().WithMessage(SharedResources.OrderRequired);
+
         RuleFor(x => x.Name)
             .MaximumLength(255).WithMessage(SharedResources.LabelLength)
             .NotEmpty().WithMessage(SharedResources.LabelRequired);
