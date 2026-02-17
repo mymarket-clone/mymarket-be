@@ -13,9 +13,9 @@ namespace Mymarket.WebApi.Controllers;
 public class CategoryAttrributesController(IMediator _mediator) : BaseController
 {
     [HttpGet]
-    public async Task<IActionResult> GetCategoryAttribute()
+    public async Task<IActionResult> GetCategoryAttribute([FromQuery] int id)
     {
-        var result = await _mediator.Send(new GetCategoryAttributesQuery());
+        var result = await _mediator.Send(new GetCategoryAttributesQuery(id));
         return Ok(result);
     }
 
