@@ -1,13 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Features.Attributes.Commands.Edit;
-using Mymarket.Application.Features.Categories.Queries.GetById;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Add;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Delete;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Edit;
 using Mymarket.Application.Features.CategoryAttributes.Queries.Get;
 using Mymarket.Application.Features.CategoryAttributes.Queries.GetById;
-using Mymarket.Application.Features.Units.Commands.Delete;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
