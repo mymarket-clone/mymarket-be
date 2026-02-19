@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.features.Users.Common.Helpers;
 using Mymarket.Application.Interfaces;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.features.Users.Commands.PasswordRecovery;
 
@@ -16,7 +17,7 @@ public class PasswordRecoveryCommandHandler(IApplicationDbContext _context) : IR
         var user = await _context.VerificationCode
             .Include(x => x.User)
             .FirstOrDefaultAsync(
-                x => x.CodeHash == codeHash && x.CodeType == Domain.Constants.CodeType.PasswordRecovery,
+                x => x.CodeHash == codeHash && x.CodeType == CodeType.PasswordRecovery,
                 cancellationToken);
 
         if (user is not null)

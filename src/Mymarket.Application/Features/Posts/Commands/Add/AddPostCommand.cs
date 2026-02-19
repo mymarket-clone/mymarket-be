@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Mymarket.Application.Interfaces;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.Posts.Commands.Add;
@@ -45,6 +45,7 @@ public sealed class AddPostCommandHandler(
 {
     public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
+
         try
         {
             var uploadedImages = await _image.Upload(request.Images, cancellationToken);

@@ -1,4 +1,4 @@
-﻿namespace Mymarket.Domain.Constants;
+﻿namespace Mymarket.Domain.Enums;
 
 public enum AttributeType
 {

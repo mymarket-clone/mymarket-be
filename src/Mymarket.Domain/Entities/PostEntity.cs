@@ -1,5 +1,5 @@
 ﻿using Mymarket.Domain.Common;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Domain.Entities;
 public class PostEntity : BaseEntity<int>
@@ -9,7 +9,6 @@ public class PostEntity : BaseEntity<int>
     public string? YoutubeLink { get; set; }
     public ConditionType? ConditionType { get; set; }
     public CategoryEntity? Category { get; set; }
-    public ICollection<PostsImages> PostsImages { get; set; } = [];
     public required string Title { get; set; }
     public required string Description { get; set; }
     public string? TitleEn { get; set; }
@@ -36,4 +35,6 @@ public class PostEntity : BaseEntity<int>
     public int? AutoRenewalOnceIn { get; set; }
     public int? AutoRenewalAtTime { get; set; }
     public ICollection<PostAttributesEntity> Attributes { get; set; } = [];
+    public ICollection<PostsImages> PostsImages { get; set; } = [];
+    public ICollection<PostAttributesEntity> PostAttributes { get; set; } = [];
 }

@@ -20,7 +20,7 @@ public class GetCategoryAttributesQueryHandler(
             .AsNoTracking()
             .Where(x => x.CategoryId == request.Id)
             .Join(
-                _context.Attributes,
+                _context.Attributes.Include(a => a.Unit),
                 category => category.AttributeId,
                 attribute => attribute.Id,
                 (category, attribute) => new
@@ -30,6 +30,9 @@ public class GetCategoryAttributesQueryHandler(
                     category.AttributeId,
                     AttributeName = _languageContext.LocalizeProperty<AttributeEntity>("Name")(attribute),
                     attribute.AttributeType,
+                    UnitName = attribute.Unit != null && attribute.Unit.Name != null
+                        ? _languageContext.LocalizeProperty<AttributeUnitEntity>("Name")(attribute.Unit)
+                        : null,
                     category.IsRequired,
                     category.Order
                 }
@@ -45,6 +48,7 @@ public class GetCategoryAttributesQueryHandler(
                     AttributeId = combined.AttributeId,
                     AttributeName = combined.AttributeName,
                     AttributeType = combined.AttributeType,
+                    UnitName = combined.UnitName,
                     IsRequired = combined.IsRequired,
                     Order = combined.Order,
                     Options = options

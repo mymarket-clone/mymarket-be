@@ -40,4 +40,30 @@ public class ImageService(Client _client) : IImageService
             throw new ApplicationException("Error uploading images", ex);
         }
     }
+
+    public async Task Delete(IEnumerable<ImageEntity> images)
+    {
+        if (images == null) return;
+
+        try
+        {
+            var fileNames = images
+                .Select(i =>
+                {
+                    var extension = Path.GetExtension(new Uri(i.Url).AbsolutePath);
+                    return $"{i.UniqueId}{extension}";
+                })
+                .ToList();
+
+            if (fileNames.Count == 0) return;
+
+            await _client.Storage
+                .From("Images")
+                .Remove(fileNames);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error deleting images", ex);
+        }
+    }
 }

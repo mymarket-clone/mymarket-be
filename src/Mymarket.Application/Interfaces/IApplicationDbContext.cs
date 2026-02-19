@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Interfaces;
@@ -17,4 +18,5 @@ public interface IApplicationDbContext
     DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
     DbSet<PostAttributesEntity> PostAttributes{ get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
 }

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Categories.Commands.Add;
 

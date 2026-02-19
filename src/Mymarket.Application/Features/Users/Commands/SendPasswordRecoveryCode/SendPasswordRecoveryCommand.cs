@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common.Exceptions;
 using Mymarket.Application.features.Users.Common.Helpers;
 using Mymarket.Application.Interfaces;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.features.Users.Commands.SendPasswordRecoveryCode;

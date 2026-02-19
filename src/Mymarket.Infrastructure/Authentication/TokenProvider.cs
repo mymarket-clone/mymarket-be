@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Models;
@@ -10,48 +9,46 @@ using System.Text;
 
 namespace Mymarket.Infrastructure.Authentication;
 
-internal sealed class TokenProvider(IConfiguration _configuration) : ITokenProvider
+internal sealed class TokenProvider(JwtOptions jwtOptions) : ITokenProvider
 {
     public (string, DateTime) CreateAccessToken(UserModel user)
-    {
-        var secretKey = _configuration["JwtSettings:SecretKey"]!;
-        var issuer = _configuration["JwtSettings:Issuer"]!;
-        var audience = _configuration["JwtSettings:Audience"]!;
-        var accessTokenTtl = DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("JwtSettings:AccessTokenTtl"));
-
-        var claims = new[]
+    { 
+        var claims = new List<Claim>
         {
-            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Name),
-            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email),
-            new Claim("email_verified", user.EmailVerified.ToString())
+            new(Domain.Constants.ClaimTypes.Id, user.Id.ToString()),
+            new(Domain.Constants.ClaimTypes.Name, user.Name.ToString()),
+            new(Domain.Constants.ClaimTypes.Email, user.Email.ToString()),
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+
+        var expiresAt = DateTime.UtcNow.AddMinutes(jwtOptions.AccessTokenTtl);
+
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: jwtOptions.Issuer,
+            audience: jwtOptions.Audience,
             claims: claims,
             notBefore: DateTime.UtcNow,
-            expires: accessTokenTtl,
+            expires: expiresAt,
             signingCredentials: creds
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return (tokenString, accessTokenTtl);
+        return (tokenString, expiresAt);
     }
 
     public (string, DateTime) CreateRefreshToken()
     {
         var randomBytes = new byte[32];
-        var refreshTokenTtl = DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("JwtSettings:RefreshTokenTtl"));
+        var expiresAt = DateTime.UtcNow.AddMinutes(jwtOptions.RefreshTokenTtl);
 
         using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(randomBytes);
         }
 
-        return (WebEncoders.Base64UrlEncode(randomBytes), refreshTokenTtl);
+        return (WebEncoders.Base64UrlEncode(randomBytes), expiresAt);
     }
 }

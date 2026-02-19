@@ -1,4 +1,4 @@
-﻿using Mymarket.Domain.Constants;
+﻿using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.CategoryAttributes.Models;
 
@@ -9,6 +9,7 @@ public class CategoryAttributeOptionsDto
     public int AttributeId { get; set; }
     public required string AttributeName { get; set; }
     public AttributeType AttributeType { get; set; }
+    public string? UnitName { get; set; }
     public bool IsRequired { get; set; }
     public int Order { get; set; }
     public List<AttributeOptionDto>? Options { get; set; } = [];

@@ -21,7 +21,6 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
             .MaximumLength(200).WithMessage("Title cannot exceed 200 characters");
 
         RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("Enter description")
             .MaximumLength(4000).WithMessage("Description cannot exceed 4000 characters");
 
         RuleFor(x => x.TitleEn)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
 using System.Reflection;
@@ -24,5 +25,10 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+    {
+        return Database.BeginTransactionAsync(cancellationToken);
     }
 }

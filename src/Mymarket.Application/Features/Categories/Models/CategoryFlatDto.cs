@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.Categories.Models;

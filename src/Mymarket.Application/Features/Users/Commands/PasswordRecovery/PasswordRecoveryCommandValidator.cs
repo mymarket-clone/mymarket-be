@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.features.Users.Common.Helpers;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.features.Users.Commands.PasswordRecovery;
 
@@ -37,7 +38,7 @@ public class PasswordRecoveryCommandValidator : AbstractValidator<PasswordRecove
         var codeHash = CryptoHelper.HashVerificationCode(code.ToString());
 
         var codeRecord = await _context.VerificationCode.FirstOrDefaultAsync(
-            x => x.CodeType == Domain.Constants.CodeType.PasswordRecovery &&
+            x => x.CodeType == CodeType.PasswordRecovery &&
                  x.ExpiresAt > DateTime.UtcNow &&
                  x.CodeHash.Equals(codeHash),
             cancellationToken

@@ -44,22 +44,25 @@ public static class DependencyInjection
         // Jwt authentication
         builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 
+        var jwtOptions = builder.Configuration
+            .GetSection(nameof(JwtOptions))
+            .Get<JwtOptions>()
+            ?? throw new InvalidOperationException("JwtOptions configuration is missing");
+
+        builder.Services.AddSingleton(jwtOptions);
+
         // Smtp
         builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
         // Custom services
         builder.Services.AddScoped<IImageService, ImageService>();
 
-        var jwtSettings = builder.Configuration
-            .GetSection("JwtSettings")
-            .Get<JwtSettings>() ?? throw new InvalidOperationException("JwtSettings missing");
-
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.ClaimsIssuer = jwtSettings.Issuer;
-                options.Audience = jwtSettings.Audience;
+                options.ClaimsIssuer = jwtOptions.Issuer;
+                options.Audience = jwtOptions.Audience;
                 options.MapInboundClaims = false;
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -68,10 +71,10 @@ public static class DependencyInjection
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidIssuer = jwtSettings.Issuer,
-                    ValidAudience = jwtSettings.Audience,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
                 };
             });
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
 using Mymarket.Domain.Models;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 using FluentValidation;
 using Mymarket.Application.features.Users.Common.Helpers;
 using Mymarket.Application.features.Users.Common.Models;

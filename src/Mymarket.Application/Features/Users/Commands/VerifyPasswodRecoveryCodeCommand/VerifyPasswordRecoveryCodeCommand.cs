@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.features.Users.Commands.VerifyPasswodRecoveryCodeCommand;
 

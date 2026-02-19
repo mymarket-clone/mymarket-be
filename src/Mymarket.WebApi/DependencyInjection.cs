@@ -1,4 +1,7 @@
-﻿namespace Mymarket.WebApi;
+﻿using Mymarket.Application.Interfaces;
+using Mymarket.WebApi.Services;
+
+namespace Mymarket.WebApi;
 
 public static class DependencyInjection
 {
@@ -8,16 +11,15 @@ public static class DependencyInjection
         {
             options.AddPolicy("CorsPolicy", policy =>
             {
-                //var origins = builder.Configuration.GetSection("CorsOrigins").Get<string[]>();
-                //policy.WithOrigins(origins!)
-                //    .AllowAnyMethod()
-                //    .AllowAnyHeader();
-
-                policy.AllowAnyOrigin()
+                policy
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             });
         });
+
+
+        builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();

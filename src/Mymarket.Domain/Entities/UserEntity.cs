@@ -1,5 +1,5 @@
 ﻿using Mymarket.Domain.Common;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Domain.Entities;
 

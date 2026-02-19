@@ -3,7 +3,7 @@ using MediatR;
 using Mymarket.Application.Features.Attributes.Models;
 using Mymarket.Application.Features.Units.Models;
 using Mymarket.Application.Interfaces;
-using Mymarket.Domain.Constants;
+using Mymarket.Domain.Enums;
 using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.Attributes.Commands.Add;
