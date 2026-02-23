@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Common.Exceptions;
+using Mymarket.Application.Features.Posts.Commands.Add;
 
 namespace Mymarket.WebApi.Infrastructure;
 
@@ -30,6 +31,23 @@ public class GlobalExceptionHandlerMiddleware(
 
                 await context.Response.WriteAsJsonAsync(problem);
             }
+        }
+        catch (AttributeValidationException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/problem+json";
+
+            var problem = new ApiValidationProblem
+            {
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = "Validation Failed",
+                Status = StatusCodes.Status400BadRequest,
+                Instance = $"{context.Request.Method} {context.Request.Path}",
+                Errors = ex.Errors,
+                Code = "ValidationError"
+            };
+
+            await context.Response.WriteAsJsonAsync(problem);
         }
         catch (UnauthorizedAccessException ex)
         {

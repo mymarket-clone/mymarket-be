@@ -21,8 +21,8 @@ internal sealed class TokenProvider(IConfiguration _configuration) : ITokenProvi
 
         var claims = new[]
         {
-            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Name),
-            new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Name),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim("email_verified", user.EmailVerified.ToString())
         };
 

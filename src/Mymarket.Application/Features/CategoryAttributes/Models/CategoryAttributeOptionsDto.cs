@@ -10,6 +10,7 @@ public class CategoryAttributeOptionsDto
     public required string AttributeName { get; set; }
     public AttributeType AttributeType { get; set; }
     public bool IsRequired { get; set; }
+    public string? UnitName { get; set; }
     public int Order { get; set; }
     public List<AttributeOptionDto>? Options { get; set; } = [];
 }
