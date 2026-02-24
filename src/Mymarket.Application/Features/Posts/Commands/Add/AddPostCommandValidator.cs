@@ -4,6 +4,7 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Posts.Commands.Add;
 
+
 public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
 {
     private readonly IApplicationDbContext _context;
@@ -91,6 +92,7 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
         RuleFor(x => x.ColorDays)
             .GreaterThan(0)
             .When(x => x.ColorDays.HasValue);
+
     }
 
     private async Task<bool> CategoryExists(int categoryId, CancellationToken cancellationToken)

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Mymarket.Application.Common;
 using Mymarket.Application.features.Users.Commands.RegisterUser;
 using Mymarket.Application.Interfaces;
 using Mymarket.Infrastructure.Authentication;

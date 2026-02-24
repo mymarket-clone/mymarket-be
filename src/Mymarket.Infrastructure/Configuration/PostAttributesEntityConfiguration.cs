@@ -23,16 +23,14 @@ public class PostAttributesEntityConfiguration : IEntityTypeConfiguration<PostAt
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
-            .HasOne(x => x.Option)
-            .WithMany(o => o.PostAttributes)
-            .HasForeignKey(x => x.OptionId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
             .Property(x => x.Value)
             .HasMaxLength(500)
             .HasColumnType("text")
             .IsUnicode(true)
             .IsRequired(false);
+
+        builder
+            .Property(x => x.ValueType)
+            .IsRequired(true);
     }
 }

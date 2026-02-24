@@ -11,16 +11,16 @@ public record GetCategoryAttributesQuery(
 ): IRequest<List<CategoryAttributeOptionsDto>>;
 
 public class GetCategoryAttributesQueryHandler(
-    IApplicationDbContext _context,
-    ILanguageContext _languageContext) : IRequestHandler<GetCategoryAttributesQuery, List<CategoryAttributeOptionsDto>>
+    IApplicationDbContext context,
+    ILanguageContext languageContext) : IRequestHandler<GetCategoryAttributesQuery, List<CategoryAttributeOptionsDto>>
 {
     public async Task<List<CategoryAttributeOptionsDto>> Handle(GetCategoryAttributesQuery request, CancellationToken cancellationToken)
     {
-        var result = await _context.CategoryAttributes
+        var result = await context.CategoryAttributes
             .AsNoTracking()
             .Where(x => x.CategoryId == request.Id)
             .Join(
-                _context.Attributes.Include(a => a.Unit),
+                context.Attributes,
                 category => category.AttributeId,
                 attribute => attribute.Id,
                 (category, attribute) => new
@@ -28,17 +28,15 @@ public class GetCategoryAttributesQueryHandler(
                     category.Id,
                     category.CategoryId,
                     category.AttributeId,
-                    AttributeName = _languageContext.LocalizeProperty<AttributeEntity>("Name")(attribute),
+                    AttributeName = languageContext.LocalizeProperty<AttributeEntity>("Name")(attribute),
                     attribute.AttributeType,
-                    UnitName = attribute.Unit != null && attribute.Unit.Name != null
-                        ? _languageContext.LocalizeProperty<AttributeUnitEntity>("Name")(attribute.Unit)
-                        : null,
                     category.IsRequired,
-                    category.Order
+                    category.Order,
+                    UnitName = attribute.Unit != null ? languageContext.LocalizeProperty<AttributeUnitEntity>("Name")(attribute.Unit) : null
                 }
             )
             .GroupJoin(
-                _context.AttributesOptions,
+                context.AttributesOptions,
                 combined => combined.AttributeId,
                 option => option.AttributeId,
                 (combined, options) => new CategoryAttributeOptionsDto
@@ -56,7 +54,7 @@ public class GetCategoryAttributesQueryHandler(
                         .Select(x => new AttributeOptionDto
                         {
                             Id = x.Id,
-                            Name = _languageContext.LocalizeProperty<AttributesOptionsEntity>("Name")(x),
+                            Name = languageContext.LocalizeProperty<AttributesOptionsEntity>("Name")(x),
                             Order = x.Order
                         })
                         .ToList()

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260223120907_Sync")]
+    partial class Sync
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,9 +244,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.Property<int?>("AttributesOptionsEntityId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("PostEntityId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("PostId")
                         .HasColumnType("integer");
 
@@ -260,8 +260,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.HasIndex("AttributeId");
 
                     b.HasIndex("AttributesOptionsEntityId");
-
-                    b.HasIndex("PostEntityId");
 
                     b.HasIndex("PostId");
 
@@ -556,10 +554,6 @@ namespace Mymarket.Infrastructure.Migrations
                         .WithMany("PostAttributes")
                         .HasForeignKey("AttributesOptionsEntityId");
 
-                    b.HasOne("Mymarket.Domain.Entities.PostEntity", null)
-                        .WithMany("PostAttributes")
-                        .HasForeignKey("PostEntityId");
-
                     b.HasOne("Mymarket.Domain.Entities.PostEntity", "Post")
                         .WithMany("Attributes")
                         .HasForeignKey("PostId")
@@ -661,8 +655,6 @@ namespace Mymarket.Infrastructure.Migrations
             modelBuilder.Entity("Mymarket.Domain.Entities.PostEntity", b =>
                 {
                     b.Navigation("Attributes");
-
-                    b.Navigation("PostAttributes");
 
                     b.Navigation("PostsImages");
                 });
