@@ -14,7 +14,7 @@ public class AttributeOptionDto
     {
         public Mapping()
         {
-            CreateMap<AttributesOptionsEntity, AttributeOptionDto>();
+            CreateMap<AttributeOptionsEntity, AttributeOptionDto>();
         }
     }
 }

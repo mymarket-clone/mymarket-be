@@ -16,7 +16,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<ImageEntity> Images => Set<ImageEntity>();
     public DbSet<AttributeEntity> Attributes => Set<AttributeEntity>();
     public DbSet<AttributeUnitEntity> AttributeUnits => Set<AttributeUnitEntity>();
-    public DbSet<AttributesOptionsEntity> AttributesOptions => Set<AttributesOptionsEntity>();
+    public DbSet<AttributeOptionsEntity> AttributesOptions => Set<AttributeOptionsEntity>();
     public DbSet<CategoryAttributesEntity> CategoryAttributes => Set<CategoryAttributesEntity>();
     public DbSet<PostAttributesEntity> PostAttributes => Set<PostAttributesEntity>();
 

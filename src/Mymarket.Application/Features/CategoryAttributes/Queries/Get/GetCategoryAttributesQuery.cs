@@ -54,7 +54,7 @@ public class GetCategoryAttributesQueryHandler(
                         .Select(x => new AttributeOptionDto
                         {
                             Id = x.Id,
-                            Name = languageContext.LocalizeProperty<AttributesOptionsEntity>("Name")(x),
+                            Name = languageContext.LocalizeProperty<AttributeOptionsEntity>("Name")(x),
                             Order = x.Order
                         })
                         .ToList()

@@ -19,7 +19,7 @@ public class AddAttributeOptionCommandHandler(
 {
     public async Task<AttributeOptionDto> Handle(AddAttributeOptionCommand request, CancellationToken cancellationToken)
     {
-        var AttributeOption = new AttributesOptionsEntity
+        var AttributeOption = new AttributeOptionsEntity
         {
             AttributeId = request.AttributeId,
             Order = request.Order,

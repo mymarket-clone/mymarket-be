@@ -14,7 +14,7 @@ public interface IApplicationDbContext
     DbSet<ImageEntity> Images { get; }
     DbSet<AttributeEntity> Attributes { get; }
     DbSet<AttributeUnitEntity> AttributeUnits { get; }
-    DbSet<AttributesOptionsEntity> AttributesOptions { get; }
+    DbSet<AttributeOptionsEntity> AttributesOptions { get; }
     DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
     DbSet<PostAttributesEntity> PostAttributes{ get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

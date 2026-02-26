@@ -2,7 +2,7 @@
 
 namespace Mymarket.Domain.Entities;
 
-public class AttributesOptionsEntity : BaseEntity<int>
+public class AttributeOptionsEntity : BaseEntity<int>
 {
     public required int AttributeId { get; set; }
     public AttributeEntity? Attribute { get; set; }

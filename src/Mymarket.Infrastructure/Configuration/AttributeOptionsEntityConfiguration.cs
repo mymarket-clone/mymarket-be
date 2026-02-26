@@ -4,11 +4,11 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-public class AttributesOptionsEntityConfiguration : IEntityTypeConfiguration<AttributesOptionsEntity>
+public class AttributeOptionsEntityConfiguration : IEntityTypeConfiguration<AttributeOptionsEntity>
 {
-    public void Configure(EntityTypeBuilder<AttributesOptionsEntity> builder)
+    public void Configure(EntityTypeBuilder<AttributeOptionsEntity> builder)
     {
-        builder.ToTable("AttributesOptions");
+        builder.ToTable("AttributeOptions");
 
         builder
             .Property(x => x.AttributeId)
