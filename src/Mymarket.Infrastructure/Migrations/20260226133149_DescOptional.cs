@@ -5,7 +5,7 @@
 namespace Mymarket.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Sync : Migration
+    public partial class DescOptional : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,23 +14,25 @@ namespace Mymarket.Infrastructure.Migrations
                 name: "FK_PostAttributes_AttributesOptions_OptionId",
                 table: "PostAttributes");
 
-            migrationBuilder.DropIndex(
-                name: "IX_PostAttributes_OptionId",
-                table: "PostAttributes");
-
-            migrationBuilder.DropColumn(
+            migrationBuilder.RenameColumn(
                 name: "OptionId",
-                table: "PostAttributes");
-
-            migrationBuilder.RenameColumn(
-                name: "ValueText",
-                table: "PostAttributes",
-                newName: "Value");
-
-            migrationBuilder.RenameColumn(
-                name: "ValueNumber",
                 table: "PostAttributes",
                 newName: "AttributesOptionsEntityId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_PostAttributes_OptionId",
+                table: "PostAttributes",
+                newName: "IX_PostAttributes_AttributesOptionsEntityId");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "Posts",
+                type: "text",
+                maxLength: 4000,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldMaxLength: 4000);
 
             migrationBuilder.AddColumn<int>(
                 name: "ValueType",
@@ -38,11 +40,6 @@ namespace Mymarket.Infrastructure.Migrations
                 type: "integer",
                 nullable: false,
                 defaultValue: 0);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostAttributes_AttributesOptionsEntityId",
-                table: "PostAttributes",
-                column: "AttributesOptionsEntityId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_PostAttributes_AttributesOptions_AttributesOptionsEntityId",
@@ -59,34 +56,31 @@ namespace Mymarket.Infrastructure.Migrations
                 name: "FK_PostAttributes_AttributesOptions_AttributesOptionsEntityId",
                 table: "PostAttributes");
 
-            migrationBuilder.DropIndex(
-                name: "IX_PostAttributes_AttributesOptionsEntityId",
-                table: "PostAttributes");
-
             migrationBuilder.DropColumn(
                 name: "ValueType",
                 table: "PostAttributes");
 
             migrationBuilder.RenameColumn(
-                name: "Value",
-                table: "PostAttributes",
-                newName: "ValueText");
-
-            migrationBuilder.RenameColumn(
                 name: "AttributesOptionsEntityId",
                 table: "PostAttributes",
-                newName: "ValueNumber");
+                newName: "OptionId");
 
-            migrationBuilder.AddColumn<int>(
-                name: "OptionId",
+            migrationBuilder.RenameIndex(
+                name: "IX_PostAttributes_AttributesOptionsEntityId",
                 table: "PostAttributes",
-                type: "integer",
-                nullable: true);
+                newName: "IX_PostAttributes_OptionId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PostAttributes_OptionId",
-                table: "PostAttributes",
-                column: "OptionId");
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "Posts",
+                type: "text",
+                maxLength: 4000,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldMaxLength: 4000,
+                oldNullable: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_PostAttributes_AttributesOptions_OptionId",

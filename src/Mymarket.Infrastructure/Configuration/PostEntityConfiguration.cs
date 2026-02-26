@@ -29,7 +29,6 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<PostEntity>
         builder
             .Property(x => x.Description)
             .HasColumnType("text")
-            .IsRequired()
             .HasMaxLength(4000);
 
         builder

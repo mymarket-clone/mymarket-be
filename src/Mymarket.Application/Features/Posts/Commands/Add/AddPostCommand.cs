@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Common.Exceptions;
 using Mymarket.Application.Interfaces;
-using Mymarket.Domain.Enums;
+using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
+using Mymarket.Domain.Enums;
+using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Mymarket.Application.Features.Posts.Commands.Add;
 
@@ -32,7 +33,6 @@ public record AddPostCommand(
     int CityId,
     string Name,
     string PhoneNumber,
-    int UserId,
     PromoType? PromoType,
     int? PromoDays,
     bool IsColored,
@@ -43,32 +43,24 @@ public record AddPostCommand(
     string? AttributesJson
 ) : IRequest<Unit>;
 
-public record AttributeItem(
-    [property: JsonPropertyName("id")] int Id,
-    [property: JsonPropertyName("value")] JsonElement Value
-);
-
-public class AttributeValidationException : Exception
-{
-    public Dictionary<string, string[]> Errors { get; }
-    public AttributeValidationException(Dictionary<string, string[]> errors) => Errors = errors;
-}
-
-public sealed class ApiValidationProblem : ProblemDetails
-{
-    public Dictionary<string, string[]> Errors { get; init; } = [];
-    public string Code { get; init; } = "ValidationError";
-}
-
 public sealed class AddPostCommandHandler(
-    IApplicationDbContext _context,
-    IImageService _image) : IRequestHandler<AddPostCommand, Unit>
+    IApplicationDbContext context,
+    ICurrentUser currentUser,
+    IImageService imageService) : IRequestHandler<AddPostCommand, Unit>
 {
     public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
+        await using var transaction = await context.BeginTransactionAsync(cancellationToken);
+
+        var uploadedImages = await imageService.UploadAsync(request.Images, cancellationToken);
 
         try
         {
+            if (currentUser.Id is null)
+            {
+                throw new UnauthorizedAccessException("No user found");
+            }
+
             List<AttributeItem> attributes;
             try
             {
@@ -78,7 +70,7 @@ public sealed class AddPostCommandHandler(
             {
                 throw new AttributeValidationException(new Dictionary<string, string[]>
                 {
-                    ["attributesJson"] = ["Invalid JSON format."]
+                    ["attributesJson"] = ["Invalid JSON format"]
                 });
             }
 
@@ -86,14 +78,14 @@ public sealed class AddPostCommandHandler(
 
             if (attributes.Count == 0)
             {
-                AddError(errors, "attributesJson", "Attributes array cannot be empty.");
+                AddError(errors, "attributesJson", "Attributes array cannot be empty");
             }
 
             var attributeIds = attributes.Select(a => a.Id).Distinct().ToList();
 
-            var dbAttributes = await _context.Attributes
+            var dbAttributes = await context.Attributes
                 .Where(a => attributeIds.Contains(a.Id))
-                .Select(a => new { a.Id, a.AttributeType ,  })
+                .Select(a => new { a.Id, a.AttributeType })
                 .ToListAsync(cancellationToken);
 
             var attributeTypeById = dbAttributes.ToDictionary(x => x.Id, x => x.AttributeType);
@@ -103,7 +95,7 @@ public sealed class AddPostCommandHandler(
                 .Select(x => x.Id)
                 .ToList();
 
-            var optionIdsByAttributeId = await _context.AttributesOptions
+            var optionIdsByAttributeId = await context.AttributesOptions
                 .Where(o => selectAttributeIds.Contains(o.AttributeId))
                 .GroupBy(o => o.AttributeId)
                 .ToDictionaryAsync(
@@ -112,13 +104,30 @@ public sealed class AddPostCommandHandler(
                     cancellationToken
                 );
 
+            var attributeMeta = await context.CategoryAttributes
+                .Where(ca => ca.CategoryId == request.CategoryId && attributeIds.Contains(ca.AttributeId))
+                .Select(ca => new
+                {
+                    Id = ca.AttributeId,
+                    Type = ca.Attribute!.AttributeType,
+                    ca.IsRequired
+                })
+                .ToListAsync(cancellationToken);
+
+            var metaById = attributeMeta.ToDictionary(x => x.Id);
+
+            var missingInCategory = attributeIds.Where(id => !metaById.ContainsKey(id)).ToList();
+
+            foreach (var id in missingInCategory)
+                AddError(errors, id.ToString(), "Attribute is not allowed for this category.");
+
             foreach (var attr in attributes)
             {
                 var key = attr.Id.ToString();
 
                 if (!attributeTypeById.TryGetValue(attr.Id, out var type))
                 {
-                    AddError(errors, key, "Unknown attribute id.");
+                    AddError(errors, key, "Unknown attribute id");
                     continue;
                 }
 
@@ -128,13 +137,13 @@ public sealed class AddPostCommandHandler(
                         {
                             if (attr.Value.ValueKind != JsonValueKind.String)
                             {
-                                AddError(errors, key, "Value must be a string.");
+                                AddError(errors, key, "Value must be a string");
                                 break;
                             }
 
                             var s = attr.Value.GetString();
                             if (string.IsNullOrWhiteSpace(s))
-                                AddError(errors, key, "Text cannot be empty.");
+                                AddError(errors, key, "Text cannot be empty");
 
                             break;
                         }
@@ -150,30 +159,30 @@ public sealed class AddPostCommandHandler(
                             {
                                 var s = attr.Value.GetString();
                                 if (!decimal.TryParse(s, out _))
-                                    AddError(errors, key, "Value must be a number.");
+                                    AddError(errors, key, "Value must be a number");
                                 break;
                             }
 
-                            AddError(errors, key, "Value must be a number.");
+                            AddError(errors, key, "Value must be a number");
                             break;
                         }
 
                     case AttributeType.Select:
                         {
-                            int optionId;
-                            if (attr.Value.ValueKind == JsonValueKind.Number && attr.Value.TryGetInt32(out var n))
+                            var meta = metaById[attr.Id];
+
+                            var isEmpty =
+                                attr.Value.ValueKind == JsonValueKind.Null ||
+                                (attr.Value.ValueKind == JsonValueKind.String && string.IsNullOrWhiteSpace(attr.Value.GetString()));
+
+                            if (isEmpty)
                             {
-                                optionId = n;
-                            }
-                            else if (attr.Value.ValueKind == JsonValueKind.String && int.TryParse(attr.Value.GetString(), out var s))
-                            {
-                                optionId = s;
-                            }
-                            else
-                            {
-                                AddError(errors, key, "Value must be an option id.");
+                                if (meta.IsRequired)
+                                    AddError(errors, key, "Value is required.");
                                 break;
                             }
+
+                            var optionId = ExtractInt(attr.Value);
 
                             if (!optionIdsByAttributeId.TryGetValue(attr.Id, out var validOptions) || !validOptions.Contains(optionId))
                                 AddError(errors, key, "Value must be a valid option id.");
@@ -185,27 +194,23 @@ public sealed class AddPostCommandHandler(
                         {
                             int b;
                             if (attr.Value.ValueKind == JsonValueKind.Number && attr.Value.TryGetInt32(out var n))
-                            {
                                 b = n;
-                            }
                             else if (attr.Value.ValueKind == JsonValueKind.String && int.TryParse(attr.Value.GetString(), out var s))
-                            {
                                 b = s;
-                            }
                             else
                             {
-                                AddError(errors, key, "Value must be 1 (false) or 2 (true).");
+                                AddError(errors, key, "Invalid value");
                                 break;
                             }
 
                             if (b != 1 && b != 2)
-                                AddError(errors, key, "Value must be 1 (false) or 2 (true).");
+                                AddError(errors, key, "Invalid value");
 
                             break;
                         }
 
                     default:
-                        AddError(errors, key, "Unsupported attribute type.");
+                        AddError(errors, key, "Unsupported attribute type");
                         break;
                 }
             }
@@ -217,7 +222,6 @@ public sealed class AddPostCommandHandler(
                 );
             }
 
-            var uploadedImages = await _image.Upload(request.Images, cancellationToken);
 
             var post = new PostEntity
             {
@@ -240,7 +244,7 @@ public sealed class AddPostCommandHandler(
                 CityId = request.CityId,
                 Name = request.Name,
                 PhoneNumber = request.PhoneNumber,
-                UserId = 1,
+                UserId = (int)currentUser.Id,
                 PromoType = request.PromoType,
                 PromoDays = request.PromoDays,
                 IsColored = request.IsColored,
@@ -250,7 +254,7 @@ public sealed class AddPostCommandHandler(
                 AutoRenewalAtTime = request.AutoRenewalAtTime
             };
 
-            _context.Posts.Add(post);
+            context.Posts.Add(post);
 
             for (int i = 0; i < uploadedImages.Count; i++)
             {
@@ -262,14 +266,33 @@ public sealed class AddPostCommandHandler(
                 });
             }
 
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+
+            var postAttributes = attributes
+                .Select(a => new { a, meta = metaById[a.Id] })
+                .Where(x => !IsEmpty(x.a.Value))
+                .Select(x => new PostAttributesEntity
+                {
+                    PostId = post.Id,
+                    AttributeId = x.a.Id,
+                    ValueType = x.meta.Type,
+                    Value = NormalizeAttributeValue(x.meta.Type, x.a.Value)
+                })
+                .ToList();
+
+
+            context.PostAttributes.AddRange(postAttributes);
+await context.SaveChangesAsync(cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
 
             return Unit.Value;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"AddPostCommand failed: {ex}");
+            await transaction.RollbackAsync(cancellationToken);
+            await imageService.DeleteAsync(uploadedImages, cancellationToken);
             throw;
         }
     }
@@ -286,5 +309,40 @@ public sealed class AddPostCommandHandler(
         }
 
         list.Add(message);
+    }
+
+    static int ExtractInt(JsonElement el)
+    {
+        if (el.ValueKind == JsonValueKind.Number && el.TryGetInt32(out var n)) return n;
+        if (el.ValueKind == JsonValueKind.String && int.TryParse(el.GetString(), out var s)) return s;
+        throw new FormatException("Expected int value.");
+    }
+
+    static string NormalizeAttributeValue(AttributeType type, JsonElement value)
+    {
+        return type switch
+        {
+            AttributeType.Text => value.ValueKind == JsonValueKind.String
+                                        ? value.GetString()!.Trim()
+                                        : throw new InvalidOperationException("Text attribute must be a string"),
+
+            AttributeType.Number => value.ValueKind switch
+            {
+                JsonValueKind.Number => value.GetDecimal().ToString(CultureInfo.InvariantCulture),
+                JsonValueKind.String => value.GetString()!.Trim(),
+                _ => throw new InvalidOperationException("Number attribute must be a number or numeric string")
+            },
+
+            AttributeType.Select => ExtractInt(value).ToString(CultureInfo.InvariantCulture),
+
+            AttributeType.Bool => ExtractInt(value).ToString(CultureInfo.InvariantCulture),
+
+            _ => throw new InvalidOperationException($"Unsupported attribute type: {type}")
+        };
+    }
+
+    static bool IsEmpty(JsonElement v)
+    {
+        return v.ValueKind == JsonValueKind.Null || (v.ValueKind == JsonValueKind.String && string.IsNullOrWhiteSpace(v.GetString()));
     }
 }

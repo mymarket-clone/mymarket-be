@@ -5,6 +5,6 @@ namespace Mymarket.Application.Interfaces;
 
 public interface IImageService
 {
-    Task<List<ImageEntity>> Upload(List<IFormFile> Images, CancellationToken cancellationToken);
-    Task Delete(IEnumerable<ImageEntity> images);
+    Task<List<ImageEntity>> UploadAsync(List<IFormFile> Images, CancellationToken cancellationToken);
+    Task DeleteAsync(IEnumerable<ImageEntity> images, CancellationToken cancellationToken);
 }

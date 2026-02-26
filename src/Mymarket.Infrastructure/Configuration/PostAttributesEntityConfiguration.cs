@@ -11,12 +11,6 @@ public class PostAttributesEntityConfiguration : IEntityTypeConfiguration<PostAt
         builder.ToTable("PostAttributes");
 
         builder
-            .HasOne(x => x.Post)
-            .WithMany(p => p.Attributes)
-            .HasForeignKey(x => x.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder
             .HasOne(x => x.Attribute)
             .WithMany(a => a.PostAttributes)
             .HasForeignKey(x => x.AttributeId)

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Common.Exceptions;
-using Mymarket.Application.Features.Posts.Commands.Add;
+using Mymarket.Domain.Constants;
 
 namespace Mymarket.WebApi.Infrastructure;
 

@@ -10,5 +10,4 @@ public class AttributesOptionsEntity : BaseEntity<int>
     public string? NameEn { get; set; }
     public string? NameRu { get; set; }
     public required int Order { get; set; }
-    public ICollection<PostAttributesEntity> PostAttributes { get; set; } = [];
 }

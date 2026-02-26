@@ -2,6 +2,7 @@
 using Mymarket.Domain.Enums;
 
 namespace Mymarket.Domain.Entities;
+
 public class PostEntity : BaseEntity<int>
 {
     public PostType PostType { get; set; }
@@ -34,7 +35,5 @@ public class PostEntity : BaseEntity<int>
     public bool AutoRenewal { get; set; } = false;
     public int? AutoRenewalOnceIn { get; set; }
     public int? AutoRenewalAtTime { get; set; }
-    public ICollection<PostAttributesEntity> Attributes { get; set; } = [];
     public ICollection<PostsImages> PostsImages { get; set; } = [];
-    public ICollection<PostAttributesEntity> PostAttributes { get; set; } = [];
 }

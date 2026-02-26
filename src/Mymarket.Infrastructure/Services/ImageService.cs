@@ -7,7 +7,7 @@ namespace Mymarket.Infrastructure.Services;
 
 public class ImageService(Client _client) : IImageService
 {
-    public async Task<List<ImageEntity>> Upload(List<IFormFile> Images, CancellationToken cancellationToken)
+    public async Task<List<ImageEntity>> UploadAsync(List<IFormFile> Images, CancellationToken cancellationToken)
     {
         var uploadedImages = new List<ImageEntity>();
 
@@ -41,7 +41,7 @@ public class ImageService(Client _client) : IImageService
         }
     }
 
-    public async Task Delete(IEnumerable<ImageEntity> images)
+    public async Task DeleteAsync(IEnumerable<ImageEntity> images, CancellationToken cancellationToken)
     {
         if (images == null) return;
 
