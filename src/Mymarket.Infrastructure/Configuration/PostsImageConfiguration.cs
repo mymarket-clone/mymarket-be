@@ -4,9 +4,9 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-public class PostsImageConfiguration : IEntityTypeConfiguration<PostsImages>
+public class PostsImageConfiguration : IEntityTypeConfiguration<PostsImagesEntity>
 {
-    public void Configure(EntityTypeBuilder<PostsImages> builder)
+    public void Configure(EntityTypeBuilder<PostsImagesEntity> builder)
     {
         builder.ToTable("PostsImages");
 

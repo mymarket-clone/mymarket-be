@@ -2,7 +2,7 @@
 
 namespace Mymarket.Domain.Entities;
 
-public class PostsImages : BaseEntity<int>
+public class PostsImagesEntity : BaseEntity<int>
 {
     public int PostId { get; set; }
     public PostEntity? Post { get; set; }

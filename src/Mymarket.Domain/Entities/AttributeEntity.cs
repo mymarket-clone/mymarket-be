@@ -9,7 +9,6 @@ public class AttributeEntity : BaseEntity<int>
     public required string Name { get; set; }
     public string? NameEn { get; set; }
     public string? NameRu { get; set; }
-    public string?
     public required AttributeType AttributeType { get; set; }
     public int? UnitId { get; set; }
     public AttributeUnitEntity? Unit { get; set; }

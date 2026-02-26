@@ -258,7 +258,7 @@ public sealed class AddPostCommandHandler(
 
             for (int i = 0; i < uploadedImages.Count; i++)
             {
-                post.PostsImages.Add(new PostsImages
+                post.PostsImages.Add(new PostsImagesEntity
                 {
                     Post = post,
                     Image = uploadedImages[i],
