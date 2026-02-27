@@ -121,13 +121,13 @@
     <value>შეიყვანეთ სახელი</value>
   </data>
   <data name="NameMaxLength" xml:space="preserve">
-    <value>სახელის სიგრძე არ უნდა აღემატებოდეს 72 სიმბოლოს</value>
+    <value>სახელის სიგრძე არ უნდა აღემატებოდეს 255 სიმბოლოს</value>
   </data>
   <data name="LastnameRequired" xml:space="preserve">
     <value>შეიყვანეთ გვარი</value>
   </data>
   <data name="LastnameMaxLength" xml:space="preserve">
-    <value>გვარის სიგრძე არ უნდა აღემატებოდეს 72 სიმბოლოს</value>
+    <value>გვარის სიგრძე არ უნდა აღემატებოდეს 255 სიმბოლოს</value>
   </data>
   <data name="EmailRequired" xml:space="preserve">
     <value>შეიყვანეთ ელფოსტა</value>
@@ -154,7 +154,7 @@
     <value>პაროლი უნდა შედგებოდეს მინიმუმ 8 სიმბოლოსგან</value>
   </data>
   <data name="PasswordMaxLength" xml:space="preserve">
-    <value>პაროლის სიგრძე არ უნდა აღემატებოდეს 72 სიმბოლოს</value>
+    <value>პაროლის სიგრძე არ უნდა აღემატებოდეს 255 სიმბოლოს</value>
   </data>
   <data name="PasswordNoSpaces" xml:space="preserve">
     <value>დაუშვებელი სიმბოლო</value>
@@ -269,5 +269,8 @@
   </data>
   <data name="AttributeOptionDoesnotExist" xml:space="preserve">
     <value>ჩანაწერი ვერ მოიძებნა</value>
+  </data>
+  <data name="ImageRequired" xml:space="preserve">
+    <value>ფოტო აუცილებელია</value>
   </data>
 </root>

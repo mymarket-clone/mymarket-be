@@ -12,12 +12,12 @@ namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
 [Route("api/Units")]
-public class UnitsController(IMediator _mediator) : BaseController
+public class UnitsController(IMediator mediator) : BaseController
 {
     [HttpPost]
     public async Task<IActionResult> AddUnit(AddUnitCommand command)
     {
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return NoContent();
     }
 
@@ -26,21 +26,22 @@ public class UnitsController(IMediator _mediator) : BaseController
         [FromRoute] int Id,
         [FromBody] EditUnitCommand command)
     {
-        await _mediator.Send(command with { Id = Id });
+        await mediator.Send(command with { Id = Id });
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUnit(int id)
     {
-        await _mediator.Send(new DeleteUnitCommand(id));
+        await mediator.Send(new DeleteUnitCommand(id));
         return NoContent();
     }
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllUnit([FromQuery] GetAllUnitQuery GetAllUnitQuery)
     {
-        var result = await _mediator.Send(GetAllUnitQuery);
+        var result = await mediator.Send(GetAllUnitQuery);
+
         if (result is null) return NotFound();
         return Ok(result);
     }
@@ -48,7 +49,8 @@ public class UnitsController(IMediator _mediator) : BaseController
     [HttpGet("GetById")]
     public async Task<IActionResult> GetByIdUnit([FromQuery] GetUnitById GetUnitById)
     {
-        var result = await _mediator.Send(GetUnitById);
+        var result = await mediator.Send(GetUnitById);
+
         if (result is null) return NotFound();
         return Ok(result);
     }

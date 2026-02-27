@@ -45,7 +45,7 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<PostEntity>
             .Property(x => x.Name)
             .HasColumnType("text")
             .IsRequired()
-            .HasMaxLength(72);
+            .HasMaxLength(255);
 
         builder
             .Property(x => x.PhoneNumber)

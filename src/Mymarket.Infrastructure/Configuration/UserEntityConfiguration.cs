@@ -17,12 +17,12 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(x => x.Firstname)
             .IsRequired()
             .HasColumnType("text")
-            .HasMaxLength(72);
+            .HasMaxLength(255);
 
         builder.Property(x => x.LastName)
             .HasColumnType("text")
             .IsRequired()
-            .HasMaxLength(72);
+            .HasMaxLength(255);
 
         builder.Property(x => x.Email)
             .HasColumnType("text")

@@ -222,7 +222,6 @@ public sealed class AddPostCommandHandler(
                 );
             }
 
-
             var post = new PostEntity
             {
                 PostType = request.PostType,
@@ -254,7 +253,7 @@ public sealed class AddPostCommandHandler(
                 AutoRenewalAtTime = request.AutoRenewalAtTime
             };
 
-            context.Posts.Add(post);
+            await context.Posts.AddAsync(post, cancellationToken);
 
             for (int i = 0; i < uploadedImages.Count; i++)
             {
@@ -282,8 +281,8 @@ public sealed class AddPostCommandHandler(
 
 
             context.PostAttributes.AddRange(postAttributes);
-await context.SaveChangesAsync(cancellationToken);
 
+            await context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
             return Unit.Value;

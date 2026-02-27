@@ -12,6 +12,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<VerificationCodeEntity> VerificationCode => Set<VerificationCodeEntity>();
     public DbSet<PostEntity> Posts => Set<PostEntity>();
     public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
+    public DbSet<CategoryBrandsEntity> CategoryBrands => Set<CategoryBrandsEntity>();
     public DbSet<CityEntity> Cities => Set<CityEntity>();
     public DbSet<ImageEntity> Images => Set<ImageEntity>();
     public DbSet<AttributeEntity> Attributes => Set<AttributeEntity>();
@@ -19,6 +20,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<AttributeOptionsEntity> AttributesOptions => Set<AttributeOptionsEntity>();
     public DbSet<CategoryAttributesEntity> CategoryAttributes => Set<CategoryAttributesEntity>();
     public DbSet<PostAttributesEntity> PostAttributes => Set<PostAttributesEntity>();
+    public DbSet<BrandEntity> Brands => Set<BrandEntity>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
 

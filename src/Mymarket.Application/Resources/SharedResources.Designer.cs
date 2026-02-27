@@ -259,6 +259,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image required.
+        /// </summary>
+        public static string ImageRequired {
+            get {
+                return ResourceManager.GetString("ImageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid email address.
         /// </summary>
         public static string InvalidEmail {
@@ -304,7 +313,7 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last name must not exceed 72 characters.
+        ///   Looks up a localized string similar to Last name must not exceed 255 characters.
         /// </summary>
         public static string LastnameMaxLength {
             get {
@@ -331,7 +340,7 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First name must not exceed 72 characters.
+        ///   Looks up a localized string similar to First name must not exceed 255 characters.
         /// </summary>
         public static string NameMaxLength {
             get {
@@ -385,7 +394,7 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password must not exceed 64 characters.
+        ///   Looks up a localized string similar to Password must not exceed 255 characters.
         /// </summary>
         public static string PasswordMaxLength {
             get {

@@ -12,7 +12,8 @@ public record AddUnitCommand(
     string NameRu
 ): IRequest<UnitDto>;
 
-public class AddUnitCommandhandler(IApplicationDbContext _context, IMapper _mapper) : IRequestHandler<AddUnitCommand, UnitDto>
+public class AddUnitCommandhandler(
+    IApplicationDbContext context, IMapper mapper) : IRequestHandler<AddUnitCommand, UnitDto>
 {
     public async Task<UnitDto> Handle(AddUnitCommand request, CancellationToken cancellationToken)
     {
@@ -23,9 +24,9 @@ public class AddUnitCommandhandler(IApplicationDbContext _context, IMapper _mapp
             NameRu = request.NameRu,
         };
 
-        await _context.AttributeUnits.AddAsync(AttributeUnit, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.AttributeUnits.AddAsync(AttributeUnit, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<UnitDto>(AttributeUnit);
+        return mapper.Map<UnitDto>(AttributeUnit);
     }
 }

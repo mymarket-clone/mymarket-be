@@ -4,16 +4,16 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Infrastructure.Configuration;
 
-public class CityEntityConfiguration : IEntityTypeConfiguration<CityEntity>
+public class BrandEntityConfiguration : IEntityTypeConfiguration<BrandEntity>
 {
-    public void Configure(EntityTypeBuilder<CityEntity> builder)
+    public void Configure(EntityTypeBuilder<BrandEntity> builder)
     {
-        builder.ToTable("Cities");
+        builder.ToTable("Brands");
 
         builder
             .Property(x => x.Name)
-            .HasMaxLength(255)
             .HasColumnType("text")
+            .HasMaxLength(255)
             .IsRequired();
     }
 }

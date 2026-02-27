@@ -11,19 +11,19 @@ namespace Mymarket.WebApi.Controllers
 {
     [Authorize]
     [Route("api/AttributeOptions")]
-    public class AttributesOptionsController(IMediator _mediator) : BaseController
+    public class AttributesOptionsController(IMediator mediator) : BaseController
     {
         [HttpPost]
         public async Task<IActionResult> AddAttributeOption([FromBody] AddAttributeOptionCommand command)
         {
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAttributeOption(int id)
         {
-            await _mediator.Send(new DeleteAttributeOptionCommand(id));
+            await mediator.Send(new DeleteAttributeOptionCommand(id));
             return NoContent();
         }
 
@@ -32,14 +32,14 @@ namespace Mymarket.WebApi.Controllers
             [FromRoute] int Id,
             [FromBody] EditAttributeOptionCommand command)
         {
-            await _mediator.Send(command with { Id = Id });
+            await mediator.Send(command with { Id = Id });
             return NoContent();
         }
 
         [HttpGet("GetAllById")]
         public async Task<IActionResult> GetByIdAttribute([FromQuery] int id)
         {
-            var result = await _mediator.Send(new GetAllAttributeOptionsById(id));
+            var result = await mediator.Send(new GetAllAttributeOptionsById(id));
             if (result is null) return NotFound();
             return Ok(result);
         }

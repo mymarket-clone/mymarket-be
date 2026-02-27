@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260227095932_AddBrands")]
+    partial class AddBrands
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,15 +217,15 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(100)
                         .HasColumnType("text");
 
                     b.Property<string>("NameEn")
-                        .HasMaxLength(255)
+                        .HasMaxLength(100)
                         .HasColumnType("text");
 
                     b.Property<string>("NameRu")
-                        .HasMaxLength(255)
+                        .HasMaxLength(100)
                         .HasColumnType("text");
 
                     b.Property<int?>("ParentId")
@@ -245,7 +248,6 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -289,7 +291,7 @@ namespace Mymarket.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Value")
-                        .HasMaxLength(255)
+                        .HasMaxLength(500)
                         .IsUnicode(true)
                         .HasColumnType("text");
 
@@ -363,7 +365,7 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(72)
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
@@ -463,7 +465,7 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.Property<string>("Firstname")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(72)
                         .HasColumnType("text");
 
                     b.Property<int>("Gender")
@@ -471,7 +473,7 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(72)
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")

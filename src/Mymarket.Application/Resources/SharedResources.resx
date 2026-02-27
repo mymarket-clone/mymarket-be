@@ -121,13 +121,13 @@
     <value>Name is required</value>
   </data>
   <data name="NameMaxLength" xml:space="preserve">
-    <value>First name must not exceed 72 characters</value>
+    <value>First name must not exceed 255 characters</value>
   </data>
   <data name="LastnameRequired" xml:space="preserve">
     <value>Last name is required</value>
   </data>
   <data name="LastnameMaxLength" xml:space="preserve">
-    <value>Last name must not exceed 72 characters</value>
+    <value>Last name must not exceed 255 characters</value>
   </data>
   <data name="EmailRequired" xml:space="preserve">
     <value>Email is required</value>
@@ -154,7 +154,7 @@
     <value>Password must be at least 8 characters</value>
   </data>
   <data name="PasswordMaxLength" xml:space="preserve">
-    <value>Password must not exceed 64 characters</value>
+    <value>Password must not exceed 255 characters</value>
   </data>
   <data name="PasswordNoSpaces" xml:space="preserve">
     <value>Password cannot contain spaces</value>
@@ -269,5 +269,8 @@
   </data>
   <data name="AttributeOptionDoesnotExist" xml:space="preserve">
     <value>Option does not exist</value>
+  </data>
+  <data name="ImageRequired" xml:space="preserve">
+    <value>Image required</value>
   </data>
 </root>

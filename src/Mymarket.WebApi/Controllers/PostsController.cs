@@ -9,19 +9,19 @@ namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
 [Route("api/Posts")]
-public class PostsController(IMediator _mediator) : BaseController
+public class PostsController(IMediator mediator) : BaseController
 {
     [HttpPost]
     public async Task<IActionResult> AddPost([FromForm] AddPostCommand command)
     {
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return Created();
     }
 
     [HttpGet("GetById")]
     public async Task<IActionResult> GetPostById([FromQuery] int id)
     {
-        var result = await _mediator.Send(new GetPostByIdQuery(id));
+        var result = await mediator.Send(new GetPostByIdQuery(id));
 
         if (result is null) return NotFound();
         return Ok(result);

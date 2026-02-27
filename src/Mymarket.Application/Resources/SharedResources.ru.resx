@@ -121,13 +121,13 @@
     <value>Введите имя</value>
   </data>
   <data name="NameMaxLength" xml:space="preserve">
-    <value>Имя не должно превышать 72 символа</value>
+    <value>Имя не должно превышать 255 символа</value>
   </data>
   <data name="LastnameRequired" xml:space="preserve">
     <value>Введите фамилию</value>
   </data>
   <data name="LastnameMaxLength" xml:space="preserve">
-    <value>Фамилия не должна превышать 72 символа</value>
+    <value>Фамилия не должна превышать 255 символа</value>
   </data>
   <data name="EmailRequired" xml:space="preserve">
     <value>Введите имя</value>
@@ -154,7 +154,7 @@
     <value>Пароль должен содержать хотя бы одну цифру</value>
   </data>
   <data name="PasswordMaxLength" xml:space="preserve">
-    <value>Пароль не должен превышать 72 символа</value>
+    <value>Пароль не должен превышать 255 символа</value>
   </data>
   <data name="PasswordNoSpaces" xml:space="preserve">
     <value>Пароль не должен состоять из пробелов</value>
@@ -269,5 +269,8 @@
   </data>
   <data name="AttributeOptionDoesnotExist" xml:space="preserve">
     <value>Запись не найдена</value>
+  </data>
+  <data name="ImageRequired" xml:space="preserve">
+    <value>Картинка обязеательна</value>
   </data>
 </root>

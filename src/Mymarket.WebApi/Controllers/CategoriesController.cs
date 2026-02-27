@@ -13,12 +13,12 @@ namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
 [Route("api/Categories")]
-public class CategoriesController(IMediator _mediator) : BaseController
+public class CategoriesController(IMediator mediator) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetCategories()
     {
-        var result = await _mediator.Send(new GetCategoriesQuery());
+        var result = await mediator.Send(new GetCategoriesQuery());
 
         if (result is null) return NotFound();
         return Ok(result);
@@ -27,7 +27,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
     [HttpPost]
     public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand command)
     {
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 
@@ -36,21 +36,21 @@ public class CategoriesController(IMediator _mediator) : BaseController
         [FromRoute] int id, 
         [FromBody] EditCategoryCommand command)
     {
-        await _mediator.Send(command with { Id = id });
+        await mediator.Send(command with { Id = id });
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        await _mediator.Send(new DeleteCategoryCommand(id));
+        await mediator.Send(new DeleteCategoryCommand(id));
         return NoContent();
     }
 
     [HttpGet("GetById")]
     public async Task<IActionResult> GetCategoryById([FromQuery] int id)
     {
-        var result = await _mediator.Send(new GetCategoryByIdQuery(id));
+        var result = await mediator.Send(new GetCategoryByIdQuery(id));
 
         if (result is null) return NotFound();
         return Ok(result);
@@ -59,7 +59,7 @@ public class CategoriesController(IMediator _mediator) : BaseController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllCategories()
     {
-        var result = await _mediator.Send(new GetAllCategoriesQuery());
+        var result = await mediator.Send(new GetAllCategoriesQuery());
 
         if (result is null) return NotFound();
         return Ok(result);

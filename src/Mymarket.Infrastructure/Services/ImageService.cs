@@ -40,8 +40,39 @@ public class ImageService(Client _client) : IImageService
             throw new ApplicationException("Error uploading images", ex);
         }
     }
+    public async Task<ImageEntity> UploadAsync(IFormFile Image, CancellationToken cancellationToken)
+    {
+        if (Image is null) throw new ArgumentNullException(nameof(Image));
+        if (Image.Length <= 0) throw new ArgumentException("Image is empty.", nameof(Image));
 
-    public async Task DeleteAsync(IEnumerable<ImageEntity> images, CancellationToken cancellationToken)
+        try
+        {
+            var uniqueId = Guid.NewGuid();
+
+            using var memoryStream = new MemoryStream();
+            await Image.CopyToAsync(memoryStream, cancellationToken);
+
+            var fileName = $"{uniqueId}{Path.GetExtension(Image.FileName)}";
+
+            await _client.Storage
+                .From("Images")
+                .Upload(memoryStream.ToArray(), fileName);
+
+            var url = _client.Storage.From("Images").GetPublicUrl(fileName);
+
+            return new ImageEntity
+            {
+                Url = url,
+                UniqueId = uniqueId
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error uploading image", ex);
+        }
+    }
+
+    public async Task DeleteAsync(List<ImageEntity> images, CancellationToken cancellationToken)
     {
         if (images == null) return;
 
@@ -64,6 +95,27 @@ public class ImageService(Client _client) : IImageService
         catch (Exception ex)
         {
             throw new ApplicationException("Error deleting images", ex);
+        }
+    }
+
+    public async Task DeleteAsync(ImageEntity image, CancellationToken cancellationToken)
+    {
+        if (image == null) return;
+
+        try
+        {
+            var extension = Path.GetExtension(new Uri(image.Url).AbsolutePath);
+            var fileName = $"{image.UniqueId}{extension}";
+
+            if (string.IsNullOrWhiteSpace(fileName)) return;
+
+            await _client.Storage
+                .From("Images")
+                .Remove([fileName]);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error deleting image", ex);
         }
     }
 }

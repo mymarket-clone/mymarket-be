@@ -10,19 +10,19 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Route("api/CategoryAttributes")]
-public class CategoryAttrributesController(IMediator _mediator) : BaseController
+public class CategoryAttrributesController(IMediator mediator) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetCategoryAttribute([FromQuery] int id)
     {
-        var result = await _mediator.Send(new GetCategoryAttributesQuery(id));
+        var result = await mediator.Send(new GetCategoryAttributesQuery(id));
         return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> AddCategoryAttribute(AddCategoryAttributesCommand command)
     {
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 
@@ -31,21 +31,21 @@ public class CategoryAttrributesController(IMediator _mediator) : BaseController
         [FromRoute] int Id,
         [FromBody] EditCategoryAttributesCommand command)
     {
-        await _mediator.Send(command with { Id = Id });
+        await mediator.Send(command with { Id = Id });
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategoryAttribute(int id)
     {
-        await _mediator.Send(new DeleteCategoryAttributesCommand(id));
+        await mediator.Send(new DeleteCategoryAttributesCommand(id));
         return NoContent();
     }
 
     [HttpGet("GetById")]
     public async Task<IActionResult> GetCategoryAttributeById([FromQuery] int id)
     {
-        var result = await _mediator.Send(new GetCategoryAttributeByIdQuery(id));
+        var result = await mediator.Send(new GetCategoryAttributeByIdQuery(id));
 
         if (result is null) return NotFound();
         return Ok(result);

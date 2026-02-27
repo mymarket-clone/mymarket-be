@@ -12,12 +12,12 @@ namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
 [Route("api/Attributes")]
-public class AttributesController(IMediator _mediator) : BaseController
+public class AttributesController(IMediator mediator) : BaseController
 {
     [HttpPost]
     public async Task<IActionResult> AddAttribute(AddAttributeCommand command)
     {
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 
@@ -26,21 +26,21 @@ public class AttributesController(IMediator _mediator) : BaseController
         [FromRoute] int Id,
         [FromBody] EditAttributeCommand command)
     {
-        await _mediator.Send(command with { Id = Id });
+        await mediator.Send(command with { Id = Id });
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAttribute(int id)
     {
-        await _mediator.Send(new DeleteUnitCommand(id));
+        await mediator.Send(new DeleteUnitCommand(id));
         return NoContent();
     }
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllAttribute([FromQuery] GetAllAttributeQuery command)
     {
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         if (result is null) return NotFound();
         return Ok(result);
     }
@@ -48,7 +48,7 @@ public class AttributesController(IMediator _mediator) : BaseController
     [HttpGet("GetById")]
     public async Task<IActionResult> GetByIdAttribute([FromQuery] GetAttributeById command)
     {
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         if (result is null) return NotFound();
         return Ok(result);
     }
