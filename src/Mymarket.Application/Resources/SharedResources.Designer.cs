@@ -142,6 +142,24 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category post type must match the parent category post type.
+        /// </summary>
+        public static string CategoryPostTypeMismatch {
+            get {
+                return ResourceManager.GetString("CategoryPostTypeMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category post type is required.
+        /// </summary>
+        public static string CategoryPostTypeRequired {
+            get {
+                return ResourceManager.GetString("CategoryPostTypeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code have already sent.
         /// </summary>
         public static string CodeAlreadySent {

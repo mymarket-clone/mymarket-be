@@ -15,7 +15,7 @@ public class AddCategoryCommandValidator : AbstractValidator<AddCategoryCommand>
         _context = context;
 
         RuleFor(x => x.ParentId)
-            .MustAsync(ParentExists).WithMessage("Parent category does not exist");
+            .MustAsync(ParentExists).WithMessage(SharedResources.IdDoesnotExist);
 
         RuleFor(x => x.Name)
             .MaximumLength(255).WithMessage(SharedResources.LabelLength)
@@ -31,8 +31,8 @@ public class AddCategoryCommandValidator : AbstractValidator<AddCategoryCommand>
 
         RuleFor(x => x.CategoryPostType)
             .IsInEnum()
-            .NotEmpty().WithMessage("Category post type is required")
-            .MustAsync(HaveSamePostTypeAsParent).WithMessage("Category post type must match the parent category post type");
+            .NotEmpty().WithMessage(SharedResources.CategoryPostTypeRequired)
+            .MustAsync(HaveSamePostTypeAsParent).WithMessage(SharedResources.CategoryPostTypeMismatch);
     }
 
     private async Task<bool> ParentExists(int? parentId, CancellationToken cancellationToken)

@@ -4,7 +4,9 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Categories.Commands.Delete;
 
-public record DeleteCategoryCommand(int Id) : IRequest<Unit>;
+public record DeleteCategoryCommand(
+    int Id
+) : IRequest<Unit>;
 
 public class DeleteCategoryCommandHandler(IApplicationDbContext _context) : IRequestHandler<DeleteCategoryCommand, Unit>
 {

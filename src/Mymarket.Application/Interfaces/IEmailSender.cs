@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Mymarket.Application.Interfaces;
+﻿namespace Mymarket.Application.Interfaces;
 
 public interface IEmailSender
 {

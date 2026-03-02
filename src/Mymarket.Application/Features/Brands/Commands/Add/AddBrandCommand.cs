@@ -19,7 +19,7 @@ public class AddBrandCommandHandler(
 {
     public async Task<BrandDto> Handle(AddBrandCommand request, CancellationToken cancellationToken)
     {
-        await using var trasnaction = await context.BeginTransactionAsync(cancellationToken);
+        await using var transaction = await context.BeginTransactionAsync(cancellationToken);
         var uploadedImage = await imageService.UploadAsync(request.Logo, cancellationToken);
 
         try
@@ -36,13 +36,13 @@ public class AddBrandCommandHandler(
             await context.Brands.AddAsync(brand, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
 
-            await trasnaction.CommitAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
 
             return mapper.Map<BrandDto>(brand);
         }
         catch
         {
-            await trasnaction.RollbackAsync(cancellationToken);
+            await transaction.RollbackAsync(cancellationToken);
             await imageService.DeleteAsync(uploadedImage, cancellationToken);
             throw;
         }

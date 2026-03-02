@@ -211,7 +211,7 @@
     <value>კოდი უკვე გამოგზავნილია</value>
   </data>
   <data name="BirthDateRequired" xml:space="preserve">
-    <value>აუცილებელი ველი</value>
+    <value>სავალდებულო ველო</value>
   </data>
   <data name="GenderRequired" xml:space="preserve">
     <value>აუცილებელი ველი</value>
@@ -272,5 +272,11 @@
   </data>
   <data name="ImageRequired" xml:space="preserve">
     <value>ფოტო აუცილებელია</value>
+  </data>
+  <data name="CategoryPostTypeRequired" xml:space="preserve">
+    <value>სავალდებული ველი</value>
+  </data>
+  <data name="CategoryPostTypeMismatch" xml:space="preserve">
+    <value>პოსტის ტიპი არ ემთხვევა დედა კატეგორის ტიპს</value>
   </data>
 </root>

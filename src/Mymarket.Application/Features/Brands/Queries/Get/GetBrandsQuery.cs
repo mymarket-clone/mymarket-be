@@ -13,13 +13,13 @@ public class GetBrandsQueryHandler(
     IApplicationDbContext context,
     IMapper mapper) : IRequestHandler<GetBrandsQuery, List<BrandDto>>
 {
-    public Task<List<BrandDto>> Handle(GetBrandsQuery request, CancellationToken cancellationToken)
+    public async Task<List<BrandDto>> Handle(GetBrandsQuery request, CancellationToken cancellationToken)
     {
-        var brands = context.Brands
+        var brands = await context.Brands
             .AsNoTracking()
             .ProjectTo<BrandDto>(mapper.ConfigurationProvider)
-            .ToList();
+            .ToListAsync(cancellationToken);
 
-        return Task.FromResult(brands);
+        return brands;
     }
 }

@@ -10,12 +10,13 @@ namespace Mymarket.Application.Features.Categories.Queries.GetAllFlat;
 public record GetAllCategoriesQuery : IRequest<List<CategoryDto>>;
 
 public class GetAllCategoriesQueryHandler(
-    IApplicationDbContext _context, IConfigurationProvider _mapper) : IRequestHandler<GetAllCategoriesQuery, List<CategoryDto>>
+    IApplicationDbContext context,
+    IMapper mapper) : IRequestHandler<GetAllCategoriesQuery, List<CategoryDto>>
 {
     public async Task<List<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await _context.Categories
-            .ProjectTo<CategoryDto>(_mapper)
+        var categories = await context.Categories
+            .ProjectTo<CategoryDto>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
         return categories;

@@ -14,8 +14,7 @@ public class DeleteCategoryCommandValidator : AbstractValidator<DeleteCategoryCo
         _context = context;
 
         RuleFor(x => x.Id)
-            .MustAsync(CategoryExists)
-            .WithMessage(SharedResources.IdDoesnotExist);
+            .MustAsync(CategoryExists).WithMessage(SharedResources.IdDoesnotExist);
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)

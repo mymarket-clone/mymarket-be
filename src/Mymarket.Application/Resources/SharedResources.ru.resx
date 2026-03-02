@@ -273,4 +273,10 @@
   <data name="ImageRequired" xml:space="preserve">
     <value>Картинка обязеательна</value>
   </data>
+  <data name="CategoryPostTypeRequired" xml:space="preserve">
+    <value>Обязательное поле</value>
+  </data>
+  <data name="CategoryPostTypeMismatch" xml:space="preserve">
+    <value>Тип поста отличается от типа родельского поста</value>
+  </data>
 </root>

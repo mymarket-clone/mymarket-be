@@ -15,13 +15,13 @@ public record AddCategoryCommand(
     CategoryPostType CategoryPostType
 ) : IRequest<CategoryDto>;
 
-public class AddCategoryCommandHandler(IApplicationDbContext _context) : IRequestHandler<AddCategoryCommand, CategoryDto>
+public class AddCategoryCommandHandler(IApplicationDbContext context) : IRequestHandler<AddCategoryCommand, CategoryDto>
 {
     public async Task<CategoryDto> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
     {
         if (request.ParentId.HasValue)
         {
-            var parentExists = await _context.Categories
+            var parentExists = await context.Categories
                 .AnyAsync(c => c.Id == request.ParentId.Value, cancellationToken);
         }
 
@@ -34,8 +34,8 @@ public class AddCategoryCommandHandler(IApplicationDbContext _context) : IReques
             CategoryPostType = request.CategoryPostType
         };
 
-        await _context.Categories.AddAsync(category, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.Categories.AddAsync(category, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         var dto = new CategoryDto
         {

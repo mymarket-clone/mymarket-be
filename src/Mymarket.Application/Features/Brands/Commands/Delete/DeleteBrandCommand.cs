@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
-using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Brands.Commands.Delete;
 
@@ -13,12 +13,7 @@ public class DeleteBrandCommandHandler(IApplicationDbContext context) : IRequest
     public async Task<Unit> Handle(DeleteBrandCommand request, CancellationToken cancellationToken)
     {
         var brand = await context.Brands
-            .FindAsync([request.Id], cancellationToken);
-
-        if (brand is null)
-        {
-            throw new ApplicationException(SharedResources.RecordNotFound);
-        }
+          .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         context.Brands.Remove(brand!);
 
