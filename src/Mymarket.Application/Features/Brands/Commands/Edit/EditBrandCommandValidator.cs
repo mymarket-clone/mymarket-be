@@ -10,8 +10,5 @@ public class EditBrandCommandValidator : AbstractValidator<EditBrandCommand>
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage(SharedResources.NameRequired)
             .MaximumLength(255).WithMessage(SharedResources.NameMaxLength);
-
-        RuleFor(x => x.Logo)
-            .NotEmpty().WithMessage(SharedResources.ImageRequired);
     }
 }

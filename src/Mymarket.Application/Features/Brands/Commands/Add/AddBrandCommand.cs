@@ -14,8 +14,7 @@ public record AddBrandCommand(
 
 public class AddBrandCommandHandler(
     IApplicationDbContext context,
-    IImageService imageService,
-    IMapper mapper) : IRequestHandler<AddBrandCommand, BrandDto>
+    IImageService imageService) : IRequestHandler<AddBrandCommand, BrandDto>
 {
     public async Task<BrandDto> Handle(AddBrandCommand request, CancellationToken cancellationToken)
     {
@@ -30,7 +29,7 @@ public class AddBrandCommandHandler(
             var brand = new BrandEntity
             {
                 Name = request.Name,
-                LogoId = uploadedImage.Id
+                LogoId = uploadedImage.Id,
             };
 
             await context.Brands.AddAsync(brand, cancellationToken);
@@ -38,7 +37,16 @@ public class AddBrandCommandHandler(
 
             await transaction.CommitAsync(cancellationToken);
 
-            return mapper.Map<BrandDto>(brand);
+            return new BrandDto
+            {
+                Id = brand.Id,
+                Name = brand.Name,
+                LogoId = uploadedImage.Id,
+                LogoUrl = context.Images
+                    .Where(i => i.Id == uploadedImage.Id)
+                    .Select(i => i.Url)
+                    .FirstOrDefault() ?? string.Empty
+            };
         }
         catch
         {

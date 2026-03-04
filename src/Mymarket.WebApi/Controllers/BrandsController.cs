@@ -29,16 +29,16 @@ public class BrandsController(IMediator mediator) : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddBrand(AddBrandCommand command)
+    public async Task<IActionResult> AddBrand([FromForm] AddBrandCommand command)
     {
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> EditBrand(EditBrandCommand command)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> EditBrand([FromRoute] int id, [FromForm] EditBrandCommand command)
     {
-        await mediator.Send(command);
+        await mediator.Send(command with { Id = id });
         return NoContent();
     }
 
