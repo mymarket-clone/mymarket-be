@@ -15,5 +15,10 @@ public class BrandEntityConfiguration : IEntityTypeConfiguration<BrandEntity>
             .HasColumnType("text")
             .HasMaxLength(255)
             .IsRequired();
+
+        builder.HasOne(x => x.Logo)
+            .WithOne()
+            .HasForeignKey<BrandEntity>(x => x.LogoId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

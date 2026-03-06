@@ -38,8 +38,8 @@ public class BrandsController(IMediator mediator) : BaseController
     [HttpPut("{id}")]
     public async Task<IActionResult> EditBrand([FromRoute] int id, [FromForm] EditBrandCommand command)
     {
-        await mediator.Send(command with { Id = id });
-        return NoContent();
+        var result  = await mediator.Send(command with { Id = id });
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]

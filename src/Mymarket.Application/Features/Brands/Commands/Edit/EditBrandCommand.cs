@@ -45,6 +45,7 @@ public class EditBrandCommandHandler(
                 await context.SaveChangesAsync(cancellationToken);
 
                 brand.LogoId = newImage.Id;
+                brand.Logo = newImage;
                 await context.SaveChangesAsync(cancellationToken);
 
                 await transaction.CommitAsync(cancellationToken);
@@ -78,7 +79,7 @@ public class EditBrandCommandHandler(
                 Id = x.Id,
                 Name = x.Name,
                 LogoId = x.LogoId,
-                LogoUrl = x.Logo!.Url ?? string.Empty
+                LogoUrl = x.Logo != null ? x.Logo.Url ?? string.Empty : string.Empty
             })
             .FirstAsync(cancellationToken);
     }
