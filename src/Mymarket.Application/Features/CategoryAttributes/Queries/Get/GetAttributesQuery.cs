@@ -6,15 +6,16 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.CategoryAttributes.Queries.Get;
 
-public record GetCategoryAttributesQuery(
+public record GetAttributesQuery(
     int Id
 ): IRequest<List<CategoryAttributeOptionsDto>>;
 
-public class GetCategoryAttributesQueryHandler(
+public class GetAttributesQueryHandler(
     IApplicationDbContext context,
-    ILanguageContext languageContext) : IRequestHandler<GetCategoryAttributesQuery, List<CategoryAttributeOptionsDto>>
+    ILanguageContext languageContext) : IRequestHandler<GetAttributesQuery, List<CategoryAttributeOptionsDto>>
 {
-    public async Task<List<CategoryAttributeOptionsDto>> Handle(GetCategoryAttributesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CategoryAttributeOptionsDto>> Handle(
+        GetAttributesQuery request, CancellationToken cancellationToken)
     {
         var result = await context.CategoryAttributes
             .AsNoTracking()

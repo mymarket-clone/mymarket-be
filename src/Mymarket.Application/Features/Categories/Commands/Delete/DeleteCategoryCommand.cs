@@ -8,15 +8,17 @@ public record DeleteCategoryCommand(
     int Id
 ) : IRequest<Unit>;
 
-public class DeleteCategoryCommandHandler(IApplicationDbContext _context) : IRequestHandler<DeleteCategoryCommand, Unit>
+public class DeleteCategoryCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<DeleteCategoryCommand, Unit>
 {
-    public async Task<Unit> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(
+        DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await _context.Categories
+        var category = await context.Categories
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
-        _context.Categories.Remove(category!);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Categories.Remove(category!);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

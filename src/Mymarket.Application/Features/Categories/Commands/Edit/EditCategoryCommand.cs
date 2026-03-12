@@ -12,11 +12,12 @@ public record EditCategoryCommand(
     string? NameRu
 ) : IRequest<Unit>;
 
-public class EditCategoryCommandHandler(IApplicationDbContext _context) : IRequestHandler<EditCategoryCommand, Unit>
+public class EditCategoryCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<EditCategoryCommand, Unit>
 {
     public async Task<Unit> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await _context.Categories
+        var category = await context.Categories
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         category!.Name = request.Name;
@@ -24,7 +25,7 @@ public class EditCategoryCommandHandler(IApplicationDbContext _context) : IReque
         category!.NameRu = request.NameRu;
         category!.ParentId = request.ParentId;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

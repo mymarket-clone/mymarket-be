@@ -7,13 +7,18 @@ using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.features.Users.Commands.LoginUser;
 
-public record LoginUserCommand(string EmailOrPhone, string Password) : IRequest<AuthDto>;
+public record LoginUserCommand(
+    string EmailOrPhone,
+    string Password
+) : IRequest<AuthDto>;
 
-public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvider _tokenProvider) : IRequestHandler<LoginUserCommand, AuthDto>
+public class LoginUserCommandHandler(
+    IApplicationDbContext context,
+    ITokenProvider tokenProvider) : IRequestHandler<LoginUserCommand, AuthDto>
 {
     public async Task<AuthDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
+        var user = await context.Users
             .FirstOrDefaultAsync(
                 x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
                 cancellationToken);
@@ -35,13 +40,13 @@ public class LoginUserCommandHandler(IApplicationDbContext _context, ITokenProvi
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, accessTokenTtl) = _tokenProvider.CreateAccessToken(userModel);
-        var (refreshToken, refreshTokenTtl) = _tokenProvider.CreateRefreshToken();
+        var (accessToken, accessTokenTtl) = tokenProvider.CreateAccessToken(userModel);
+        var (refreshToken, refreshTokenTtl) = tokenProvider.CreateRefreshToken();
 
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = refreshTokenTtl;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new AuthDto
         (

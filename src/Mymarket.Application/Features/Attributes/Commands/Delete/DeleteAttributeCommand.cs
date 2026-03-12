@@ -9,11 +9,12 @@ public record DeleteAttributeCommand(
     int Id
 ) : IRequest<Unit>;
 
-public class DeleteAttributeCommandHandler(IApplicationDbContext _context) : IRequestHandler<DeleteAttributeCommand, Unit>
+public class DeleteAttributeCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<DeleteAttributeCommand, Unit>
 {
     public async Task<Unit> Handle(DeleteAttributeCommand request, CancellationToken cancellationToken)
     {
-        var attribute = await _context.Attributes
+        var attribute = await context.Attributes
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (attribute is null)
@@ -21,8 +22,8 @@ public class DeleteAttributeCommandHandler(IApplicationDbContext _context) : IRe
             throw new ApplicationException(SharedResources.AttributeDoesnotExist);
         }
 
-        _context.Attributes.Remove(attribute!);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Attributes.Remove(attribute!);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

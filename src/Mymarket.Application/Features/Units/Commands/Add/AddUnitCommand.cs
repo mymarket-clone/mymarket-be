@@ -13,7 +13,8 @@ public record AddUnitCommand(
 ): IRequest<UnitDto>;
 
 public class AddUnitCommandhandler(
-    IApplicationDbContext context, IMapper mapper) : IRequestHandler<AddUnitCommand, UnitDto>
+    IApplicationDbContext context,
+    IMapper mapper) : IRequestHandler<AddUnitCommand, UnitDto>
 {
     public async Task<UnitDto> Handle(AddUnitCommand request, CancellationToken cancellationToken)
     {

@@ -13,12 +13,13 @@ public record RefreshUserCommand(
 ) : IRequest<AuthDto>;
 
 public class RefreshUserCommandHandler(
-    IApplicationDbContext _context,
-    ITokenProvider _tokenProvider) : IRequestHandler<RefreshUserCommand, AuthDto>
+    IApplicationDbContext context,
+    ITokenProvider tokenProvider) : IRequestHandler<RefreshUserCommand, AuthDto>
 {
-    public async Task<AuthDto> Handle(RefreshUserCommand request, CancellationToken cancellationToken)
+    public async Task<AuthDto> Handle(
+        RefreshUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
+        var user = await context.Users
             .FirstOrDefaultAsync(
                 x => x.RefreshToken == request.RefreshToken && x.RefreshTokenExpiry > DateTime.UtcNow,
                 cancellationToken);
@@ -37,13 +38,13 @@ public class RefreshUserCommandHandler(
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, accessTokenTtl) = _tokenProvider.CreateAccessToken(userModel!);
-        var (refreshToken, refreshTokenTtl) = _tokenProvider.CreateRefreshToken();
+        var (accessToken, accessTokenTtl) = tokenProvider.CreateAccessToken(userModel!);
+        var (refreshToken, refreshTokenTtl) = tokenProvider.CreateRefreshToken();
 
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = refreshTokenTtl;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new AuthDto
         (

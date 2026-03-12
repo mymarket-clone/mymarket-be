@@ -7,21 +7,21 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Units.Queries.GetById;
 
-public record GetUnitById(
+public record GetUnitByIdQuery(
     int Id
 ) : IRequest<UnitDto?>;
 
-public class GetUnitByIdHandler(IApplicationDbContext _context, IConfigurationProvider _mapper) : IRequestHandler<GetUnitById, UnitDto?>
+public class GetUnitByIdQueryHandler(
+    IApplicationDbContext context,
+    IMapper mapper) : IRequestHandler<GetUnitByIdQuery, UnitDto?>
 {
-    public async Task<UnitDto?> Handle(GetUnitById request, CancellationToken cancellationToken)
+    public async Task<UnitDto?> Handle(GetUnitByIdQuery request, CancellationToken cancellationToken)
     {
-        var attribute = await _context.AttributeUnits
+        var result = await context.AttributeUnits
             .AsNoTracking()
-            .ProjectTo<UnitDto>(_mapper)
+            .ProjectTo<UnitDto>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (attribute is null) return null;
-
-        return attribute;
+        return result is null ? null : result;
     }
 }

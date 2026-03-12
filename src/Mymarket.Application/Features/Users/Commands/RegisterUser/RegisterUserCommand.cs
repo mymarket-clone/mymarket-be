@@ -14,9 +14,11 @@ public record RegisterUserCommand(
     int BirthYear,
     string PhoneNumber,
     string Password,
-    string PasswordConfirm) : IRequest<Unit>;
+    string PasswordConfirm
+) : IRequest<Unit>;
 
-public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandler<RegisterUserCommand, Unit>
+public class RegisterUserHandler(
+    IApplicationDbContext context) : IRequestHandler<RegisterUserCommand, Unit>
 {
     public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
@@ -32,8 +34,8 @@ public class RegisterUserHandler(IApplicationDbContext _context) : IRequestHandl
             PasswordHash = CryptoHelper.HashPassword(request.Password),
         };
 
-        _context.Users.Add(userToSave);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Users.Add(userToSave);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

@@ -12,7 +12,8 @@ public record AddCategoryAttributesCommand(
     int Order
 ) : IRequest<CategoryAttributeDto>;
 
-public class AddCategoryAttributesCommandHandler(IApplicationDbContext _context) : IRequestHandler<AddCategoryAttributesCommand, CategoryAttributeDto>
+public class AddCategoryAttributesCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<AddCategoryAttributesCommand, CategoryAttributeDto>
 {
     public async Task<CategoryAttributeDto> Handle(AddCategoryAttributesCommand request, CancellationToken cancellationToken)
     {
@@ -24,8 +25,8 @@ public class AddCategoryAttributesCommandHandler(IApplicationDbContext _context)
             Order = request.Order
         };
 
-        await _context.CategoryAttributes.AddAsync(entity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.CategoryAttributes.AddAsync(entity, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         var dto = new CategoryAttributeDto
         {

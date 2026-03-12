@@ -4,14 +4,19 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.features.Users.Queries.UserExists;
 
-public record UserExistsQuery(string Email): IRequest<bool>;
+public record UserExistsQuery(
+    string Email
+): IRequest<bool>;
 
-public class UserExistsQueryHandler(IApplicationDbContext _context) : IRequestHandler<UserExistsQuery, bool>
+public class UserExistsQueryHandler(
+    IApplicationDbContext context) : IRequestHandler<UserExistsQuery, bool>
 {
     public async Task<bool> Handle(UserExistsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Users
+        var result = await context.Users
             .AsTracking()
             .AnyAsync(x => x.Email.ToLower().Equals(request.Email.ToLower()), cancellationToken);
+
+        return result;
     }
 }

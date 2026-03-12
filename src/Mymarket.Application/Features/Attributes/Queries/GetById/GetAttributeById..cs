@@ -7,21 +7,21 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Attributes.Queries.GetById;
 
-public record GetAttributeById(
+public record GetAttributeByIdQuery(
     int Id
 ) : IRequest<AttributeDto?>;
 
-public class GetAttributeByIdHandler(IApplicationDbContext _context, IConfigurationProvider _mapper) : IRequestHandler<GetAttributeById, AttributeDto?>
+public class GetAttributeByIdQueryHandler(
+    IApplicationDbContext context,
+    IMapper mapper) : IRequestHandler<GetAttributeByIdQuery, AttributeDto?>
 {
-    public async Task<AttributeDto?> Handle(GetAttributeById request, CancellationToken cancellationToken)
+    public async Task<AttributeDto?> Handle(GetAttributeByIdQuery request, CancellationToken cancellationToken)
     {
-        var attribute = await _context.Attributes
+        var attribute = await context.Attributes
             .AsNoTracking()
-            .ProjectTo<AttributeDto>(_mapper)
+            .ProjectTo<AttributeDto>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (attribute is null) return null;
-
-        return attribute;
+        return attribute is null ? null : attribute;
     }
 }

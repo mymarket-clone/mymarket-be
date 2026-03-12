@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Categories.Models;
 using Mymarket.Application.Interfaces;
 
-namespace Mymarket.Application.Features.Categories.Queries.GetFlat;
+namespace Mymarket.Application.Features.Categories.Queries.Get;
 
 public record GetCategoriesQuery : IRequest<List<CategoryFlatDto>>;
 

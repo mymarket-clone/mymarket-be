@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.AttributeOptions.Commands.Add;
 using Mymarket.Application.Features.AttributeOptions.Commands.Delete;
 using Mymarket.Application.Features.AttributeOptions.Commands.Edit;
-using Mymarket.Application.Features.AttributeOptions.Queries.GetAllById;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers
 {
     [Authorize]
-    [Route("api/AttributeOptions")]
+    [Route("api/attribute-options")]
     public class AttributesOptionsController(IMediator mediator) : BaseController
     {
         [HttpPost]
@@ -34,14 +33,6 @@ namespace Mymarket.WebApi.Controllers
         {
             await mediator.Send(command with { Id = Id });
             return NoContent();
-        }
-
-        [HttpGet("GetAllById")]
-        public async Task<IActionResult> GetByIdAttribute([FromQuery] int id)
-        {
-            var result = await mediator.Send(new GetAllAttributeOptionsById(id));
-            if (result is null) return NotFound();
-            return Ok(result);
         }
     }
 }

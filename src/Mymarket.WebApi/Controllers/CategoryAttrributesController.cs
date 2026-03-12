@@ -4,18 +4,17 @@ using Mymarket.Application.Features.CategoryAttributes.Commands.Add;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Delete;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Edit;
 using Mymarket.Application.Features.CategoryAttributes.Queries.Get;
-using Mymarket.Application.Features.CategoryAttributes.Queries.GetById;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
-[Route("api/CategoryAttributes")]
+[Route("api/category-attributes")]
 public class CategoryAttrributesController(IMediator mediator) : BaseController
 {
     [HttpGet]
-    public async Task<IActionResult> GetCategoryAttribute([FromQuery] int id)
+    public async Task<IActionResult> GetCategoryAttributes([FromQuery] int id)
     {
-        var result = await mediator.Send(new GetCategoryAttributesQuery(id));
+        var result = await mediator.Send(new GetAttributesQuery(id));
         return Ok(result);
     }
 
@@ -40,14 +39,5 @@ public class CategoryAttrributesController(IMediator mediator) : BaseController
     {
         await mediator.Send(new DeleteCategoryAttributesCommand(id));
         return NoContent();
-    }
-
-    [HttpGet("GetById")]
-    public async Task<IActionResult> GetCategoryAttributeById([FromQuery] int id)
-    {
-        var result = await mediator.Send(new GetCategoryAttributeByIdQuery(id));
-
-        if (result is null) return NotFound();
-        return Ok(result);
     }
 }

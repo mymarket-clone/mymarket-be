@@ -13,24 +13,24 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
-[Route("api/Auth")]
+[Route("api/auth")]
 public class AuthController(IMediator mediator) : BaseController
 {
-    [HttpPost("RegisterUser")]
+    [HttpPost("register-user")]
     public async Task<IActionResult> Register(RegisterUserCommand command)
     {
         await mediator.Send(command);
         return Created();
     }
 
-    [HttpPost("SendEmailVerificationCode")]
+    [HttpPost("send-email-verification-code")]
     public async Task<IActionResult> SendEmailVerificationCode(SendEmailVerificationCodeCommand command)
     {
         await mediator.Send(command);
         return NoContent();
     }
 
-    [HttpPost("VerifyEmailCode")]
+    [HttpPost("verify-email-code")]
     public async Task<IActionResult> VerifyCode(VerifyEmailCodeCommand command)
     {
         var response = await mediator.Send(command);
@@ -38,42 +38,42 @@ public class AuthController(IMediator mediator) : BaseController
         return Ok(response);
     }
 
-    [HttpPost("LoginUser")]
+    [HttpPost("login-user")]
     public async Task<IActionResult> LoginUser(LoginUserCommand command)
     {
         var response = await mediator.Send(command);
         return Ok(response);
     }
 
-    [HttpPost("SendPasswordRecovery")]
+    [HttpPost("send-password-recovery")]
     public async Task<IActionResult> PasswordRecovery(SendPasswordRecoveryCommand command)
     {
         await mediator.Send(command);
         return NoContent();
     }
 
-    [HttpPost("VerifyPasswordCode")]
+    [HttpPost("verify-password-code")]
     public async Task<IActionResult> VerifyPasswordCode(VerifyPasswordRecoveryCodeCommand command)
     {
         await mediator.Send(command);
         return NoContent();
     }
 
-    [HttpPost("PasswordRecovery")]
+    [HttpPost("password-recovery")]
     public async Task<IActionResult> PasswordRecovery(PasswordRecoveryCommand command)
     {
         await mediator.Send(command);
         return NoContent();
     }
 
-    [HttpPost("RefreshUser")]
+    [HttpPost("refresh-user")]
     public async Task<IActionResult> RefreshUser(RefreshUserCommand command)
     {
         var response = await mediator.Send(command);
         return Ok(response);
     }
 
-    [HttpGet("UserExists")]
+    [HttpGet("user-exists")]
     public async Task<IActionResult> UserExists([FromQuery] UserExistsQuery command)
     {
         var result = await mediator.Send(command);

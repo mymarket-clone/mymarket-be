@@ -15,11 +15,12 @@ public record EditAttributeCommand(
     AttributeType AttributeType
 ) : IRequest<Unit>;
 
-public class EditAttributeCommandHandler(IApplicationDbContext _context) : IRequestHandler<EditAttributeCommand, Unit>
+public class EditAttributeCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<EditAttributeCommand, Unit>
 {
     public async Task<Unit> Handle(EditAttributeCommand request, CancellationToken cancellationToken)
     {
-        var attribute = await _context.Attributes
+        var attribute = await context.Attributes
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         attribute!.Name = request.Name;
@@ -29,7 +30,7 @@ public class EditAttributeCommandHandler(IApplicationDbContext _context) : IRequ
         attribute!.UnitId = request.UnitId;
         attribute!.AttributeType = request.AttributeType;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

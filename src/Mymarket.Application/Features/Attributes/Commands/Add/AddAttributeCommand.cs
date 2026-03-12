@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Mymarket.Application.Features.Attributes.Models;
-using Mymarket.Application.Features.Units.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Enums;
 using Mymarket.Domain.Entities;
@@ -18,7 +17,8 @@ public record AddAttributeCommand(
 ) : IRequest<AttributeDto>;
 
 public class AddAttributeCommandHandler(
-    IApplicationDbContext _context, IMapper _mapper) : IRequestHandler<AddAttributeCommand, AttributeDto>
+    IApplicationDbContext context,
+    IMapper mapper) : IRequestHandler<AddAttributeCommand, AttributeDto>
 {
     public async Task<AttributeDto> Handle(AddAttributeCommand request, CancellationToken cancellationToken)
     {
@@ -32,9 +32,9 @@ public class AddAttributeCommandHandler(
             AttributeType = request.AttributeType
         };
 
-        await _context.Attributes.AddAsync(attribute, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.Attributes.AddAsync(attribute, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<AttributeDto>(attribute);
+        return mapper.Map<AttributeDto>(attribute);
     }
 }

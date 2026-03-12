@@ -12,11 +12,12 @@ public record EditAttributeOptionCommand(
     string? NameRu
 ) : IRequest<Unit>;
 
-public class EditAttributeOptionCommandHandler(IApplicationDbContext _context) : IRequestHandler<EditAttributeOptionCommand, Unit>
+public class EditAttributeOptionCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<EditAttributeOptionCommand, Unit>
 {
     public async Task<Unit> Handle(EditAttributeOptionCommand request, CancellationToken cancellationToken)
     {
-        var attributeOption = await _context.AttributesOptions
+        var attributeOption = await context.AttributesOptions
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         attributeOption!.Order = request.Order;
@@ -24,7 +25,7 @@ public class EditAttributeOptionCommandHandler(IApplicationDbContext _context) :
         attributeOption!.NameEn = request.NameEn;
         attributeOption!.NameRu = request.NameRu;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

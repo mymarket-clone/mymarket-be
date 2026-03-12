@@ -8,15 +8,17 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.features.Users.Commands.SendPasswordRecoveryCode;
 
-public record SendPasswordRecoveryCommand(string Email) : IRequest<Unit>;
+public record SendPasswordRecoveryCommand(
+    string Email
+) : IRequest<Unit>;
 
 public class SendPasswordRecoveryCommandHandler(
-    IApplicationDbContext _context,
-    IEmailSender _emailSender) : IRequestHandler<SendPasswordRecoveryCommand, Unit>
+    IApplicationDbContext context,
+    IEmailSender emailSender) : IRequestHandler<SendPasswordRecoveryCommand, Unit>
 {
     public async Task<Unit> Handle(SendPasswordRecoveryCommand request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
+        var user = await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.Email.ToLower().Equals(request.Email.ToLower()),
@@ -35,7 +37,7 @@ public class SendPasswordRecoveryCommandHandler(
                 var verificationCode = CryptoHelper.CreateVerificationCode();
                 var hashedVerificationCode = CryptoHelper.HashVerificationCode(verificationCode);
 
-                var existingRecord = await _context.VerificationCode
+                var existingRecord = await context.VerificationCode
                     .FirstOrDefaultAsync(
                         x => x.UserId.Equals(user.Id) && x.CodeType == CodeType.PasswordRecovery,
                         cancellationToken
@@ -43,11 +45,11 @@ public class SendPasswordRecoveryCommandHandler(
 
                 if (existingRecord is not null)
                 {
-                    _context.VerificationCode.Remove(existingRecord);
-                    await _context.SaveChangesAsync(cancellationToken);
+                    context.VerificationCode.Remove(existingRecord);
+                    await context.SaveChangesAsync(cancellationToken);
                 }
 
-                _emailSender.SendEmail(
+                emailSender.SendEmail(
                     SenderName: "Mymarket",
                     SenderEmail: "noreply@mymarket.info",
                     ToName: user.Firstname,
@@ -65,8 +67,8 @@ public class SendPasswordRecoveryCommandHandler(
                     IsVerified = false,
                 };
 
-                await _context.VerificationCode.AddAsync(verificationCodeEntity, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.VerificationCode.AddAsync(verificationCodeEntity, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
             {

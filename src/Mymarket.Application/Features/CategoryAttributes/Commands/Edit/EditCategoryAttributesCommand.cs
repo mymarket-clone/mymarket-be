@@ -12,18 +12,18 @@ public record EditCategoryAttributesCommand(
 ) : IRequest<Unit>;
 
 public class EditCategoryAttributesCommandHandler(
-    IApplicationDbContext _context) : IRequestHandler<EditCategoryAttributesCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<EditCategoryAttributesCommand, Unit>
 {
     public async Task<Unit> Handle(EditCategoryAttributesCommand request, CancellationToken cancellationToken)
     {
-        var category = await _context.CategoryAttributes
+        var category = await context.CategoryAttributes
                 .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         category!.AttributeId = request.AttributeId ?? category.AttributeId;
         category!.IsRequired = request.IsRequired ?? category.IsRequired;
         category!.Order = request.Order ?? category.Order;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

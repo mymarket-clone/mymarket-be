@@ -9,15 +9,15 @@ public record DeleteCategoryAttributesCommand(
 ): IRequest<Unit>;
 
 public class DeleteCategoryAttributesCommandHandler(
-    IApplicationDbContext _context) : IRequestHandler<DeleteCategoryAttributesCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<DeleteCategoryAttributesCommand, Unit>
 {
     public async Task<Unit> Handle(DeleteCategoryAttributesCommand request, CancellationToken cancellationToken)
     {
-        var attribute = await _context.CategoryAttributes
+        var attribute = await context.CategoryAttributes
                 .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
-        _context.CategoryAttributes.Remove(attribute!);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.CategoryAttributes.Remove(attribute!);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

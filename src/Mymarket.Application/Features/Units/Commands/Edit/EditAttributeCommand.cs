@@ -11,18 +11,18 @@ public record EditUnitCommand(
     string NameRu
 ) : IRequest<Unit>;
 
-public class EditUnitCommandHandler(IApplicationDbContext _context) : IRequestHandler<EditUnitCommand, Unit>
+public class EditUnitCommandHandler(IApplicationDbContext context) : IRequestHandler<EditUnitCommand, Unit>
 {
     public async Task<Unit> Handle(EditUnitCommand request, CancellationToken cancellationToken)
     {
-        var unit = await _context.Attributes
+        var unit = await context.Attributes
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         unit!.Name = request.Name;
         unit!.NameEn = request.NameEn;
         unit!.NameRu = request.NameRu;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

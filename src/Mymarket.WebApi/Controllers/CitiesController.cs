@@ -7,14 +7,14 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/Cities")]
+[Route("api/cities")]
 public class CitiesController(IMediator mediator) : BaseController
 {
 
-    [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllCategories()
+    [HttpGet]
+    public async Task<IActionResult> GetCitites()
     {
-        var result = await mediator.Send(new GetAllCitiesQuery());
+        var result = await mediator.Send(new GetCitiesQuery());
         return Ok(result);
     }
 }

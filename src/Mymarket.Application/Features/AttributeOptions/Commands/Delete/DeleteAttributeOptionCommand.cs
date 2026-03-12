@@ -9,11 +9,12 @@ public record DeleteAttributeOptionCommand(
     int Id
 ) : IRequest<Unit>;
 
-public class DeleteAttributeOptionCommandHandler(IApplicationDbContext _context) : IRequestHandler<DeleteAttributeOptionCommand, Unit>
+public class DeleteAttributeOptionCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<DeleteAttributeOptionCommand, Unit>
 {
     public async Task<Unit> Handle(DeleteAttributeOptionCommand request, CancellationToken cancellationToken)
     {
-        var attributeOption = await _context.AttributesOptions
+        var attributeOption = await context.AttributesOptions
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 
@@ -22,8 +23,8 @@ public class DeleteAttributeOptionCommandHandler(IApplicationDbContext _context)
             throw new ApplicationException(SharedResources.AttributeOptionDoesnotExist);
         }
 
-        _context.AttributesOptions.Remove(attributeOption!);
-        await _context.SaveChangesAsync(cancellationToken);
+        context.AttributesOptions.Remove(attributeOption!);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

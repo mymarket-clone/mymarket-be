@@ -9,7 +9,7 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
-[Route("api/Brands")]
+[Route("api/brands")]
 public class BrandsController(IMediator mediator) : BaseController
 {
     [HttpGet]

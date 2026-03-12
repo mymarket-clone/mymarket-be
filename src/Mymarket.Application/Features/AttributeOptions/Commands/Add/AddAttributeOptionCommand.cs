@@ -15,9 +15,11 @@ public record AddAttributeOptionCommand(
 ) : IRequest<AttributeOptionDto>;
 
 public class AddAttributeOptionCommandHandler(
-    IApplicationDbContext _context, IMapper _mapper) : IRequestHandler<AddAttributeOptionCommand, AttributeOptionDto>
+    IApplicationDbContext context,
+    IMapper mapper) : IRequestHandler<AddAttributeOptionCommand, AttributeOptionDto>
 {
-    public async Task<AttributeOptionDto> Handle(AddAttributeOptionCommand request, CancellationToken cancellationToken)
+    public async Task<AttributeOptionDto> Handle(
+        AddAttributeOptionCommand request, CancellationToken cancellationToken)
     {
         var AttributeOption = new AttributeOptionsEntity
         {
@@ -28,9 +30,9 @@ public class AddAttributeOptionCommandHandler(
             NameRu = request.NameRu,
         };
 
-        await _context.AttributesOptions.AddAsync(AttributeOption, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.AttributesOptions.AddAsync(AttributeOption, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<AttributeOptionDto>(AttributeOption);
+        return mapper.Map<AttributeOptionDto>(AttributeOption);
     }
 }

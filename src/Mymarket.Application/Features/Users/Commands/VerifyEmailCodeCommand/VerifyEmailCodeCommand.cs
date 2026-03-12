@@ -10,13 +10,18 @@ using Mymarket.Application.features.Users.Common.Models;
 
 namespace Mymarket.Application.features.Users.Commands.VerifyEmailCodeCommand;
 
-public record VerifyEmailCodeCommand(string Email, int Code) : IRequest<AuthDto>;
+public record VerifyEmailCodeCommand(
+    string Email,
+    int Code
+) : IRequest<AuthDto>;
 
-public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, ITokenProvider _tokenProvider) : IRequestHandler<VerifyEmailCodeCommand, AuthDto>
+public class VerifyEmailCodeCommandHandler(
+    IApplicationDbContext context,
+    ITokenProvider tokenProvider) : IRequestHandler<VerifyEmailCodeCommand, AuthDto>
 {
     public async Task<AuthDto> Handle(VerifyEmailCodeCommand request, CancellationToken cancellationToken)
     {
-        var record = await _context.VerificationCode
+        var record = await context.VerificationCode
             .Include(x => x.User)
             .FirstOrDefaultAsync(x => x.User!.Email == request.Email && x.CodeType == CodeType.EmailVerification, cancellationToken);
 
@@ -49,15 +54,15 @@ public class VerifyEmailCodeCommandHandler(IApplicationDbContext _context, IToke
             EmailVerified = user.EmailVerified,
         };
 
-        var (accessToken, accessTokenTtl) = _tokenProvider.CreateAccessToken(userModel!);
-        var (refreshToken, refreshTokenTtl) = _tokenProvider.CreateRefreshToken();
+        var (accessToken, accessTokenTtl) = tokenProvider.CreateAccessToken(userModel!);
+        var (refreshToken, refreshTokenTtl) = tokenProvider.CreateRefreshToken();
 
         record.IsVerified = true;
 
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = refreshTokenTtl;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new AuthDto
         (

@@ -4,16 +4,30 @@ using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Units.Commands.Add;
 using Mymarket.Application.Features.Units.Commands.Delete;
 using Mymarket.Application.Features.Units.Commands.Edit;
-using Mymarket.Application.Features.Units.Queries.GetAll;
+using Mymarket.Application.Features.Units.Queries.Get;
 using Mymarket.Application.Features.Units.Queries.GetById;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/Units")]
+[Route("api/units")]
 public class UnitsController(IMediator mediator) : BaseController
 {
+    [HttpGet]
+    public async Task<IActionResult> GetAllUnit()
+    {
+        var result = await mediator.Send(new GetUnitsQuery());
+        return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetByIdUnit([FromRoute] int id)
+    {
+        var result = await mediator.Send(new GetUnitByIdQuery(id));
+        return result is null ? NotFound() : Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddUnit(AddUnitCommand command)
     {
@@ -35,23 +49,5 @@ public class UnitsController(IMediator mediator) : BaseController
     {
         await mediator.Send(new DeleteUnitCommand(id));
         return NoContent();
-    }
-
-    [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllUnit([FromQuery] GetAllUnitQuery GetAllUnitQuery)
-    {
-        var result = await mediator.Send(GetAllUnitQuery);
-
-        if (result is null) return NotFound();
-        return Ok(result);
-    }
-
-    [HttpGet("GetById")]
-    public async Task<IActionResult> GetByIdUnit([FromQuery] GetUnitById GetUnitById)
-    {
-        var result = await mediator.Send(GetUnitById);
-
-        if (result is null) return NotFound();
-        return Ok(result);
     }
 }

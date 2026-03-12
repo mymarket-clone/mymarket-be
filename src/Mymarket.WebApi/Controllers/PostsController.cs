@@ -8,7 +8,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/Posts")]
+[Route("api/posts")]
 public class PostsController(IMediator mediator) : BaseController
 {
     [HttpPost]
@@ -18,12 +18,10 @@ public class PostsController(IMediator mediator) : BaseController
         return Created();
     }
 
-    [HttpGet("GetById")]
-    public async Task<IActionResult> GetPostById([FromQuery] int id)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPostById([FromRoute] int id)
     {
         var result = await mediator.Send(new GetPostByIdQuery(id));
-
-        if (result is null) return NotFound();
-        return Ok(result);
+        return result is null ? NotFound() : Ok(result);
     }
 }

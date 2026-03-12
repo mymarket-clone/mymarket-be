@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Categories.Models;
 using Mymarket.Application.Interfaces;
 
-namespace Mymarket.Application.Features.Categories.Queries.GetAllFlat;
+namespace Mymarket.Application.Features.Categories.Queries.GetLocalized;
 
-public record GetAllCategoriesQuery : IRequest<List<CategoryDto>>;
+public record GetCategoriesLocalizedQuery : IRequest<List<CategoryDto>>;
 
-public class GetAllCategoriesQueryHandler(
+public class GetCategoriesLocalizedHandler(
     IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<GetAllCategoriesQuery, List<CategoryDto>>
+    IMapper mapper) : IRequestHandler<GetCategoriesLocalizedQuery, List<CategoryDto>>
 {
-    public async Task<List<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CategoryDto>> Handle(GetCategoriesLocalizedQuery request, CancellationToken cancellationToken)
     {
         var categories = await context.Categories
             .ProjectTo<CategoryDto>(mapper.ConfigurationProvider)
