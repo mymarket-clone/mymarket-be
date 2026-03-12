@@ -7,7 +7,9 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.CategoryBrands.Queries.Get;
 
-public record GetCategoryBrandsQuery : IRequest<List<CategoryBrandDto>>;
+public record GetCategoryBrandsQuery(
+    int? Id
+) : IRequest<List<CategoryBrandDto>>;
 
 public class GetCategoryBrandsQueryHandler(
     IApplicationDbContext context,
@@ -15,11 +17,10 @@ public class GetCategoryBrandsQueryHandler(
 {
     public async Task<List<CategoryBrandDto>> Handle(GetCategoryBrandsQuery request, CancellationToken cancellationToken)
     {
-        var categoryBrands = await context.CategoryBrands
+        return await context.CategoryBrands
             .AsNoTracking()
+            .Where(x => !request.Id.HasValue || x.Id == request.Id.Value)
             .ProjectTo<CategoryBrandDto>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
-
-        return categoryBrands;
     }
 }

@@ -7,20 +7,20 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.CategoryBrands.Queries.GetById;
 
-public record GetCategoryBrandByIdQuery(
+public record GetBrandsByCategoryIdQuery(
     int Id
 ) : IRequest<CategoryBrandDto?>;
 
-public class GetCategoryBrandByIdQueryHandler(
+public class GetBrandsByCategoryIdHandler(
     IApplicationDbContext context, 
-    IMapper mapper) : IRequestHandler<GetCategoryBrandByIdQuery, CategoryBrandDto?>
+    IMapper mapper) : IRequestHandler<GetBrandsByCategoryIdQuery, CategoryBrandDto?>
 {
-    public Task<CategoryBrandDto?> Handle(GetCategoryBrandByIdQuery request, CancellationToken cancellationToken)
+    public Task<CategoryBrandDto?> Handle(GetBrandsByCategoryIdQuery request, CancellationToken cancellationToken)
     {
         var categoryBrand = context.CategoryBrands
             .AsNoTracking()
             .ProjectTo<CategoryBrandDto>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.CategoryId == request.Id, cancellationToken);
 
         return categoryBrand;
     }

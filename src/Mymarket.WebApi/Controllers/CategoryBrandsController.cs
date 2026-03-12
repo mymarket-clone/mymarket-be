@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Features.Categories.Queries.GetById;
 using Mymarket.Application.Features.CategoryBrands.Commands.Add;
 using Mymarket.Application.Features.CategoryBrands.Commands.AddMultiple;
 using Mymarket.Application.Features.CategoryBrands.Commands.Delete;
@@ -19,14 +17,21 @@ public class CategoryBrandsController(
     [HttpGet]
     public async Task<IActionResult> GetCategoryBrands()
     {
-        var result = await mediator.Send(new GetCategoryBrandsQuery());
+        var result = await mediator.Send(new GetCategoryBrandsQuery(null));
         return Ok(result);
     }
 
-    [HttpGet("GetById")]
-    public async Task<IActionResult> GetCategoryBrandById([FromQuery] int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetCategoryBrand(int id)
     {
-        var result = await mediator.Send(new GetCategoryBrandByIdQuery(id));
+        var result = await mediator.Send(new GetCategoryBrandsQuery(id));
+        return Ok(result);
+    }
+
+    [HttpGet("GetBrandsByCategoryId")]
+    public async Task<IActionResult> GetCategoryBrandById([FromQuery] int categoryId)
+    {
+        var result = await mediator.Send(new GetBrandsByCategoryIdQuery(categoryId));
 
         if (result is null) return NotFound();
         return Ok(result);
