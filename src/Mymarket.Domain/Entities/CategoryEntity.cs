@@ -9,6 +9,7 @@ public class CategoryEntity : BaseEntity<int>
     public required string Name { get; set; }
     public string? NameEn { get; set; }
     public string? NameRu { get; set; }
+    public bool? BrandRequired { get; set; } = null;
     public CategoryPostType CategoryPostType { get; set; }
     public CategoryEntity? Parent { get; set; }
     public ICollection<CategoryEntity> Children { get; set; } = [];

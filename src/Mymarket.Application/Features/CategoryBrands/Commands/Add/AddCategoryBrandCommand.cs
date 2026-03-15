@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
-using Mymarket.Application.Features.CategoryBrands.Models;
+﻿using MediatR;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
 
@@ -9,13 +7,12 @@ namespace Mymarket.Application.Features.CategoryBrands.Commands.Add;
 public record AddCategoryBrandCommand(
     int CategoryId,
     int BrandId
-) : IRequest<CategoryBrandDto>;
+) : IRequest<Unit>;
 
 public class AddCategoryBrandCommandHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<AddCategoryBrandCommand, CategoryBrandDto>
+    IApplicationDbContext context) : IRequestHandler<AddCategoryBrandCommand, Unit>
 {
-    public async Task<CategoryBrandDto> Handle(AddCategoryBrandCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddCategoryBrandCommand request, CancellationToken cancellationToken)
     {
         var entity = new CategoryBrandsEntity
         {
@@ -26,7 +23,7 @@ public class AddCategoryBrandCommandHandler(
         await context.CategoryBrands.AddAsync(entity, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return mapper.Map<CategoryBrandDto>(entity);
+        return Unit.Value;
     }
 }
 

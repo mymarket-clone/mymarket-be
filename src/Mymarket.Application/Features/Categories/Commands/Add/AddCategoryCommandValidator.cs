@@ -15,7 +15,8 @@ public class AddCategoryCommandValidator : AbstractValidator<AddCategoryCommand>
         _context = context;
 
         RuleFor(x => x.ParentId)
-            .MustAsync(ParentExists).WithMessage(SharedResources.IdDoesnotExist);
+            .MustAsync(ParentExists)
+            .WithMessage(SharedResources.IdDoesnotExist);
 
         RuleFor(x => x.Name)
             .MaximumLength(255).WithMessage(SharedResources.LabelLength)
@@ -29,19 +30,29 @@ public class AddCategoryCommandValidator : AbstractValidator<AddCategoryCommand>
             .MaximumLength(255).WithMessage(SharedResources.LabelLength)
             .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
+        RuleFor(x => x.BrandRequired)
+            .NotNull()
+            .WithMessage("BrandRequired is required for leaf categories.");
+
         RuleFor(x => x.CategoryPostType)
             .IsInEnum()
             .NotEmpty().WithMessage(SharedResources.CategoryPostTypeRequired)
-            .MustAsync(HaveSamePostTypeAsParent).WithMessage(SharedResources.CategoryPostTypeMismatch);
+            .MustAsync(HaveSamePostTypeAsParent)
+            .WithMessage(SharedResources.CategoryPostTypeMismatch);
     }
 
     private async Task<bool> ParentExists(int? parentId, CancellationToken cancellationToken)
     {
         if (!parentId.HasValue) return true;
-        return await _context.Categories.AnyAsync(c => c.Id == parentId.Value, cancellationToken);
+
+        return await _context.Categories
+            .AnyAsync(c => c.Id == parentId.Value, cancellationToken);
     }
 
-    private async Task<bool> HaveSamePostTypeAsParent(AddCategoryCommand command, CategoryPostType categoryPostType, CancellationToken cancellationToken)
+    private async Task<bool> HaveSamePostTypeAsParent(
+        AddCategoryCommand command,
+        CategoryPostType categoryPostType,
+        CancellationToken cancellationToken)
     {
         if (!command.ParentId.HasValue) return true;
 

@@ -9,7 +9,8 @@ public record EditCategoryCommand(
     int? ParentId,
     string Name,
     string? NameEn,
-    string? NameRu
+    string? NameRu,
+    bool? BrandRequired
 ) : IRequest<Unit>;
 
 public class EditCategoryCommandHandler(

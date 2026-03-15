@@ -12,6 +12,7 @@ public class CategoryDto
     public string? NameEn { get; set; } = null;
     public string? NameRu { get; set; } = null;
     public bool HasChildren { get; set; }
+    public bool? BrandRequired { get; set; } = null;
     public CategoryPostType CategoryPostType { get; set; }
     public sealed class Mapping : Profile
     {

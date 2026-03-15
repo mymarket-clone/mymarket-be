@@ -5,11 +5,11 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Categories.Commands.Edit;
 
-public class AddCategoryCommandValidator : AbstractValidator<EditCategoryCommand>
+public class EditCategoryCommandValidator : AbstractValidator<EditCategoryCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public AddCategoryCommandValidator(IApplicationDbContext context)
+    public EditCategoryCommandValidator(IApplicationDbContext context)
     {
         _context = context;
 
@@ -30,6 +30,10 @@ public class AddCategoryCommandValidator : AbstractValidator<EditCategoryCommand
 
         RuleFor(x => x.NameRu)
             .MaximumLength(255).WithMessage(SharedResources.LabelLength);
+
+        RuleFor(x => x.BrandRequired)
+            .MustAsync(HaveValidBrandRequired)
+            .WithMessage("BrandRequired must be null for non-leaf categories and required for leaf categories.");
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)
@@ -40,10 +44,14 @@ public class AddCategoryCommandValidator : AbstractValidator<EditCategoryCommand
     private async Task<bool> ParentExists(int? parentId, CancellationToken cancellationToken)
     {
         if (!parentId.HasValue) return true;
+
         return await _context.Categories.AnyAsync(c => c.Id == parentId.Value, cancellationToken);
     }
 
-    private async Task<bool> NoCircularReference(EditCategoryCommand command, int? parentId, CancellationToken cancellationToken)
+    private async Task<bool> NoCircularReference(
+        EditCategoryCommand command,
+        int? parentId,
+        CancellationToken cancellationToken)
     {
         if (!parentId.HasValue) return true;
         if (command.Id == parentId) return false;
@@ -53,9 +61,24 @@ public class AddCategoryCommandValidator : AbstractValidator<EditCategoryCommand
         return !descendants.Contains(parentId.Value);
     }
 
+    private async Task<bool> HaveValidBrandRequired(
+        EditCategoryCommand command,
+        bool? brandRequired,
+        CancellationToken cancellationToken)
+    {
+        var hasChildren = await _context.Categories
+            .AnyAsync(c => c.ParentId == command.Id, cancellationToken);
+
+        if (hasChildren)
+            return brandRequired is null;
+
+        return brandRequired is not null;
+    }
+
     private async Task<List<int>> GetDescendants(int categoryId, CancellationToken cancellationToken)
     {
         var result = new List<int>();
+
         var children = await _context.Categories
             .Where(c => c.ParentId == categoryId)
             .Select(c => c.Id)

@@ -4,6 +4,7 @@ using Mymarket.Application.Features.CategoryBrands.Commands.Add;
 using Mymarket.Application.Features.CategoryBrands.Commands.AddMultiple;
 using Mymarket.Application.Features.CategoryBrands.Commands.Delete;
 using Mymarket.Application.Features.CategoryBrands.Commands.Edit;
+using Mymarket.Application.Features.CategoryBrands.Commands.Remove;
 using Mymarket.Application.Features.CategoryBrands.Queries.Get;
 using Mymarket.WebApi.Infrastructure;
 
@@ -27,11 +28,18 @@ public class CategoryBrandsController(
         return Ok(result);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddCategoryBrand(AddCategoryBrandCommand command)
+    [HttpPost("link")]
+    public async Task<IActionResult> LinkCategoryBrand(AddCategoryBrandCommand command)
     {
-        var result = await mediator.Send(command);
-        return Ok(result);
+        await mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("unlink")]
+    public async Task<IActionResult> UnlinkCategoryBrand(RemoveCategoryBrandCommand command)
+    {
+        await mediator.Send(command);
+        return NoContent();
     }
 
     [HttpPost("add-multiple")]

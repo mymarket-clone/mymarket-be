@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Mymarket.Application.Features.Attributes.Queries.Get;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Add;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Delete;
 using Mymarket.Application.Features.CategoryAttributes.Commands.Edit;
-using Mymarket.Application.Features.CategoryAttributes.Queries.Get;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -12,9 +12,9 @@ namespace Mymarket.WebApi.Controllers;
 public class CategoryAttrributesController(IMediator mediator) : BaseController
 {
     [HttpGet]
-    public async Task<IActionResult> GetCategoryAttributes([FromQuery] int id)
+    public async Task<IActionResult> GetCategoryAttributes(GetAttributesQuery query)
     {
-        var result = await mediator.Send(new GetAttributesQuery(id));
+        var result = await mediator.Send(query);
         return Ok(result);
     }
 

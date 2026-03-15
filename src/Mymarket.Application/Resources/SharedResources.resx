@@ -279,4 +279,7 @@
   <data name="CategoryPostTypeMismatch" xml:space="preserve">
     <value>Category post type must match the parent category post type</value>
   </data>
+  <data name="FieldRequired" xml:space="preserve">
+    <value>Field is required</value>
+  </data>
 </root>

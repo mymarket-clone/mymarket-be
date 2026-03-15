@@ -22,7 +22,6 @@ public class CategoriesController(IMediator mediator) : BaseController
     {
         var result = await mediator.Send(new GetCategoriesQuery());
 
-        if (result is null) return NotFound();
         return Ok(result);
     }
 
@@ -31,7 +30,6 @@ public class CategoriesController(IMediator mediator) : BaseController
     {
         var result = await mediator.Send(new GetCategoriesLocalizedQuery());
 
-        if (result is null) return NotFound();
         return Ok(result);
     }
 
@@ -49,7 +47,6 @@ public class CategoriesController(IMediator mediator) : BaseController
     {
         var result = await mediator.Send(new GetCategoryAttributesQuery(id));
 
-        if (result is null) return NotFound();
         return Ok(result);
     }
 
@@ -58,7 +55,6 @@ public class CategoriesController(IMediator mediator) : BaseController
     {
         var result = await mediator.Send(new GetCategoryBrandsQuery(id));
 
-        if (result is null) return NotFound();
         return Ok(result);
     }
 

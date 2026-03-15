@@ -9,18 +9,19 @@ namespace Mymarket.Application.Features.Categories.Queries.GetBrands
 {
     public record GetCategoryBrandsQuery(
         int Id
-    ) : IRequest<CategoryBrandDto?>;
+    ) : IRequest<List<CategoryBrandDto>?>;
 
     public class GetCategoryBrandsQueryHandler(
         IApplicationDbContext context,
-        IMapper mapper) : IRequestHandler<GetCategoryBrandsQuery, CategoryBrandDto?>
+        IMapper mapper) : IRequestHandler<GetCategoryBrandsQuery, List<CategoryBrandDto>?>
     {
-        public Task<CategoryBrandDto?> Handle(GetCategoryBrandsQuery request, CancellationToken cancellationToken)
+        public async Task<List<CategoryBrandDto>?> Handle(GetCategoryBrandsQuery request, CancellationToken cancellationToken)
         {
-            var categoryBrand = context.CategoryBrands
+            var categoryBrand = await context.CategoryBrands
                 .AsNoTracking()
                 .ProjectTo<CategoryBrandDto>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(x => x.CategoryId == request.Id, cancellationToken);
+                .Where(x => x.CategoryId == request.Id)
+                .ToListAsync(cancellationToken);
 
             return categoryBrand;
         }

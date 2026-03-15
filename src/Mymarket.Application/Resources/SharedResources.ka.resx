@@ -279,4 +279,7 @@
   <data name="CategoryPostTypeMismatch" xml:space="preserve">
     <value>პოსტის ტიპი არ ემთხვევა დედა კატეგორის ტიპს</value>
   </data>
+  <data name="FieldRequired" xml:space="preserve">
+    <value>აუცილებელი ველი</value>
+  </data>
 </root>

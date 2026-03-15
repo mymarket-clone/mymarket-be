@@ -10,6 +10,7 @@ public class CategoryFlatDto
     public int? ParentId { get; set; } = null;
     public required string Name { get; set; }
     public CategoryPostType CategoryPostType { get; set; }
+    public bool? BrandRequired { get; set; }
     public sealed class Mapping : Profile
     {
         public Mapping()

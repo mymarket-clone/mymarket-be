@@ -279,4 +279,7 @@
   <data name="CategoryPostTypeMismatch" xml:space="preserve">
     <value>Тип поста отличается от типа родельского поста</value>
   </data>
+  <data name="FieldRequired" xml:space="preserve">
+    <value>Обязательное поле</value>
+  </data>
 </root>

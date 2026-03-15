@@ -12,12 +12,15 @@ public record AddCategoryCommand(
     string Name,
     string? NameEn,
     string? NameRu,
+    bool? BrandRequired,
     CategoryPostType CategoryPostType
 ) : IRequest<CategoryDto>;
 
-public class AddCategoryCommandHandler(IApplicationDbContext context) : IRequestHandler<AddCategoryCommand, CategoryDto>
+public class AddCategoryCommandHandler(
+    IApplicationDbContext context) : IRequestHandler<AddCategoryCommand, CategoryDto>
 {
-    public async Task<CategoryDto> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<CategoryDto> Handle(
+        AddCategoryCommand request, CancellationToken cancellationToken)
     {
         if (request.ParentId.HasValue)
         {
@@ -31,6 +34,7 @@ public class AddCategoryCommandHandler(IApplicationDbContext context) : IRequest
             Name = request.Name,
             NameEn = request.NameEn,
             NameRu = request.NameRu,
+            BrandRequired = request.BrandRequired,
             CategoryPostType = request.CategoryPostType
         };
 
@@ -44,6 +48,7 @@ public class AddCategoryCommandHandler(IApplicationDbContext context) : IRequest
             Name = category.Name,
             NameEn = category.NameEn,
             NameRu = category.NameRu,
+            BrandRequired = request.BrandRequired,
             CategoryPostType = category.CategoryPostType
         };
 

@@ -1,68 +1,27 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.CategoryAttributes.Models;
 using Mymarket.Application.Interfaces;
-using Mymarket.Domain.Entities;
 
-namespace Mymarket.Application.Features.CategoryAttributes.Queries.Get;
-
-public record GetAttributesQuery(
-    int Id
-): IRequest<List<CategoryAttributeOptionsDto>>;
-
-public class GetAttributesQueryHandler(
-    IApplicationDbContext context,
-    ILanguageContext languageContext) : IRequestHandler<GetAttributesQuery, List<CategoryAttributeOptionsDto>>
+namespace Mymarket.Application.Features.CategoryAttributes.Queries.GetAttributes
 {
-    public async Task<List<CategoryAttributeOptionsDto>> Handle(
-        GetAttributesQuery request, CancellationToken cancellationToken)
-    {
-        var result = await context.CategoryAttributes
-            .AsNoTracking()
-            .Where(x => x.CategoryId == request.Id)
-            .Join(
-                context.Attributes,
-                category => category.AttributeId,
-                attribute => attribute.Id,
-                (category, attribute) => new
-                {
-                    category.Id,
-                    category.CategoryId,
-                    category.AttributeId,
-                    AttributeName = languageContext.LocalizeProperty<AttributeEntity>("Name")(attribute),
-                    attribute.AttributeType,
-                    category.IsRequired,
-                    category.Order,
-                    UnitName = attribute.Unit != null ? languageContext.LocalizeProperty<AttributeUnitEntity>("Name")(attribute.Unit) : null
-                }
-            )
-            .GroupJoin(
-                context.AttributesOptions,
-                combined => combined.AttributeId,
-                option => option.AttributeId,
-                (combined, options) => new CategoryAttributeOptionsDto
-                {
-                    Id = combined.Id,
-                    CategoryId = combined.CategoryId,
-                    AttributeId = combined.AttributeId,
-                    AttributeName = combined.AttributeName,
-                    AttributeType = combined.AttributeType,
-                    UnitName = combined.UnitName,
-                    IsRequired = combined.IsRequired,
-                    Order = combined.Order,
-                    Options = options
-                        .OrderBy(x => x.Order)
-                        .Select(x => new AttributeOptionDto
-                        {
-                            Id = x.Id,
-                            Name = languageContext.LocalizeProperty<AttributeOptionsEntity>("Name")(x),
-                            Order = x.Order
-                        })
-                        .ToList()
-                })
-            .OrderBy(x => x.Order)
-            .ToListAsync(cancellationToken);
+    public record GetAttributesQuery: IRequest<List<CategoryAttributeDto>?>;
 
-        return result;
+    public class GetCategoryAttributeByIdQueryHandler(
+        IApplicationDbContext _context,
+        IConfigurationProvider _mapper) : IRequestHandler<GetAttributesQuery, List<CategoryAttributeDto>?>
+    {
+        public async Task<List<CategoryAttributeDto>?> Handle(
+            GetAttributesQuery request, CancellationToken cancellationToken)
+        {
+            var result = await _context.CategoryAttributes
+                .AsNoTracking()
+                .ProjectTo<CategoryAttributeDto>(_mapper)
+                .ToListAsync(cancellationToken);
+
+            return result;
+        }
     }
 }

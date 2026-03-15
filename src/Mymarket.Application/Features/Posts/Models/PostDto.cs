@@ -27,6 +27,7 @@ public class PostDto
     public string Title { get; set; } = null!;
     public string? TitleEn { get; set; }
     public string? TitleRu { get; set; }
+    public int? BrandId { get; set; }
 
     public sealed class Mapping : Profile
     {
