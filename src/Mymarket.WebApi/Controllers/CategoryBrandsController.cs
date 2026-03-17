@@ -62,6 +62,6 @@ public class CategoryBrandsController(
     public async Task<IActionResult> DeleteCategoryBrand([FromRoute] int id)
     {
         var result = await mediator.Send(new DeleteCategoryBrandCommand(id));
-        return NoContent();
+        return Ok(result);
     }
 }
