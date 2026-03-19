@@ -18,6 +18,7 @@ public class GetCategoriesQueryHandler(
     {
         var entities = await context.Categories
             .AsNoTracking()
+            .Include(x => x.Logo)
             .ToListAsync(cancellationToken);
 
         var categories = entities

@@ -14,6 +14,7 @@ public class CategoryDto
     public bool HasChildren { get; set; }
     public bool? BrandRequired { get; set; } = null;
     public CategoryPostType CategoryPostType { get; set; }
+    public string? LogoUrl { get; set; } = null; 
     public sealed class Mapping : Profile
     {
         public Mapping()

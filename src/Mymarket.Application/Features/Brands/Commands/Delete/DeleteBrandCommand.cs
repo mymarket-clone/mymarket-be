@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Brands.Commands.Delete;
 
@@ -18,7 +19,7 @@ public class DeleteBrandCommandHandler(
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (brand is null)
-            throw new KeyNotFoundException($"Brand with id {request.Id} not found.");
+            throw new KeyNotFoundException(SharedResources.IdDoesnotExist);
 
         var logo = brand.Logo;
 

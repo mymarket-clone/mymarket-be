@@ -2,6 +2,7 @@
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
 using Supabase;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Mymarket.Infrastructure.Services;
 
@@ -76,46 +77,30 @@ public class ImageService(Client _client) : IImageService
     {
         if (images == null) return;
 
-        try
-        {
-            var fileNames = images
-                .Select(i =>
-                {
-                    var extension = Path.GetExtension(new Uri(i.Url).AbsolutePath);
-                    return $"{i.UniqueId}{extension}";
-                })
-                .ToList();
+        var fileNames = images
+            .Select(i =>
+            {
+                return Path.GetFileName(i.Url);
+            })
+            .ToList();
 
-            if (fileNames.Count == 0) return;
+        if (fileNames.Count == 0) return;
 
-            await _client.Storage
-                .From("Images")
-                .Remove(fileNames);
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("Error deleting images", ex);
-        }
+        await _client.Storage
+            .From("Images")
+            .Remove(fileNames);
     }
 
     public async Task DeleteAsync(ImageEntity image, CancellationToken cancellationToken)
     {
         if (image == null) return;
 
-        try
-        {
-            var extension = Path.GetExtension(new Uri(image.Url).AbsolutePath);
-            var fileName = $"{image.UniqueId}{extension}";
+        var fileName = Path.GetFileName(image.Url);
 
-            if (string.IsNullOrWhiteSpace(fileName)) return;
+        if (string.IsNullOrWhiteSpace(fileName)) return;
 
-            await _client.Storage
-                .From("Images")
-                .Remove([fileName]);
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("Error deleting image", ex);
-        }
+        await _client.Storage
+            .From("Images")
+            .Remove([fileName]);
     }
 }

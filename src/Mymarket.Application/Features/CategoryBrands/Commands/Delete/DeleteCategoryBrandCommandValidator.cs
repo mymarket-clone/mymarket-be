@@ -6,7 +6,7 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.CategoryBrands.Commands.Delete;
 
-public class DeleteCategoryBrandCommandValidator : AbstractValidator<DeleteCategoryCommand>
+public class DeleteCategoryBrandCommandValidator : AbstractValidator<DeleteCategoryBrandCommand>
 {
     private readonly IApplicationDbContext _context;
 

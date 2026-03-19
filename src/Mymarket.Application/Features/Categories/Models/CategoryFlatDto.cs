@@ -11,6 +11,7 @@ public class CategoryFlatDto
     public required string Name { get; set; }
     public CategoryPostType CategoryPostType { get; set; }
     public bool? BrandRequired { get; set; }
+    public string? LogoUrl { get; set; } = null;
     public sealed class Mapping : Profile
     {
         public Mapping()
@@ -25,6 +26,10 @@ public class CategoryFlatDto
                              : lang == "ru" ? src.NameRu ?? src.Name
                              : src.Name;
                     })
+                )
+                .ForMember(
+                    d => d.LogoUrl,
+                    opt => opt.MapFrom(src => src.Logo != null ? src.Logo.Url : null)
                 );
         }
     }

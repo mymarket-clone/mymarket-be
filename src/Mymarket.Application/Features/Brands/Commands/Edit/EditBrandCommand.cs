@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Brands.Models;
 using Mymarket.Application.Interfaces;
+using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.Features.Brands.Commands.Edit;
 
@@ -28,46 +29,36 @@ public class EditBrandCommandHandler(
 
         brand.Name = request.Name;
 
+        var oldLogo = brand.Logo;
+
         if (request.Logo is null || request.Logo.Length == 0)
         {
             await context.SaveChangesAsync(cancellationToken);
         }
         else
         {
-            var oldLogo = brand.Logo;
-
             var newImage = await imageService.UploadAsync(request.Logo, cancellationToken);
-
             await using var transaction = await context.BeginTransactionAsync(cancellationToken);
+
             try
             {
-                await context.Images.AddAsync(newImage, cancellationToken);
-                await context.SaveChangesAsync(cancellationToken);
+                brand.Logo = new ImageEntity {
+                    UniqueId = newImage.UniqueId,
+                    Url = newImage.Url 
+                };
 
-                brand.LogoId = newImage.Id;
-                brand.Logo = newImage;
-                await context.SaveChangesAsync(cancellationToken);
+                context.Images.Remove(oldLogo);
 
+                await context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
+                await imageService.DeleteAsync(oldLogo, cancellationToken);
             }
             catch
             {
                 await transaction.RollbackAsync(cancellationToken);
-
-                try { await imageService.DeleteAsync(newImage, cancellationToken); } catch { }
+                await imageService.DeleteAsync(newImage, cancellationToken);
 
                 throw;
-            }
-
-            if (oldLogo is not null)
-            {
-                try
-                {
-                    await imageService.DeleteAsync(oldLogo, cancellationToken);
-                    context.Images.Remove(oldLogo);
-                    await context.SaveChangesAsync(cancellationToken);
-                }
-                catch { }
             }
         }
 

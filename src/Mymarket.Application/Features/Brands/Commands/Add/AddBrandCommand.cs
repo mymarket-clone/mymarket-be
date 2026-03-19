@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Mymarket.Application.Features.Brands.Models;
 using Mymarket.Application.Interfaces;
@@ -23,13 +22,14 @@ public class AddBrandCommandHandler(
 
         try
         {
-            await context.Images.AddAsync(uploadedImage, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-
             var brand = new BrandEntity
             {
                 Name = request.Name,
-                LogoId = uploadedImage.Id,
+                Logo = new ImageEntity
+                {
+                    UniqueId = uploadedImage.UniqueId,
+                    Url = uploadedImage.Url,
+                }
             };
 
             await context.Brands.AddAsync(brand, cancellationToken);

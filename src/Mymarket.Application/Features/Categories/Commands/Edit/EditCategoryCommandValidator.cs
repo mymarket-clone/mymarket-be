@@ -14,11 +14,11 @@ public class EditCategoryCommandValidator : AbstractValidator<EditCategoryComman
         _context = context;
 
         RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Category id is required")
-            .MustAsync(CategoryExists).WithMessage("Category with this Id does not exist");
+            .NotEmpty().WithMessage(SharedResources.IdRequired)
+            .MustAsync(CategoryExists).WithMessage(SharedResources.IdDoesnotExist);
 
         RuleFor(x => x.ParentId)
-            .MustAsync(ParentExists).WithMessage("Parent category does not exist")
+            .MustAsync(ParentExists).WithMessage(SharedResources.IdRequired)
             .MustAsync(NoCircularReference).WithMessage("Parent category cannot be a descendant of this category");
 
         RuleFor(x => x.Name)

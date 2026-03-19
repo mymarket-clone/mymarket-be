@@ -59,7 +59,7 @@ public class CategoriesController(IMediator mediator) : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddCategory([FromBody] AddCategoryCommand command)
+    public async Task<IActionResult> AddCategory([FromForm] AddCategoryCommand command)
     {
         var result = await mediator.Send(command);
         return Ok(result);
@@ -67,15 +67,15 @@ public class CategoriesController(IMediator mediator) : BaseController
 
     [HttpPut("{id}")]
     public async Task<IActionResult> EditCategory(
-        [FromRoute] int id, 
-        [FromBody] EditCategoryCommand command)
+        [FromRoute] int id,
+        [FromForm] EditCategoryCommand command)
     {
         await mediator.Send(command with { Id = id });
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCategory(int id)
+    public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
         await mediator.Send(new DeleteCategoryCommand(id));
         return NoContent();
