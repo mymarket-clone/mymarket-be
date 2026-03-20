@@ -331,7 +331,7 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Label is requied.
+        ///   Looks up a localized string similar to Label is required.
         /// </summary>
         public static string LabelRequired {
             get {

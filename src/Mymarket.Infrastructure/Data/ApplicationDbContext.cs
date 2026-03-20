@@ -21,6 +21,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<CategoryAttributesEntity> CategoryAttributes => Set<CategoryAttributesEntity>();
     public DbSet<PostAttributesEntity> PostAttributes => Set<PostAttributesEntity>();
     public DbSet<BrandEntity> Brands => Set<BrandEntity>();
+    public DbSet<HomeCategoriesEntity> HomeCategories => Set<HomeCategoriesEntity>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
 

@@ -9,7 +9,8 @@ public class CategoryEntity : BaseEntity<int>
     public required string Name { get; set; }
     public string? NameEn { get; set; }
     public string? NameRu { get; set; }
-    public bool? BrandRequired { get; set; } = null;
+    public bool BrandRequired { get; set; } = false;
+    public bool BrandVisible { get; set; } = false;
     public int? LogoId { get; set; } = null;
     public ImageEntity? Logo { get; set; }
     public CategoryPostType CategoryPostType { get; set; }

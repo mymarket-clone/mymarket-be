@@ -70,8 +70,8 @@ public class CategoriesController(IMediator mediator) : BaseController
         [FromRoute] int id,
         [FromForm] EditCategoryCommand command)
     {
-        await mediator.Send(command with { Id = id });
-        return NoContent();
+        var result = await mediator.Send(command with { Id = id });
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]

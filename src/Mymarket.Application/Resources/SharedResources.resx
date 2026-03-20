@@ -226,7 +226,7 @@
     <value>Label length must not exceed 255 characters</value>
   </data>
   <data name="LabelRequired" xml:space="preserve">
-    <value>Label is requied</value>
+    <value>Label is required</value>
   </data>
   <data name="AttributeCodeRequired" xml:space="preserve">
     <value>Attribute code is required</value>

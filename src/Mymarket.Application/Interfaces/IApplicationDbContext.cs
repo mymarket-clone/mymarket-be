@@ -19,6 +19,7 @@ public interface IApplicationDbContext
     DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
     DbSet<PostAttributesEntity> PostAttributes{ get; }
     DbSet<BrandEntity> Brands { get; }
+    DbSet<HomeCategoriesEntity> HomeCategories { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
 }

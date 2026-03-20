@@ -1,7 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Features.Categories.Models;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
+using Mymarket.Domain.Entities;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Categories.Commands.Edit;
 
@@ -11,16 +15,18 @@ public record EditCategoryCommand(
     string Name,
     string? NameEn,
     string? NameRu,
-    bool? BrandRequired,
+    bool BrandRequired,
+    bool BrandVisible,
+    CategoryPostType CategoryPostType,
     IFormFile? Logo
-) : IRequest<Unit>;
+) : IRequest<CategoryDto>;
 
 public class EditCategoryCommandHandler(
     IApplicationDbContext context,
     IImageService imageService
-) : IRequestHandler<EditCategoryCommand, Unit>
+) : IRequestHandler<EditCategoryCommand, CategoryDto>
 {
-    public async Task<Unit> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<CategoryDto> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
     {
         await using var transaction = await context.BeginTransactionAsync(cancellationToken);
 
@@ -29,17 +35,33 @@ public class EditCategoryCommandHandler(
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         if (category is null)
-            throw new KeyNotFoundException($"Category with id {request.Id} not found.");
+            throw new KeyNotFoundException(SharedResources.IdDoesnotExist);
 
         category.Name = request.Name;
         category.NameEn = request.NameEn;
         category.NameRu = request.NameRu;
         category.ParentId = request.ParentId;
+        category.BrandRequired = request.BrandRequired;
+        category.BrandVisible = request.BrandVisible;
+        category.CategoryPostType = request.CategoryPostType;
 
         if (request.Logo is null || request.Logo.Length == 0)
         {
             await context.SaveChangesAsync(cancellationToken);
-            return Unit.Value;
+            await transaction.CommitAsync(cancellationToken);
+
+            return new CategoryDto
+            {
+                Id = category.Id,
+                ParentId = category.ParentId,
+                Name = category.Name,
+                NameEn = category.NameEn,
+                NameRu = category.NameRu,
+                BrandRequired = category.BrandRequired,
+                BrandVisible = category.BrandVisible,
+                CategoryPostType = category.CategoryPostType,
+                LogoUrl = category.Logo?.Url
+            };
         }
 
         var oldLogo = category.Logo;
@@ -47,39 +69,40 @@ public class EditCategoryCommandHandler(
 
         try
         {
-            await context.Images.AddAsync(newImage, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
+            category.Logo = new ImageEntity
+            {
+                UniqueId = newImage.UniqueId,
+                Url = newImage.Url
+            };
 
-            category.LogoId = newImage.Id;
-            category.Logo = newImage;
             await context.SaveChangesAsync(cancellationToken);
-
             await transaction.CommitAsync(cancellationToken);
         }
         catch
         {
             await transaction.RollbackAsync(cancellationToken);
-
-            try
-            {
-                await imageService.DeleteAsync(newImage, cancellationToken);
-            }
-            catch {}
-
+            await imageService.DeleteAsync(newImage, cancellationToken);
             throw;
         }
 
         if (oldLogo is not null)
         {
-            try
-            {
-                await imageService.DeleteAsync(oldLogo, cancellationToken);
-                context.Images.Remove(oldLogo);
-                await context.SaveChangesAsync(cancellationToken);
-            }
-            catch {}
+            context.Images.Remove(oldLogo);
+            await context.SaveChangesAsync(cancellationToken);
+            await imageService.DeleteAsync(oldLogo, cancellationToken);
         }
 
-        return Unit.Value;
+        return new CategoryDto
+        {
+            Id = category.Id,
+            ParentId = category.ParentId,
+            Name = category.Name,
+            NameEn = category.NameEn,
+            NameRu = category.NameRu,
+            BrandRequired = category.BrandRequired,
+            BrandVisible = category.BrandVisible,
+            CategoryPostType = category.CategoryPostType,
+            LogoUrl = category.Logo?.Url
+        };
     }
 }

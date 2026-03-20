@@ -26,14 +26,12 @@ public class EditCategoryCommandValidator : AbstractValidator<EditCategoryComman
             .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameEn)
-            .MaximumLength(255).WithMessage(SharedResources.LabelLength);
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
 
         RuleFor(x => x.NameRu)
-            .MaximumLength(255).WithMessage(SharedResources.LabelLength);
-
-        RuleFor(x => x.BrandRequired)
-            .MustAsync(HaveValidBrandRequired)
-            .WithMessage("BrandRequired must be null for non-leaf categories and required for leaf categories.");
+            .MaximumLength(255).WithMessage(SharedResources.LabelLength)
+            .NotEmpty().WithMessage(SharedResources.LabelRequired);
     }
 
     private async Task<bool> CategoryExists(int id, CancellationToken cancellationToken)
