@@ -22,11 +22,11 @@ public class LanguageContext : ILanguageContext
         };
     }
 
-    public Func<T, string> LocalizeProperty<T>(string basePropertyName)
+    public Func<T?, string?> LocalizeProperty<T>(string? basePropertyName)
     {
         return entity =>
         {
-            if (entity == null) return null!;
+            if (entity == null || basePropertyName == null) return null!;
 
             var propertyName = Language switch
             {

@@ -33,7 +33,7 @@ public class GetCategoryAttributesQueryHandler(
                     attribute.AttributeType,
                     category.IsRequired,
                     category.Order,
-                    UnitName = attribute.Unit != null ? languageContext.LocalizeProperty<AttributeUnitEntity>("Name")(attribute.Unit) : null
+                    UnitName = languageContext.LocalizeProperty<AttributeUnitEntity>("Name")(attribute.Unit)
                 }
             )
             .GroupJoin(
@@ -55,7 +55,7 @@ public class GetCategoryAttributesQueryHandler(
                         .Select(x => new AttributeOptionDto
                         {
                             Id = x.Id,
-                            Name = languageContext.LocalizeProperty<AttributeOptionsEntity>("Name")(x),
+                            Name = languageContext.LocalizeProperty<AttributeOptionsEntity>("Name")(x)!,
                             Order = x.Order
                         })
                         .ToList()

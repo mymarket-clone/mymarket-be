@@ -15,16 +15,7 @@ public class HomeCategoryDto
     {
         public MappingProfile()
         {
-            CreateMap<HomeCategoriesEntity, HomeCategoryDto>()
-                .ForMember(
-                    dest => dest.Name,
-                    opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null)
-                )
-                .ForMember(
-                    dest => dest.LogoUrl,
-                    opt => opt.MapFrom(src => src.Category != null && src.Category.Logo != null
-                        ? src.Category.Logo.Url: null)
-                );
+            CreateMap<HomeCategoriesEntity, HomeCategoryDto>();
         }
     }
 }
