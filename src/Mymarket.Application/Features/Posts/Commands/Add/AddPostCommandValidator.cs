@@ -69,10 +69,6 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
             .Must((x, v) => x.AutoRenewal ? v != null : v == null)
             .WithMessage("Auto renewal interval must be set only when auto renewal is enabled.");
 
-        RuleFor(x => x.AutoRenewalAtTime)
-            .Must((x, v) => x.AutoRenewal ? v != null : v == null)
-            .WithMessage("Auto renewal time must be set only when auto renewal is enabled.");
-
         RuleFor(x => x.AutoRenewalOnceIn)
             .GreaterThan(0)
             .When(x => x.AutoRenewalOnceIn.HasValue);
@@ -93,6 +89,40 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
             .GreaterThan(0)
             .When(x => x.ColorDays.HasValue);
 
+        RuleFor(x => x.BrandId)
+            .MustAsync(BrandRequiredForCategory)
+            .WithMessage("Brand is required for the selected category.");
+
+        RuleFor(x => x.BrandId)
+            .MustAsync(BrandExistsWhenProvided)
+            .WithMessage("Selected brand does not exist.");
+    }
+
+    private async Task<bool> BrandRequiredForCategory(
+        AddPostCommand command, int? brandId,
+        CancellationToken cancellationToken)
+    {
+        var category = await _context.Categories
+            .AsNoTracking()
+            .Where(c => c.Id == command.CategoryId)
+            .Select(c => new { c.BrandRequired })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (category is null)
+            return true;
+
+        return !category.BrandRequired || brandId.HasValue;
+    }
+
+    private async Task<bool> BrandExistsWhenProvided(
+        AddPostCommand command, int? brandId,
+        CancellationToken cancellationToken)
+    {
+        if (!brandId.HasValue)
+            return true;
+
+        return await _context.Brands
+            .AnyAsync(b => b.Id == brandId.Value, cancellationToken);
     }
 
     private async Task<bool> CategoryExists(int categoryId, CancellationToken cancellationToken)

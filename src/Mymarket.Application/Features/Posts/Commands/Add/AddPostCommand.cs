@@ -17,6 +17,7 @@ public record AddPostCommand(
     string? YoutubeLink,
     ConditionType? ConditionType,
     List<IFormFile> Images,
+    int? BrandId,
     IFormFile MainImage,
     string Title,
     string? Description,
@@ -75,11 +76,6 @@ public sealed class AddPostCommandHandler(
             }
 
             var errors = new Dictionary<string, List<string>>();
-
-            if (attributes.Count == 0)
-            {
-                AddError(errors, "attributesJson", "Attributes array cannot be empty");
-            }
 
             var attributeIds = attributes.Select(a => a.Id).Distinct().ToList();
 
@@ -242,6 +238,7 @@ public sealed class AddPostCommandHandler(
                 IsNegotiable = request.IsNegotiable,
                 CityId = request.CityId,
                 Name = request.Name,
+                BrandId = request.BrandId,
                 PhoneNumber = request.PhoneNumber,
                 UserId = (int)currentUser.Id,
                 PromoType = request.PromoType,

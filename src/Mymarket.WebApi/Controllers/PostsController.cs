@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Features.Posts.Queries.GetById;
+using Mymarket.Application.Features.Posts.Queries.GetLite;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -16,6 +17,13 @@ public class PostsController(IMediator mediator) : BaseController
     {
         await mediator.Send(command);
         return Created();
+    }
+
+    [HttpGet("lite")]
+    public async Task<IActionResult> GetLitePosts()
+    {
+        var result = await mediator.Send(new GetLitePostsQuery());
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
