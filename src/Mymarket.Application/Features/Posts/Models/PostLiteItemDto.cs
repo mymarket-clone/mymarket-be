@@ -9,14 +9,23 @@ public class PostLiteItemDto
     public int Id { get; set; }
     public required string Title { get; set; }
     public double? Price { get; set; }
+    public double? PriceAfterDiscount { get; set; }
     public CurrencyType CurrencyType { get; set; }
     public required List<string> Images { get; set; }
+    public bool IsNegotiable { get; set; }
 
     private sealed class MappingProfile : Profile
     {
         public MappingProfile()
         {
             CreateMap<PostEntity, PostLiteItemDto>()
+                .ForMember(
+                    d => d.PriceAfterDiscount,
+                    opt => opt.MapFrom(s =>
+                        s.SalePercentage > 0
+                            ? s.Price * (1 - (double)s.SalePercentage / 100) : null
+                    )
+                )
                 .ForMember(
                     d => d.Images,
                     opt => opt.MapFrom(s =>

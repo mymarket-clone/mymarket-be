@@ -26,6 +26,8 @@ public class GetLitePostsQueryHandler(
                     Id = x.Id,
                     Title = x.Title,
                     Price = x.Price,
+                    IsNegotiable = x.IsNegotiable,
+                    PriceAfterDiscount = x.SalePercentage > 0 ? x.Price * (1 - (double)x.SalePercentage / 100) : null,
                     CurrencyType = x.CurrencyType,
                     Images = x.PostsImages
                         .Where(pi => pi.Image != null && pi.Image.Url != null)
