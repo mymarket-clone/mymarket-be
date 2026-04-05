@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Posts.Models;
 using Mymarket.Application.Interfaces;
