@@ -15,7 +15,7 @@ public interface IApplicationDbContext
     DbSet<ImageEntity> Images { get; }
     DbSet<AttributeEntity> Attributes { get; }
     DbSet<AttributeUnitEntity> AttributeUnits { get; }
-    DbSet<AttributeOptionsEntity> AttributesOptions { get; }
+    DbSet<AttributeOptionsEntity> AttributeOptions { get; }
     DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
     DbSet<PostAttributesEntity> PostAttributes{ get; }
     DbSet<BrandEntity> Brands { get; }

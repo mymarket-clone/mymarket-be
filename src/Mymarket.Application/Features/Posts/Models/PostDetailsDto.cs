@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Mymarket.Domain.Enums;
-using Mymarket.Domain.Entities;
+﻿using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Posts.Models;
 
-public class PostDto
+public class PostDetailsDto
 {
     public int Id { get; set; }
     public bool AutoRenewal { get; set; }
@@ -13,8 +11,6 @@ public class PostDto
     public ConditionType ConditionType { get; set; }
     public CurrencyType CurrencyType { get; set; }
     public string? Description { get; set; }
-    public string? DescriptionEn { get; set; }
-    public string? DescriptionRu { get; set; }
     public bool ForDisabledPerson { get; set; }
     public bool IsColored { get; set; }
     public bool IsNegotiable { get; set; }
@@ -25,15 +21,6 @@ public class PostDto
     public PromoType? PromoType { get; set; }
     public byte SalePercentage { get; set; }
     public required string Title { get; set; }
-    public string? TitleEn { get; set; }
-    public string? TitleRu { get; set; }
-    public int? BrandId { get; set; }
-
-    public sealed class Mapping : Profile
-    {
-        public Mapping() 
-        {
-            CreateMap<PostEntity, PostDto>();
-        }
-    }
+    public List<CategoryBreadcrumbDto> Breadcrumb { get; set; } = [];
+    public List<PostAttributeDto> Attributes { get; set; } = [];
 }

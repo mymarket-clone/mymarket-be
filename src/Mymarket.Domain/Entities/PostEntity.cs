@@ -8,7 +8,7 @@ public class PostEntity : BaseEntity<int>
     public PostType PostType { get; set; }
     public int CategoryId { get; set; }
     public string? YoutubeLink { get; set; }
-    public ConditionType? ConditionType { get; set; }
+    public ConditionType ConditionType { get; set; }
     public CategoryEntity? Category { get; set; }
     public required string Title { get; set; }
     public string? Description { get; set; }

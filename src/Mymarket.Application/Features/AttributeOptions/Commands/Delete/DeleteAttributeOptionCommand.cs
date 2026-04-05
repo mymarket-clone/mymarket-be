@@ -14,7 +14,7 @@ public class DeleteAttributeOptionCommandHandler(
 {
     public async Task<Unit> Handle(DeleteAttributeOptionCommand request, CancellationToken cancellationToken)
     {
-        var attributeOption = await context.AttributesOptions
+        var attributeOption = await context.AttributeOptions
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 
@@ -23,7 +23,7 @@ public class DeleteAttributeOptionCommandHandler(
             throw new ApplicationException(SharedResources.AttributeOptionDoesnotExist);
         }
 
-        context.AttributesOptions.Remove(attributeOption!);
+        context.AttributeOptions.Remove(attributeOption!);
         await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

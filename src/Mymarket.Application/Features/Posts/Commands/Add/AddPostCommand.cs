@@ -15,7 +15,7 @@ public record AddPostCommand(
     PostType PostType,
     int CategoryId,
     string? YoutubeLink,
-    ConditionType? ConditionType,
+    ConditionType ConditionType,
     List<IFormFile> Images,
     int? BrandId,
     IFormFile MainImage,
@@ -91,7 +91,7 @@ public sealed class AddPostCommandHandler(
                 .Select(x => x.Id)
                 .ToList();
 
-            var optionIdsByAttributeId = await context.AttributesOptions
+            var optionIdsByAttributeId = await context.AttributeOptions
                 .Where(o => selectAttributeIds.Contains(o.AttributeId))
                 .GroupBy(o => o.AttributeId)
                 .ToDictionaryAsync(

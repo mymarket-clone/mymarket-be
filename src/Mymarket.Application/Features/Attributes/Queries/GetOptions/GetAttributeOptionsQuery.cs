@@ -17,7 +17,7 @@ public class GetAttributeOptionsQueryHandler(
 {
     public async Task<List<AttributeOptionDto>> Handle(GetAttributeOptionsQuery request, CancellationToken cancellationToken)
     {
-        var result = await context.AttributesOptions
+        var result = await context.AttributeOptions
             .Where(x => x.AttributeId == request.Id)
             .ProjectTo<AttributeOptionDto>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

@@ -30,7 +30,7 @@ public class AddAttributeOptionCommandHandler(
             NameRu = request.NameRu,
         };
 
-        await context.AttributesOptions.AddAsync(AttributeOption, cancellationToken);
+        await context.AttributeOptions.AddAsync(AttributeOption, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         return mapper.Map<AttributeOptionDto>(AttributeOption);

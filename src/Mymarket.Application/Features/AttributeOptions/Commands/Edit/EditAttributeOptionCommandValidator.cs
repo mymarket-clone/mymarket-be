@@ -33,6 +33,6 @@ public class EditAttributeOptionCommandValidator : AbstractValidator<EditAttribu
 
     private async Task<bool> OptionExists(int id, CancellationToken cancellationToken)
     {
-        return await _context.AttributesOptions.AnyAsync(o => o.Id == id, cancellationToken);
+        return await _context.AttributeOptions.AnyAsync(o => o.Id == id, cancellationToken);
     }
 }

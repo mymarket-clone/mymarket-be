@@ -37,7 +37,7 @@ public class GetCategoryAttributesQueryHandler(
                 }
             )
             .GroupJoin(
-                context.AttributesOptions,
+                context.AttributeOptions,
                 combined => combined.AttributeId,
                 option => option.AttributeId,
                 (combined, options) => new CategoryAttributeOptionsDto

@@ -17,7 +17,7 @@ public class EditAttributeOptionCommandHandler(
 {
     public async Task<Unit> Handle(EditAttributeOptionCommand request, CancellationToken cancellationToken)
     {
-        var attributeOption = await context.AttributesOptions
+        var attributeOption = await context.AttributeOptions
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         attributeOption!.Order = request.Order;
