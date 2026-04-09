@@ -1,4 +1,5 @@
-﻿using Mymarket.Domain.Enums;
+﻿using Mymarket.Application.Features.Users.Common.Models;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Posts.Models;
 
@@ -18,9 +19,13 @@ public class PostDetailsDto
     public string PhoneNumber { get; set; } = null!;
     public PostType PostType { get; set; }
     public double? Price { get; set; }
+    public double? PriceAfterDiscount { get; set; }
     public PromoType? PromoType { get; set; }
     public byte SalePercentage { get; set; }
+    public string? City { get; set; }
     public required string Title { get; set; }
     public List<CategoryBreadcrumbDto> Breadcrumb { get; set; } = [];
     public List<PostAttributeDto> Attributes { get; set; } = [];
+    public List<string> Images { get; set; } = [];
+    public required UserInfoDto User { get; set; }
 }

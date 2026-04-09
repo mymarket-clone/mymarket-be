@@ -19,7 +19,6 @@ public class PostsController(IMediator mediator) : BaseController
         return Created();
     }
 
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostById([FromRoute] int id)
     {

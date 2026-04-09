@@ -9,6 +9,7 @@ public interface IApplicationDbContext
     DbSet<UserEntity> Users { get; }
     DbSet<VerificationCodeEntity> VerificationCode { get; }
     DbSet<PostEntity> Posts { get; }
+    DbSet<PostsImagesEntity> PostsImages { get; }
     DbSet<CategoryEntity> Categories { get; }
     DbSet<CategoryBrandsEntity> CategoryBrands { get; }
     DbSet<CityEntity> Cities { get; }

@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Posts.Models;
+using Mymarket.Application.Features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 using Mymarket.Domain.Entities;
 using Mymarket.Domain.Enums;
 
@@ -33,9 +35,20 @@ public class GetPostByIdQueryHandler(
             .Include(x => x.Attribute)
             .ToListAsync(cancellationToken);
 
+        var postCity = await context.Cities
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Id == post.CityId, cancellationToken);
+
         var postAttributes = await context.PostAttributes
             .AsNoTracking()
             .Where(x => x.PostId == post.Id)
+            .ToListAsync(cancellationToken);
+
+        var postImages = await context.PostsImages
+            .AsNoTracking()
+            .Where(pi => pi.PostId == request.Id && pi.Image != null && pi.Image.Url != null)
+            .OrderBy(pi => pi.Order)
+            .Select(pi => pi.Image!.Url!)
             .ToListAsync(cancellationToken);
 
         var postAttrById = postAttributes.ToDictionary(x => x.AttributeId);
@@ -87,6 +100,21 @@ public class GetPostByIdQueryHandler(
             });
         }
 
+        var user = context.Users.FirstOrDefault(u => u.Id == post.UserId)
+            ?? throw new KeyNotFoundException(SharedResources.RecordNotFound);
+
+        var userDto = new UserInfoDto(
+            Id: user.Id,
+            FirstName: user.Firstname,
+            Lastname: user.LastName,
+            Email: user.Email,
+            GenderType: user.Gender,
+            BirthYear: user.BirthYear,
+            PhoneNumber: user.PhoneNumber,
+            EmailVerified: user.EmailVerified,
+            PostsCount: context.Posts.Count(p => p.UserId == user.Id)
+        );
+
         var postDto = new PostDetailsDto
         {
             Id = post.Id,
@@ -97,6 +125,7 @@ public class GetPostByIdQueryHandler(
             Name = post.Name,
             PhoneNumber = MaskPhoneNumber(post.PhoneNumber),
             Price = post.Price,
+            PriceAfterDiscount = post.SalePercentage > 0 ? post.Price * (1 - (double)post.SalePercentage / 100) : null,
             CurrencyType = post.CurrencyType,
             SalePercentage = post.SalePercentage,
             CanOfferPrice = post.CanOfferPrice,
@@ -107,7 +136,10 @@ public class GetPostByIdQueryHandler(
             ConditionType = post.ConditionType,
             PostType = post.PostType,
             PromoType = post.PromoType,
-            Attributes = attributesDto
+            Attributes = attributesDto,
+            Images = postImages,
+            City = postCity?.Name ?? null,
+            User = userDto
         };
 
         return postDto;
