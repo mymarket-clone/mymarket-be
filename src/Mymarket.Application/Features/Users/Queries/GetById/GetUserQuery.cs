@@ -2,6 +2,7 @@
 using Mymarket.Application.Features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
+using System.Data.Entity;
 
 namespace Mymarket.Application.Features.Users.Queries.GetById;
 
@@ -12,9 +13,9 @@ public record GetUserByIdQuery(
 public class GetUserByIdQueryHandler(
     IApplicationDbContext context) : IRequestHandler<GetUserByIdQuery, UserInfoDto>
 {
-    public Task<UserInfoDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<UserInfoDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var user = context.Users.FirstOrDefault(u => u.Id == request.Id)
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken)
             ?? throw new KeyNotFoundException(SharedResources.RecordNotFound);
 
         var userDto = new UserInfoDto(
@@ -29,6 +30,6 @@ public class GetUserByIdQueryHandler(
             PostsCount: context.Posts.Count(p => p.UserId == user.Id)
         ); 
 
-        return Task.FromResult(userDto);
+        return userDto;
     }
 }   

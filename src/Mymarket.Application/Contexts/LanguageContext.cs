@@ -26,7 +26,7 @@ public class LanguageContext : ILanguageContext
     {
         return entity =>
         {
-            if (entity == null || basePropertyName == null) return null!;
+            if (entity == null || basePropertyName == null) return null;
 
             var propertyName = Language switch
             {
@@ -35,10 +35,8 @@ public class LanguageContext : ILanguageContext
                 _ => basePropertyName
             };
 
-            var prop = typeof(T).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
-
-            if (prop == null)
-                throw new InvalidOperationException($"Property '{propertyName}' not found on type {typeof(T).Name}");
+            var prop = typeof(T).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance) 
+                ?? throw new InvalidOperationException($"Property '{propertyName}' not found on type {typeof(T).Name}");
 
             var value = prop.GetValue(entity) as string;
 

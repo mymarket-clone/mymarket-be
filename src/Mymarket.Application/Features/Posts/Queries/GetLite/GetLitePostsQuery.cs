@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Contexts;
 using Mymarket.Application.Features.Posts.Models;
 using Mymarket.Application.Interfaces;
+using Mymarket.Domain.Entities;
 using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Posts.Queries.GetLite;
@@ -10,7 +12,8 @@ public record GetLitePostsQuery : IRequest<PostLiteItemListDto>;
 
 
 public class GetLitePostsQueryHandler(
-    IApplicationDbContext context) : IRequestHandler<GetLitePostsQuery, PostLiteItemListDto>
+    IApplicationDbContext context,
+    ILanguageContext languageContext) : IRequestHandler<GetLitePostsQuery, PostLiteItemListDto>
 {
     public async Task<PostLiteItemListDto> Handle(
         GetLitePostsQuery request, CancellationToken cancellationToken)
@@ -23,7 +26,7 @@ public class GetLitePostsQueryHandler(
                 Item = new PostLiteItemDto
                 {
                     Id = x.Id,
-                    Title = x.Title,
+                    Title = languageContext.LocalizeProperty<PostEntity>("Title")(x)!,
                     Price = x.Price,
                     IsNegotiable = x.IsNegotiable,
                     PriceAfterDiscount = x.SalePercentage > 0 ? x.Price * (1 - (double)x.SalePercentage / 100) : null,

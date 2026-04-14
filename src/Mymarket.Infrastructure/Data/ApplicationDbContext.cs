@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Mymarket.Application.Interfaces;
+using Mymarket.Domain.Common;
 using Mymarket.Domain.Entities;
 using System.Reflection;
 
@@ -24,7 +25,21 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<HomeCategoriesEntity> HomeCategories => Set<HomeCategoriesEntity>();
     public DbSet<PostsImagesEntity> PostsImages => Set<PostsImagesEntity>();
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken) => base.SaveChangesAsync(cancellationToken);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        var entries = ChangeTracker.Entries<AuditableEntity>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+                entry.Entity.CreatedAt = DateTime.UtcNow;
+
+            if (entry.State == EntityState.Modified)
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
