@@ -13,8 +13,6 @@ public class PostDto
     public ConditionType ConditionType { get; set; }
     public CurrencyType CurrencyType { get; set; }
     public string? Description { get; set; }
-    public string? DescriptionEn { get; set; }
-    public string? DescriptionRu { get; set; }
     public bool ForDisabledPerson { get; set; }
     public bool IsColored { get; set; }
     public bool IsNegotiable { get; set; }
@@ -25,15 +23,20 @@ public class PostDto
     public PromoType? PromoType { get; set; }
     public byte SalePercentage { get; set; }
     public required string Title { get; set; }
-    public string? TitleEn { get; set; }
-    public string? TitleRu { get; set; }
     public int? BrandId { get; set; }
+    public List<string> Images { get; set; } = [];
 
     public sealed class Mapping : Profile
     {
         public Mapping() 
         {
-            CreateMap<PostEntity, PostDto>();
+            CreateMap<PostEntity, PostDto>()
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src =>
+                    src.PostsImages
+                        .Where(pi => pi.Image != null && pi.Image.Url != null)
+                        .OrderBy(pi => pi.Order)
+                        .Select(pi => pi.Image!.Url)
+                ));
         }
     }
 }

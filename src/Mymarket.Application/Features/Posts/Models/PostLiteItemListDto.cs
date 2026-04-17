@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace Mymarket.Application.Features.Posts.Models;
+﻿namespace Mymarket.Application.Features.Posts.Models;
 
 public class PostLiteItemListDto
 {

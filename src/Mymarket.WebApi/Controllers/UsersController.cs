@@ -1,9 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Features.Users.Queries;
 using Mymarket.Application.Features.Users.Queries.GetById;
 using Mymarket.Application.Features.Users.Queries.GetCurrent;
+using Mymarket.Application.Features.Users.Queries.GetPhoneNumber;
 
 namespace Mymarket.WebApi.Controllers;
 
@@ -21,7 +20,7 @@ public class UsersController(IMediator mediator) : ControllerBase
     [HttpGet("{id}/phone-number")]
     public async Task<IActionResult> GetPhoneNumber([FromRoute] int id)
     {
-        var result = await mediator.Send(new GetPhoneNumber(id));
+        var result = await mediator.Send(new GetPhoneNumberCommand(id));
         return result is null ? NotFound() : Ok(result);
     }
 

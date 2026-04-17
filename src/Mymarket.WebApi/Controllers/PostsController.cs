@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Posts.Commands.Add;
+using Mymarket.Application.Features.Posts.Queries.Get;
 using Mymarket.Application.Features.Posts.Queries.GetById;
 using Mymarket.Application.Features.Posts.Queries.GetLite;
+using Mymarket.Domain.Enums;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -17,6 +19,39 @@ public class PostsController(IMediator mediator) : BaseController
     {
         await mediator.Send(command);
         return Created();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPosts(
+        [FromQuery] int? PriceFrom,
+        [FromQuery] int? PriceTo,
+        [FromQuery] bool? OfferPrice,
+        [FromQuery] bool? Discount,
+        [FromQuery] int? LocId,
+        [FromQuery] List<ConditionType>? CondType,
+        [FromQuery] List<PostType>? PostType,
+        [FromQuery] SortType? SortType,
+        [FromQuery] int? CatId,
+        [FromQuery] int? BrandId,
+        [FromQuery] int Page = 1,
+        [FromQuery] int PageSize = 20)
+    {
+        var result = await mediator.Send(new GetPostsCommand(
+            PriceFrom,
+            PriceTo,
+            OfferPrice,
+            Discount,
+            LocId,
+            CondType,
+            PostType,
+            SortType,
+            CatId,
+            BrandId,
+            Page,
+            PageSize
+        ));
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

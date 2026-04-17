@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Application.Common;
 using Mymarket.Application.Features.Posts.Models;
 using Mymarket.Application.Features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
@@ -121,7 +122,7 @@ public class GetPostByIdQueryHandler(
             Title = languageContext.LocalizeProperty<PostEntity>("Title")(post)!,
             Description = languageContext.LocalizeProperty<PostEntity>("Description")(post),
             CategoryId = post.CategoryId,
-            Breadcrumb = BuildBreadcrumb(post.CategoryId, categories, languageContext),
+            Breadcrumb = BreadcrumbBuilder.Build(post.CategoryId, categories, languageContext),
             Name = post.Name,
             PhoneNumber = MaskPhoneNumber(post.PhoneNumber),
             Price = post.Price,
@@ -143,35 +144,6 @@ public class GetPostByIdQueryHandler(
         };
 
         return postDto;
-    }
-
-    private static List<CategoryBreadcrumbDto> BuildBreadcrumb(
-        int categoryId,
-        List<CategoryEntity> categories,
-        ILanguageContext languageContext)
-    {
-        var result = new List<CategoryBreadcrumbDto>();
-        var lookup = categories.ToDictionary(x => x.Id);
-        var currentId = categoryId;
-
-        while (lookup.TryGetValue(currentId, out var category))
-        {
-            var name = languageContext.LocalizeProperty<CategoryEntity>("Name")(category);
-
-            result.Add(new CategoryBreadcrumbDto
-            {
-                Id = category.Id,
-                Name = name!
-            });
-
-            if (category.ParentId == null)
-                break;
-
-            currentId = category.ParentId.Value;
-        }
-
-        result.Reverse();
-        return result;
     }
 
     public static string MaskPhoneNumber(string input)

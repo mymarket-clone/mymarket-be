@@ -13,7 +13,6 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
 
-[Authorize]
 [Route("api/categories")]
 public class CategoriesController(IMediator mediator) : BaseController
 {
@@ -58,6 +57,7 @@ public class CategoriesController(IMediator mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> AddCategory([FromForm] AddCategoryCommand command)
     {
@@ -65,6 +65,7 @@ public class CategoriesController(IMediator mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> EditCategory(
         [FromRoute] int id,
@@ -74,6 +75,7 @@ public class CategoriesController(IMediator mediator) : BaseController
         return Ok(result);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
