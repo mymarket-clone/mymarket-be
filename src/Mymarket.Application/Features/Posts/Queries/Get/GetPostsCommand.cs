@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common;
-using Mymarket.Application.Features.Categories.Models;
 using Mymarket.Application.Features.Posts.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Common;
@@ -21,6 +20,7 @@ public record GetPostsCommand(
     List<ConditionType>? CondType,
     List<PostType>? PostType,
     SortType? SortType,
+    bool? ForPsn,
     int? CatId,
     int? BrandId,
     int Page,
@@ -217,7 +217,7 @@ public class GetPostsCommandHandler(
                 p.Price - (p.Price * p.SalePercentage / 100) <= request.PriceTo);
         }
 
-        if (request.OfferPrice is not null && request.OfferPrice.Value == false)
+        if (request.OfferPrice is not null && request.OfferPrice.Value != false)
         {
             query = query.Where(p => !p.CanOfferPrice);
         }
@@ -245,6 +245,11 @@ public class GetPostsCommandHandler(
         if (request.BrandId is not null)
         {
             query = query.Where(p => p.BrandId == request.BrandId);
+        }
+
+        if (request.ForPsn is not null)
+        {
+            query = query.Where(p => p.ForDisabledPerson == request.ForPsn);
         }
 
         return query;

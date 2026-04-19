@@ -22,6 +22,7 @@ public class PostDto
     public double? Price { get; set; }
     public PromoType? PromoType { get; set; }
     public byte SalePercentage { get; set; }
+    public double? PriceAfterDiscount { get; set; }
     public required string Title { get; set; }
     public int? BrandId { get; set; }
     public List<string> Images { get; set; } = [];
@@ -36,6 +37,11 @@ public class PostDto
                         .Where(pi => pi.Image != null && pi.Image.Url != null)
                         .OrderBy(pi => pi.Order)
                         .Select(pi => pi.Image!.Url)
+                ))
+                .ForMember(dest => dest.PriceAfterDiscount, opt => opt.MapFrom(src =>
+                    src.Price.HasValue
+                        ? src.Price.Value * (1 - src.SalePercentage / 100.0)
+                        : (double?)null
                 ));
         }
     }

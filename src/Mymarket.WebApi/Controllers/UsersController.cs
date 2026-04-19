@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Users.Queries.GetById;
 using Mymarket.Application.Features.Users.Queries.GetCurrent;
@@ -24,6 +25,7 @@ public class UsersController(IMediator mediator) : ControllerBase
         return result is null ? NotFound() : Ok(result);
     }
 
+    [Authorize]
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrentUser()
     {
