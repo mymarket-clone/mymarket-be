@@ -23,6 +23,7 @@ public record GetPostsCommand(
     bool? ForPsn,
     int? CatId,
     int? BrandId,
+    SortType? SortBy,
     int Page,
     int PageSize
 ) : IRequest<PostSearchDto>;
@@ -78,10 +79,11 @@ public class GetPostsCommandHandler(
 
         query = request.SortType switch
         {
-            SortType.DateDec => ordered.ThenByDescending(p => p.CreatedAt),
+            SortType.DateDesc => ordered.ThenByDescending(p => p.CreatedAt),
             SortType.DateAsc => ordered.ThenBy(p => p.CreatedAt),
-            SortType.PriceDec => ordered.ThenByDescending(p => p.Price - (p.Price * p.SalePercentage / 100)),
+            SortType.PriceDesc => ordered.ThenByDescending(p => p.Price - (p.Price * p.SalePercentage / 100)),
             SortType.PriceAsc => ordered.ThenBy(p => p.Price - (p.Price * p.SalePercentage / 100)),
+            SortType.WithDiscount => ordered.ThenByDescending(p => p.SalePercentage),
             _ => ordered
         };
 

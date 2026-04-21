@@ -2,11 +2,11 @@
 
 public enum SortType
 {
-    DateDec = 1,
+    DateDesc = 1,
     DateAsc = 2,
-    PriceDec = 3,
+    PriceDesc = 3,
     PriceAsc = 4,
-    ViewsDec = 5,
+    ViewsDesc = 5,
     ViewsAsc = 6,
     WithDiscount = 7,
 }
