@@ -75,7 +75,8 @@ public class VerifyEmailCodeCommandHandler(
                 Name: user.Firstname,
                 Lastname: user.LastName,
                 Email: user.Email,
-                EmailVerified: user.EmailVerified
+                EmailVerified: user.EmailVerified,
+                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id)
             )
         );
     }

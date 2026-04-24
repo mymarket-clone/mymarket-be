@@ -28,10 +28,12 @@ public record GetPostsCommand(
     int PageSize
 ) : IRequest<PostSearchDto>;
 
+
 public class GetPostsCommandHandler(
     IApplicationDbContext context,
-    IMapper mapper, 
-    ILanguageContext languageContext) : IRequestHandler<GetPostsCommand, PostSearchDto>
+    ILanguageContext languageContext,
+    ICurrentUser currentUser
+) : IRequestHandler<GetPostsCommand, PostSearchDto>
 {
     public async Task<PostSearchDto> Handle(GetPostsCommand request, CancellationToken cancellationToken)
     {
@@ -55,9 +57,7 @@ public class GetPostsCommandHandler(
                 return result;
 
             foreach (var child in children)
-            {
                 result.AddRange(GetAllDescendants(child));
-            }
 
             return result;
         }
@@ -68,11 +68,6 @@ public class GetPostsCommandHandler(
             query = query.Where(p => categoryIds.Contains(p.CategoryId));
         }
 
-        var postCounts = await context.Posts
-            .GroupBy(p => p.CategoryId)
-            .Select(g => new { CategoryId = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.CategoryId, x => x.Count, cancellationToken);
-
         var ordered = query
             .OrderByDescending(p => p.PromoType)
             .ThenByDescending(p => p.CreatedAt);
@@ -81,8 +76,8 @@ public class GetPostsCommandHandler(
         {
             SortType.DateDesc => ordered.ThenByDescending(p => p.CreatedAt),
             SortType.DateAsc => ordered.ThenBy(p => p.CreatedAt),
-            SortType.PriceDesc => ordered.ThenByDescending(p => p.Price - (p.Price * p.SalePercentage / 100)),
-            SortType.PriceAsc => ordered.ThenBy(p => p.Price - (p.Price * p.SalePercentage / 100)),
+            SortType.PriceDesc => ordered.ThenByDescending(p => p.Price * (1 - p.SalePercentage / 100.0)),
+            SortType.PriceAsc => ordered.ThenBy(p => p.Price * (1 - p.SalePercentage / 100.0)),
             SortType.WithDiscount => ordered.ThenByDescending(p => p.SalePercentage),
             _ => ordered
         };
@@ -91,13 +86,13 @@ public class GetPostsCommandHandler(
 
         var totalCount = await query.CountAsync(cancellationToken);
 
-        var items = await query
+        var posts = await query
+            .AsNoTracking()
             .Skip(skip)
             .Take(pageSize)
-            .ProjectTo<PostDto>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
-        var postIds = items.Select(x => x.Id).ToList();
+        var postIds = posts.Select(p => p.Id).ToList();
 
         var images = await context.PostsImages
             .AsNoTracking()
@@ -113,7 +108,6 @@ public class GetPostsCommandHandler(
             })
             .ToListAsync(cancellationToken);
 
-
         var imageLookup = images
             .GroupBy(x => x.PostId)
             .ToDictionary(
@@ -121,13 +115,59 @@ public class GetPostsCommandHandler(
                 g => g.Select(x => x.Url).ToList()
             );
 
+        var userId = currentUser.Id;
+
+        var favoritePostIds = userId is null ? [] : 
+            (await context.Favorites
+                .AsNoTracking()
+                .Where(f => f.UserId == userId)
+                .Select(f => f.PostId)
+                .ToListAsync(cancellationToken))
+            .ToHashSet();
+
+        var items = posts.Select(p =>
+        {
+            double? priceAfterDiscount = p.Price.HasValue
+                ? p.Price.Value * (1 - p.SalePercentage / 100.0)
+                : null;
+
+            return new PostDto
+            {
+                Id = p.Id,
+                AutoRenewal = p.AutoRenewal,
+                CanOfferPrice = p.CanOfferPrice,
+                CategoryId = p.CategoryId,
+                ConditionType = p.ConditionType,
+                CurrencyType = p.CurrencyType,
+                Description = p.Description,
+                ForDisabledPerson = p.ForDisabledPerson,
+                IsColored = p.IsColored,
+                IsNegotiable = p.IsNegotiable,
+                Name = p.Name,
+                PhoneNumber = p.PhoneNumber,
+                PostType = p.PostType,
+                Price = p.Price,
+                PromoType = p.PromoType,
+                SalePercentage = p.SalePercentage,
+                Title = p.Title,
+                BrandId = p.BrandId,
+                PriceAfterDiscount = priceAfterDiscount,
+                Images = imageLookup.TryGetValue(p.Id, out var imgs)
+                    ? imgs : [],
+                IsFavorite = favoritePostIds.Contains(p.Id)
+            };
+        }).ToList();
+
+        var postCounts = await context.Posts
+            .GroupBy(p => p.CategoryId)
+            .Select(g => new { CategoryId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.CategoryId, x => x.Count, cancellationToken);
+
         List<CategoryEntity> categoryScope;
 
         if (request.CatId is null)
         {
-            categoryScope = categories
-                .Where(c => c.ParentId == null)
-                .ToList();
+            categoryScope = [.. categories.Where(c => c.ParentId == null)];
         }
         else
         {
@@ -135,35 +175,18 @@ public class GetPostsCommandHandler(
 
             if (selected is null)
             {
-                categoryScope = categories
-                    .Where(c => c.ParentId == null)
-                    .ToList();
+                categoryScope = [.. categories.Where(c => c.ParentId == null)];
             }
             else
             {
-                var children = categories
-                    .Where(c => c.ParentId == selected.Id)
-                    .ToList();
+                var children = categories.Where(c => c.ParentId == selected.Id).ToList();
 
                 if (children.Count != 0)
-                {
                     categoryScope = children;
-                }
+                else if (selected.ParentId is int parentId)
+                    categoryScope = [.. categories.Where(c => c.ParentId == parentId)];
                 else
-                {
-                    if (selected.ParentId is int parentId)
-                    {
-                        categoryScope = categories
-                            .Where(c => c.ParentId == parentId)
-                            .ToList();
-                    }
-                    else
-                    {
-                        categoryScope = categories
-                            .Where(c => c.ParentId == null)
-                            .ToList();
-                    }
-                }
+                    categoryScope = [.. categories.Where(c => c.ParentId == null)];
             }
         }
 
@@ -172,14 +195,14 @@ public class GetPostsCommandHandler(
             {
                 var allIds = GetAllDescendants(c.Id);
 
-                var totalCount = allIds
+                var total = allIds
                     .Sum(id => postCounts.TryGetValue(id, out var count) ? count : 0);
 
                 return new CategoryLiteDto
                 {
                     Id = c.Id,
                     Name = languageContext.LocalizeProperty<CategoryEntity>("Name")(c) ?? string.Empty,
-                    Count = totalCount,
+                    Count = total,
                     HasChildren = childrenLookup.ContainsKey(c.Id)
                 };
             })
@@ -204,27 +227,26 @@ public class GetPostsCommandHandler(
             Categories = categoryDtos,
         };
     }
-
     public static IQueryable<PostEntity> ApplyFilters(IQueryable<PostEntity> query, GetPostsCommand request)
     {
         if (request.PriceFrom is not null)
         {
             query = query.Where(p =>
-                p.Price - (p.Price * p.SalePercentage / 100) >= request.PriceFrom);
+                p.Price * (1 - p.SalePercentage / 100.0) >= request.PriceFrom);
         }
 
         if (request.PriceTo is not null)
         {
             query = query.Where(p =>
-                p.Price - (p.Price * p.SalePercentage / 100) <= request.PriceTo);
+                p.Price * (1 - p.SalePercentage / 100.0) <= request.PriceTo);
         }
 
-        if (request.OfferPrice is not null && request.OfferPrice.Value != false)
+        if (request.OfferPrice is true)
         {
             query = query.Where(p => !p.CanOfferPrice);
         }
 
-        if (request.Discount is not null && request.Discount.Value)
+        if (request.Discount is true)
         {
             query = query.Where(p => p.SalePercentage > 0);
         }

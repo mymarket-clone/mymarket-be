@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mymarket.Application.Features.Favorites.Commands.Add;
+using Mymarket.Application.Features.Favorites.Commands.Remove;
+using Mymarket.Application.Features.Favorites.Query;
 using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Features.Posts.Queries.Get;
 using Mymarket.Application.Features.Posts.Queries.GetById;
@@ -70,5 +73,34 @@ public class PostsController(IMediator mediator) : BaseController
     {
         var result = await mediator.Send(new GetLitePostsQuery());
         return Ok(result);
+    }
+
+    [Authorize]
+    [HttpGet("favorite")]
+    public async Task<IActionResult> GetMyFavorites(
+        [FromQuery] int Page = 1,
+        [FromQuery] int PageSize = 20)
+    {
+        var result = await mediator.Send(new GetFavoritesQuery(
+            Page,
+            PageSize
+        ));
+        return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPost("{id}/favorite")]
+    public async Task<IActionResult> AddToFavorite([FromRoute] int id)
+    {
+        await mediator.Send(new AddToFavoriteCommand(id));
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{id}/favorite")]
+    public async Task<IActionResult> RemoveFromFavorite([FromRoute] int id)
+    {
+        await mediator.Send(new RemoveFromFavouriteCommand(id));
+        return NoContent();
     }
 }
