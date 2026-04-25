@@ -13,5 +13,6 @@ public static class DependencyInjection
         builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ILanguageContext, LanguageContext>();
+        builder.Services.AddMemoryCache();
     }
 }

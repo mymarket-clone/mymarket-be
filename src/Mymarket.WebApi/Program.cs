@@ -2,6 +2,7 @@ using Mymarket.Application;
 using Mymarket.Domain;
 using Mymarket.Infrastructure;
 using Mymarket.WebApi.Infrastructure;
+using Mymarket.WebApi.Middlewares;
 
 namespace Mymarket.WebApi;
 
@@ -17,6 +18,8 @@ public class Program
         builder.AddWebApiServices();
 
         var app = builder.Build();
+
+        app.UseMiddleware<SessionMiddleware>();
 
         app.ConfigureMiddleware();
 

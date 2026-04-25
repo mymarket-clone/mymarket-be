@@ -8,19 +8,21 @@ public interface IApplicationDbContext
 {
     DbSet<UserEntity> Users { get; }
     DbSet<VerificationCodeEntity> VerificationCode { get; }
-    DbSet<PostEntity> Posts { get; }
-    DbSet<PostsImagesEntity> PostsImages { get; }
     DbSet<CategoryEntity> Categories { get; }
+    DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
     DbSet<CategoryBrandsEntity> CategoryBrands { get; }
+    DbSet<BrandEntity> Brands { get; }
     DbSet<CityEntity> Cities { get; }
+    DbSet<PostEntity> Posts { get; }
+    DbSet<PostAttributesEntity> PostAttributes { get; }
+    DbSet<PostsImagesEntity> PostsImages { get; }
+    DbSet<PostViewEntity> PostViews { get; }
     DbSet<ImageEntity> Images { get; }
     DbSet<AttributeEntity> Attributes { get; }
     DbSet<AttributeUnitEntity> AttributeUnits { get; }
     DbSet<AttributeOptionsEntity> AttributeOptions { get; }
-    DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
-    DbSet<PostAttributesEntity> PostAttributes{ get; }
-    DbSet<BrandEntity> Brands { get; }
     DbSet<HomeCategoriesEntity> HomeCategories { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
 }
