@@ -22,6 +22,7 @@ public interface IApplicationDbContext
     DbSet<AttributeUnitEntity> AttributeUnits { get; }
     DbSet<AttributeOptionsEntity> AttributeOptions { get; }
     DbSet<HomeCategoriesEntity> HomeCategories { get; }
+    DbSet<FavoritesEntity> Favorites { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
