@@ -520,6 +520,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record already exists.
+        /// </summary>
+        public static string RecordAlredyExists {
+            get {
+                return ResourceManager.GetString("RecordAlredyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record not found.
         /// </summary>
         public static string RecordNotFound {

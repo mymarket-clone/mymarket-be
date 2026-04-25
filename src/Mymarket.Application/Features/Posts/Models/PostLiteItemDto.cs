@@ -13,6 +13,7 @@ public class PostLiteItemDto
     public CurrencyType CurrencyType { get; set; }
     public required List<string> Images { get; set; }
     public bool IsNegotiable { get; set; }
+    public bool IsFavorite { get; set; }
 
     private sealed class MappingProfile : Profile
     {

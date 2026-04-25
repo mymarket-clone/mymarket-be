@@ -5,5 +5,6 @@ public record UserDto(
     string Name,
     string Lastname,
     string Email,
-    bool EmailVerified
+    bool EmailVerified,
+    int FavoritesCount
 );

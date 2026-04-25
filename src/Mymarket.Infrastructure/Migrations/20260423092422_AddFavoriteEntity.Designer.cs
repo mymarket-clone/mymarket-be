@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423092422_AddFavoriteEntity")]
+    partial class AddFavoriteEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,10 +236,9 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("CategoryId", "BrandId")
-                        .IsUnique();
+                    b.HasIndex("CategoryId");
 
-                    b.ToTable("CategoryBrands", (string)null);
+                    b.ToTable("CategoryBrands");
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.CategoryEntity", b =>
@@ -549,44 +551,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.ToTable("Posts", (string)null);
                 });
 
-            modelBuilder.Entity("Mymarket.Domain.Entities.PostViewEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("SessionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateOnly>("ViewDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateTime>("ViewedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("ViewedAt");
-
-                    b.HasIndex("PostId", "ViewDate");
-
-                    b.HasIndex("PostId", "SessionId", "ViewDate");
-
-                    b.HasIndex("PostId", "UserId", "ViewDate");
-
-                    b.ToTable("PostViews", (string)null);
-                });
-
             modelBuilder.Entity("Mymarket.Domain.Entities.PostsImagesEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -884,24 +848,6 @@ namespace Mymarket.Infrastructure.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("City");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Mymarket.Domain.Entities.PostViewEntity", b =>
-                {
-                    b.HasOne("Mymarket.Domain.Entities.PostEntity", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mymarket.Domain.Entities.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });

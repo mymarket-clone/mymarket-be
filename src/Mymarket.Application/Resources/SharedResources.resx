@@ -282,4 +282,7 @@
   <data name="FieldRequired" xml:space="preserve">
     <value>Field is required</value>
   </data>
+  <data name="RecordAlredyExists" xml:space="preserve">
+    <value>Record already exists</value>
+  </data>
 </root>

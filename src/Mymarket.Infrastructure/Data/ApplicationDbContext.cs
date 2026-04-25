@@ -25,6 +25,11 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<AttributeUnitEntity> AttributeUnits => Set<AttributeUnitEntity>();
     public DbSet<AttributeOptionsEntity> AttributeOptions => Set<AttributeOptionsEntity>();
     public DbSet<HomeCategoriesEntity> HomeCategories => Set<HomeCategoriesEntity>();
+<<<<<<< HEAD
+=======
+    public DbSet<PostsImagesEntity> PostsImages => Set<PostsImagesEntity>();
+    public DbSet<FavoritesEntity> Favorites => Set<FavoritesEntity>();
+>>>>>>> 89a195946752e4e65893959aa4b11169a5af4d76
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {

@@ -14,13 +14,15 @@ public record GetPostByIdQuery(int Id) : IRequest<PostDetailsDto?>;
 
 public class GetPostByIdQueryHandler(
     IApplicationDbContext context,
-    ILanguageContext languageContext
+    ILanguageContext languageContext,
+    ICurrentUser currentUser
 ) : IRequestHandler<GetPostByIdQuery, PostDetailsDto?>
 {
     public async Task<PostDetailsDto?> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
         var post = await context.Posts
             .AsNoTracking()
+            .Include(p => p.Favorites)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (post == null)  return null;
@@ -51,6 +53,14 @@ public class GetPostByIdQueryHandler(
             .OrderBy(pi => pi.Order)
             .Select(pi => pi.Image!.Url!)
             .ToListAsync(cancellationToken);
+
+        var isFavorite = currentUser.Id != 0 &&
+            await context.Favorites
+                .AsNoTracking()
+                .AnyAsync(f =>
+                    f.PostId == post.Id &&
+                    f.UserId == currentUser.Id,
+                    cancellationToken);
 
         var postAttrById = postAttributes.ToDictionary(x => x.AttributeId);
 
@@ -140,7 +150,8 @@ public class GetPostByIdQueryHandler(
             Attributes = attributesDto,
             Images = postImages,
             City = postCity?.Name ?? null,
-            User = userDto
+            User = userDto,
+            IsFavorite = isFavorite
         };
 
         return postDto;

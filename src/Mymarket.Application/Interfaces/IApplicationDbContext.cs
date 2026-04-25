@@ -21,8 +21,16 @@ public interface IApplicationDbContext
     DbSet<AttributeEntity> Attributes { get; }
     DbSet<AttributeUnitEntity> AttributeUnits { get; }
     DbSet<AttributeOptionsEntity> AttributeOptions { get; }
+<<<<<<< HEAD
     DbSet<HomeCategoriesEntity> HomeCategories { get; }
 
+=======
+    DbSet<CategoryAttributesEntity> CategoryAttributes { get; }
+    DbSet<PostAttributesEntity> PostAttributes { get; }
+    DbSet<BrandEntity> Brands { get; }
+    DbSet<HomeCategoriesEntity> HomeCategories { get; }
+    DbSet<FavoritesEntity> Favorites { get; }
+>>>>>>> 89a195946752e4e65893959aa4b11169a5af4d76
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
 }

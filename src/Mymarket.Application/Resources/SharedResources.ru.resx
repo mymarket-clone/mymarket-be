@@ -282,4 +282,7 @@
   <data name="FieldRequired" xml:space="preserve">
     <value>Обязательное поле</value>
   </data>
+  <data name="RecordAlredyExists" xml:space="preserve">
+    <value>Запись уже существует</value>
+  </data>
 </root>

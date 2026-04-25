@@ -26,6 +26,7 @@ public class PostDto
     public required string Title { get; set; }
     public int? BrandId { get; set; }
     public List<string> Images { get; set; } = [];
+    public bool IsFavorite { get; set; }
 
     public sealed class Mapping : Profile
     {
@@ -35,6 +36,7 @@ public class PostDto
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src =>
                     src.PostsImages
                         .Where(pi => pi.Image != null && pi.Image.Url != null)
+                        .OrderBy(pi => pi.Order)
                         .OrderBy(pi => pi.Order)
                         .Select(pi => pi.Image!.Url)
                 ))
