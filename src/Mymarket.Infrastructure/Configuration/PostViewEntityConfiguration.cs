@@ -24,22 +24,23 @@ public class PostViewEntityConfiguration : IEntityTypeConfiguration<PostViewEnti
 
         builder.Property(x => x.SessionId)
             .IsRequired(false);
-
         builder.HasOne(x => x.Post)
-            .WithMany()
+            .WithMany(p => p.PostViews) 
             .HasForeignKey(x => x.PostId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.User)
-            .WithMany()
+            .WithMany(u => u.PostViews)
             .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict); ;
 
-        builder.HasIndex(x => new { x.PostId, x.ViewDate });
+        builder.HasIndex(x => new { x.PostId, x.UserId, x.ViewDate })
+            .IsUnique()
+            .HasFilter("\"UserId\" IS NOT NULL");
 
-        builder.HasIndex(x => new { x.PostId, x.UserId, x.ViewDate });
-
-        builder.HasIndex(x => new { x.PostId, x.SessionId, x.ViewDate });
+        builder.HasIndex(x => new { x.PostId, x.SessionId, x.ViewDate })
+            .IsUnique()
+            .HasFilter("\"SessionId\" IS NOT NULL");
 
         builder.HasIndex(x => x.ViewedAt);
     }

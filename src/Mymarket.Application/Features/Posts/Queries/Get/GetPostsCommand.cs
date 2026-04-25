@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using EFCoreSecondLevelCacheInterceptor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common;
@@ -37,12 +38,12 @@ public class GetPostsCommandHandler(
 {
     public async Task<PostSearchDto> Handle(GetPostsCommand request, CancellationToken cancellationToken)
     {
-        var query = ApplyFilters(context.Posts.AsQueryable(), request);
-
         var pageSize = Math.Clamp(request.PageSize, 1, 100);
 
         var categories = await context.Categories
             .AsNoTracking()
+            .Include(x => x.Logo)
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .ToListAsync(cancellationToken);
 
         var childrenLookup = categories
@@ -52,15 +53,14 @@ public class GetPostsCommandHandler(
         List<int> GetAllDescendants(int categoryId)
         {
             var result = new List<int> { categoryId };
-
             if (!childrenLookup.TryGetValue(categoryId, out var children))
                 return result;
-
             foreach (var child in children)
-                result.AddRange(GetAllDescendants(child));
-
+                result.AddRange(GetAllDescendants(child));  
             return result;
         }
+
+        var query = ApplyFilters(context.Posts.AsNoTracking().AsQueryable(), request);
 
         if (request.CatId is not null)
         {
@@ -68,69 +68,60 @@ public class GetPostsCommandHandler(
             query = query.Where(p => categoryIds.Contains(p.CategoryId));
         }
 
-        var ordered = query
-            .OrderByDescending(p => p.PromoType)
-            .ThenByDescending(p => p.CreatedAt);
-
         query = request.SortType switch
         {
-            SortType.DateDesc => ordered.ThenByDescending(p => p.CreatedAt),
-            SortType.DateAsc => ordered.ThenBy(p => p.CreatedAt),
-            SortType.PriceDesc => ordered.ThenByDescending(p => p.Price * (1 - p.SalePercentage / 100.0)),
-            SortType.PriceAsc => ordered.ThenBy(p => p.Price * (1 - p.SalePercentage / 100.0)),
-            SortType.WithDiscount => ordered.ThenByDescending(p => p.SalePercentage),
-            _ => ordered
+            SortType.DateAsc => query.OrderByDescending(p => p.PromoType).ThenBy(p => p.CreatedAt),
+            SortType.PriceDesc => query.OrderByDescending(p => p.PromoType).ThenByDescending(p => p.Price * (1 - p.SalePercentage / 100.0)),
+            SortType.PriceAsc => query.OrderByDescending(p => p.PromoType).ThenBy(p => p.Price * (1 - p.SalePercentage / 100.0)),
+            SortType.WithDiscount => query.OrderByDescending(p => p.PromoType).ThenByDescending(p => p.SalePercentage),
+            _ => query.OrderByDescending(p => p.PromoType).ThenByDescending(p => p.CreatedAt)
         };
 
         var skip = (request.Page - 1) * pageSize;
 
-        var totalCount = await query.CountAsync(cancellationToken);
-
-        var posts = await query
-            .AsNoTracking()
+        var postsWithImages = await query
             .Skip(skip)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
-
-        var postIds = posts.Select(p => p.Id).ToList();
-
-        var images = await context.PostsImages
-            .AsNoTracking()
-            .Where(pi =>
-                postIds.Contains(pi.PostId) &&
-                pi.Image != null &&
-                pi.Image.Url != null)
-            .OrderBy(pi => pi.Order)
-            .Select(pi => new
+            .Select(p => new
             {
-                pi.PostId,
-                Url = pi.Image!.Url!
+                Post = p,
+                Images = p.PostsImages
+                    .Where(pi => pi.Image != null && pi.Image.Url != null)
+                    .OrderBy(pi => pi.Order)
+                    .Select(pi => pi.Image!.Url!)
+                    .ToList()
             })
             .ToListAsync(cancellationToken);
 
-        var imageLookup = images
-            .GroupBy(x => x.PostId)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Select(x => x.Url).ToList()
-            );
+        var totalCount = await query.CountAsync(cancellationToken);
 
-        var userId = currentUser.Id;
+        var postIds = postsWithImages.Select(x => x.Post.Id).ToList();
 
-        var favoritePostIds = userId is null ? [] : 
-            (await context.Favorites
+        var favoritePostIds = currentUser.Id != 0
+            ? (await context.Favorites
                 .AsNoTracking()
-                .Where(f => f.UserId == userId)
+                .Where(f => f.UserId == currentUser.Id && postIds.Contains(f.PostId))
                 .Select(f => f.PostId)
                 .ToListAsync(cancellationToken))
-            .ToHashSet();
+                .ToHashSet()
+            : new HashSet<int>();
 
-        var items = posts.Select(p =>
+        List<int> scopeCategoryIds = request.CatId is not null
+            ? GetAllDescendants(request.CatId.Value)
+            : categories.Where(c => c.ParentId == null)
+                        .SelectMany(c => GetAllDescendants(c.Id))
+                        .ToList();
+
+        var postCounts = await context.Posts
+            .AsNoTracking()
+            .Where(p => scopeCategoryIds.Contains(p.CategoryId))
+            .GroupBy(p => p.CategoryId)
+            .Select(g => new { CategoryId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.CategoryId, x => x.Count, cancellationToken);
+
+        var items = postsWithImages.Select(x =>
         {
-            double? priceAfterDiscount = p.Price.HasValue
-                ? p.Price.Value * (1 - p.SalePercentage / 100.0)
-                : null;
-
+            var p = x.Post;
             return new PostDto
             {
                 Id = p.Id,
@@ -139,7 +130,7 @@ public class GetPostsCommandHandler(
                 CategoryId = p.CategoryId,
                 ConditionType = p.ConditionType,
                 CurrencyType = p.CurrencyType,
-                Description = p.Description,
+                Description = languageContext.LocalizeProperty<PostEntity>("Description")(p),
                 ForDisabledPerson = p.ForDisabledPerson,
                 IsColored = p.IsColored,
                 IsNegotiable = p.IsNegotiable,
@@ -149,22 +140,17 @@ public class GetPostsCommandHandler(
                 Price = p.Price,
                 PromoType = p.PromoType,
                 SalePercentage = p.SalePercentage,
-                Title = p.Title,
+                Title = languageContext.LocalizeProperty<PostEntity>("Title")(p)!,
                 BrandId = p.BrandId,
-                PriceAfterDiscount = priceAfterDiscount,
-                Images = imageLookup.TryGetValue(p.Id, out var imgs)
-                    ? imgs : [],
+                PriceAfterDiscount = p.Price.HasValue
+                    ? p.Price.Value * (1 - p.SalePercentage / 100.0)
+                    : null,
+                Images = x.Images,
                 IsFavorite = favoritePostIds.Contains(p.Id)
             };
         }).ToList();
 
-        var postCounts = await context.Posts
-            .GroupBy(p => p.CategoryId)
-            .Select(g => new { CategoryId = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.CategoryId, x => x.Count, cancellationToken);
-
         List<CategoryEntity> categoryScope;
-
         if (request.CatId is null)
         {
             categoryScope = [.. categories.Where(c => c.ParentId == null)];
@@ -172,7 +158,6 @@ public class GetPostsCommandHandler(
         else
         {
             var selected = categories.FirstOrDefault(c => c.Id == request.CatId);
-
             if (selected is null)
             {
                 categoryScope = [.. categories.Where(c => c.ParentId == null)];
@@ -180,7 +165,6 @@ public class GetPostsCommandHandler(
             else
             {
                 var children = categories.Where(c => c.ParentId == selected.Id).ToList();
-
                 if (children.Count != 0)
                     categoryScope = children;
                 else if (selected.ParentId is int parentId)
@@ -194,10 +178,7 @@ public class GetPostsCommandHandler(
             .Select(c =>
             {
                 var allIds = GetAllDescendants(c.Id);
-
-                var total = allIds
-                    .Sum(id => postCounts.TryGetValue(id, out var count) ? count : 0);
-
+                var total = allIds.Sum(id => postCounts.TryGetValue(id, out var count) ? count : 0);
                 return new CategoryLiteDto
                 {
                     Id = c.Id,
@@ -227,6 +208,7 @@ public class GetPostsCommandHandler(
             Categories = categoryDtos,
         };
     }
+
     public static IQueryable<PostEntity> ApplyFilters(IQueryable<PostEntity> query, GetPostsCommand request)
     {
         if (request.PriceFrom is not null)

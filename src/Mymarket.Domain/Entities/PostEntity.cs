@@ -39,4 +39,6 @@ public class PostEntity : BaseEntity<int>
     public BrandEntity? Brand { get; set; }
     public ICollection<PostsImagesEntity> PostsImages { get; set; } = [];
     public ICollection<FavoritesEntity> Favorites { get; set; } = [];
+    public ICollection<PostAttributesEntity> PostAttributes { get; set; } = [];
+    public ICollection<PostViewEntity> PostViews { get; set; } = [];
 }

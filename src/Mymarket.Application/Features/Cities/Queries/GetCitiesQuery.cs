@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using EFCoreSecondLevelCacheInterceptor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Cities.Models;
@@ -17,6 +18,7 @@ public class GetAllCitiesQueryHandler(
     {
         var result = await context.Cities
             .AsNoTracking()
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromHours(1))
             .ProjectTo<CityDto>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

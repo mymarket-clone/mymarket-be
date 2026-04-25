@@ -8,6 +8,7 @@ using Mymarket.Application.Features.Posts.Commands.Add;
 using Mymarket.Application.Features.Posts.Queries.Get;
 using Mymarket.Application.Features.Posts.Queries.GetById;
 using Mymarket.Application.Features.Posts.Queries.GetLite;
+using Mymarket.Application.Features.Views.Commands.View;
 using Mymarket.Domain.Enums;
 using Mymarket.WebApi.Infrastructure;
 
@@ -66,6 +67,13 @@ public class PostsController(IMediator mediator) : BaseController
     {
         var result = await mediator.Send(new GetPostByIdQuery(id));
         return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpGet("{id}/view")]
+    public async Task<IActionResult> ViewPost([FromRoute] int id)
+    {
+        await mediator.Send(new ViewPostCommand(id));
+        return NoContent();
     }
 
     [HttpGet("lite")]

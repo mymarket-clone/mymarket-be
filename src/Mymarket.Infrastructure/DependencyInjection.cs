@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -22,19 +23,25 @@ public static class DependencyInjection
     public static void AddInfrastuctureServices(this IHostApplicationBuilder builder)
     {
         // Database
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        builder.Services.AddDbContext<ApplicationDbContext>((provider, options) =>
         {
-            options.UseNpgsql(builder.Configuration.GetConnectionString("Supabase"));
+            options.UseNpgsql(
+                builder.Configuration.GetConnectionString("Supabase"),
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+            )
+            .AddInterceptors(provider.GetRequiredService<SecondLevelCacheInterceptor>());
         });
 
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        builder.Services.AddEFSecondLevelCache(options =>options.UseMemoryCacheProvider().UseCacheKeyPrefix("EF_") );
 
         // MediatR
         builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 
         // Problem details RFC 7807
         builder.Services.AddProblemDetails();
-
+            
         // Fluent validation
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

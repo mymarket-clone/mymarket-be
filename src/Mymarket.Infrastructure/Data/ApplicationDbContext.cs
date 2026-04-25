@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Common;
 using Mymarket.Domain.Entities;
+using System.Data;
 using System.Reflection;
 
 namespace Mymarket.Infrastructure.Data;
@@ -27,6 +29,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<HomeCategoriesEntity> HomeCategories => Set<HomeCategoriesEntity>();
     public DbSet<FavoritesEntity> Favorites => Set<FavoritesEntity>();
 
+    public DatabaseFacade GetDatabase() => base.Database;
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
         var entries = ChangeTracker.Entries<AuditableEntity>();
@@ -50,6 +54,6 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
     {
-        return Database.BeginTransactionAsync(cancellationToken);
+        return GetDatabase().BeginTransactionAsync(cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EFCoreSecondLevelCacheInterceptor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Categories.Models;
@@ -18,6 +19,7 @@ public class GetCategoriesQueryHandler(
     {
         var entities = await context.Categories
             .AsNoTracking()
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .Include(x => x.Logo)
             .ToListAsync(cancellationToken);
 

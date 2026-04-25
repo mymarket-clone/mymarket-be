@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.HomeCategories.Models;
 using Mymarket.Application.Interfaces;
@@ -17,6 +18,7 @@ public class GetHomeCategoriesQueryHandler(
     {
         var homeCategories = await context.HomeCategories
             .AsNoTracking()
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .OrderBy(x => x.Order)
             .Select(x => new HomeCategoryDto
             {

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common;
 using Mymarket.Application.Features.Posts.Models;
@@ -22,80 +23,76 @@ public class GetPostByIdQueryHandler(
     {
         var post = await context.Posts
             .AsNoTracking()
-            .Include(p => p.Favorites)
-            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            .Where(x => x.Id == request.Id)
+            .Select(p => new
+            {
+                Post = p,
+                Images = p.PostsImages
+                    .Where(pi => pi.Image != null && pi.Image.Url != null)
+                    .OrderBy(pi => pi.Order)
+                    .Select(pi => pi.Image!.Url!)
+                    .ToList(),
+                IsFavorite = currentUser.Id != 0 &&
+                    p.Favorites.Any(f => f.UserId == currentUser.Id),
+                ViewsCount = p.PostViews.Count(),
+                PostAttributes = p.PostAttributes.ToList(),
+                p.User,
+                UserPostsCount = p.User!.Posts.Count()
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        if (post == null)  return null;
+        if (post == null) return null;
 
         var categories = await context.Categories
             .AsNoTracking()
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .ToListAsync(cancellationToken);
 
         var categoryAttributes = await context.CategoryAttributes
             .AsNoTracking()
-            .Where(x => x.CategoryId == post.CategoryId)
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
+            .Where(x => x.CategoryId == post.Post.CategoryId)
             .OrderBy(x => x.Order)
             .Include(x => x.Attribute)
             .ToListAsync(cancellationToken);
 
-        var postCity = await context.Cities
+        var cityName = await context.Cities
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == post.CityId, cancellationToken);
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
+            .Where(c => c.Id == post.Post.CityId)
+            .Select(c => c.Name)
+            .FirstOrDefaultAsync(cancellationToken);
 
-        var postAttributes = await context.PostAttributes
-            .AsNoTracking()
-            .Where(x => x.PostId == post.Id)
-            .ToListAsync(cancellationToken);
+        var postAttrById = post.PostAttributes.ToDictionary(x => x.AttributeId);
 
-        var postImages = await context.PostsImages
-            .AsNoTracking()
-            .Where(pi => pi.PostId == request.Id && pi.Image != null && pi.Image.Url != null)
-            .OrderBy(pi => pi.Order)
-            .Select(pi => pi.Image!.Url!)
-            .ToListAsync(cancellationToken);
-
-        var isFavorite = currentUser.Id != 0 &&
-            await context.Favorites
-                .AsNoTracking()
-                .AnyAsync(f =>
-                    f.PostId == post.Id &&
-                    f.UserId == currentUser.Id,
-                    cancellationToken);
-
-        var postAttrById = postAttributes.ToDictionary(x => x.AttributeId);
-
-        var selectedOptionIds = postAttributes
+        var selectedOptionIds = post.PostAttributes
             .Where(pa => pa.Value != null &&
-                    categoryAttributes.Any(ca => ca.AttributeId == pa.AttributeId &&
+                categoryAttributes.Any(ca =>
+                    ca.AttributeId == pa.AttributeId &&
                     ca.Attribute?.AttributeType == AttributeType.Select))
             .Select(pa => int.Parse(pa.Value!))
             .ToList();
 
-        var optionById = await context.AttributeOptions
-            .AsNoTracking()
-            .Where(x => selectedOptionIds.Contains(x.Id))
-            .ToDictionaryAsync(x => x.Id, cancellationToken);
+        var optionById = selectedOptionIds.Count > 0
+            ? await context.AttributeOptions
+                .AsNoTracking()
+                .Where(x => selectedOptionIds.Contains(x.Id))
+                .ToDictionaryAsync(x => x.Id, cancellationToken) : new Dictionary<int, AttributeOptionsEntity>();
 
         var attributesDto = new List<PostAttributeDto>();
-
         foreach (var categoryAttr in categoryAttributes)
         {
             postAttrById.TryGetValue(categoryAttr.AttributeId, out var postAttr);
-
             var attributeName = languageContext.LocalizeProperty<AttributeEntity>("Name")(categoryAttr.Attribute)!;
             string? value = null;
 
-            var attributeType = categoryAttr.Attribute?.AttributeType;
-
             if (postAttr != null)
             {
-                if (attributeType == AttributeType.Select && postAttr.Value != null)
+                if (categoryAttr.Attribute?.AttributeType == AttributeType.Select && postAttr.Value != null)
                 {
                     var optionId = int.Parse(postAttr.Value);
                     if (optionById.TryGetValue(optionId, out var option))
-                    {
                         value = languageContext.LocalizeProperty<AttributeOptionsEntity>("Name")(option);
-                    }
                 }
                 else
                 {
@@ -107,54 +104,54 @@ public class GetPostByIdQueryHandler(
             {
                 Attribute = attributeName,
                 Value = value,
-                AttributeType = attributeType
+                AttributeType = categoryAttr.Attribute?.AttributeType
             });
         }
 
-        var user = context.Users.FirstOrDefault(u => u.Id == post.UserId)
-            ?? throw new KeyNotFoundException(SharedResources.RecordNotFound);
+        var u = post.User ?? throw new KeyNotFoundException(SharedResources.RecordNotFound);
 
         var userDto = new UserInfoDto(
-            Id: user.Id,
-            FirstName: user.Firstname,
-            Lastname: user.LastName,
-            Email: user.Email,
-            GenderType: user.Gender,
-            BirthYear: user.BirthYear,
-            PhoneNumber: user.PhoneNumber,
-            EmailVerified: user.EmailVerified,
-            PostsCount: context.Posts.Count(p => p.UserId == user.Id)
+            Id: u.Id,
+            FirstName: u.Firstname,
+            Lastname: u.LastName,
+            Email: u.Email,
+            GenderType: u.Gender,
+            BirthYear: u.BirthYear,
+            PhoneNumber: u.PhoneNumber,
+            EmailVerified: u.EmailVerified,
+            PostsCount: post.UserPostsCount
         );
 
-        var postDto = new PostDetailsDto
+        return new PostDetailsDto
         {
-            Id = post.Id,
-            Title = languageContext.LocalizeProperty<PostEntity>("Title")(post)!,
-            Description = languageContext.LocalizeProperty<PostEntity>("Description")(post),
-            CategoryId = post.CategoryId,
-            Breadcrumb = BreadcrumbBuilder.Build(post.CategoryId, categories, languageContext),
-            Name = post.Name,
-            PhoneNumber = MaskPhoneNumber(post.PhoneNumber),
-            Price = post.Price,
-            PriceAfterDiscount = post.SalePercentage > 0 ? post.Price * (1 - (double)post.SalePercentage / 100) : null,
-            CurrencyType = post.CurrencyType,
-            SalePercentage = post.SalePercentage,
-            CanOfferPrice = post.CanOfferPrice,
-            IsNegotiable = post.IsNegotiable,
-            ForDisabledPerson = post.ForDisabledPerson,
-            IsColored = post.IsColored,
-            AutoRenewal = post.AutoRenewal,
-            ConditionType = post.ConditionType,
-            PostType = post.PostType,
-            PromoType = post.PromoType,
+            Id = post.Post.Id,
+            Title = languageContext.LocalizeProperty<PostEntity>("Title")(post.Post)!,
+            Description = languageContext.LocalizeProperty<PostEntity>("Description")(post.Post),
+            CategoryId = post.Post.CategoryId,
+            Breadcrumb = BreadcrumbBuilder.Build(post.Post.CategoryId, categories, languageContext),
+            Name = post.Post.Name,
+            PhoneNumber = MaskPhoneNumber(post.Post.PhoneNumber),
+            Price = post.Post.Price,
+            PriceAfterDiscount = post.Post.SalePercentage > 0
+                ? post.Post.Price * (1 - (double)post.Post.SalePercentage / 100)
+                : null,
+            CurrencyType = post.Post.CurrencyType,
+            SalePercentage = post.Post.SalePercentage,
+            CanOfferPrice = post.Post.CanOfferPrice,
+            IsNegotiable = post.Post.IsNegotiable,
+            ForDisabledPerson = post.Post.ForDisabledPerson,
+            IsColored = post.Post.IsColored,
+            AutoRenewal = post.Post.AutoRenewal,
+            ConditionType = post.Post.ConditionType,
+            PostType = post.Post.PostType,
+            PromoType = post.Post.PromoType,
             Attributes = attributesDto,
-            Images = postImages,
-            City = postCity?.Name ?? null,
+            Images = post.Images,
+            City = cityName,
             User = userDto,
-            IsFavorite = isFavorite
+            IsFavorite = post.IsFavorite,
+            ViewsCount = post.ViewsCount
         };
-
-        return postDto;
     }
 
     public static string MaskPhoneNumber(string input)

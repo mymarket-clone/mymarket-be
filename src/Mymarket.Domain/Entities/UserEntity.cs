@@ -13,6 +13,8 @@ public class UserEntity : BaseEntity<int>
     public required string PhoneNumber {  get; set; }
     public required string PasswordHash { get; set; }
     public bool EmailVerified { get; set; }
-    public string? RefreshToken { get; set; }
+    public string? RefreshToken { get; set; }   
     public DateTime RefreshTokenExpiry { get; set; }
+    public ICollection<PostEntity> Posts { get; set; } = [];
+    public ICollection<PostViewEntity> PostViews { get; set; } = [];
 }

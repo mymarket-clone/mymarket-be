@@ -25,6 +25,7 @@ public class PostDetailsDto
     public string? City { get; set; }
     public required string Title { get; set; }
     public bool IsFavorite { get; set; }
+    public int ViewsCount { get; set; }
     public List<CategoryBreadcrumbDto> Breadcrumb { get; set; } = [];
     public List<PostAttributeDto> Attributes { get; set; } = [];
     public List<string> Images { get; set; } = [];

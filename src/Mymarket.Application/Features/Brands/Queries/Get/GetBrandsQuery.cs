@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using EFCoreSecondLevelCacheInterceptor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Brands.Models;
@@ -17,6 +18,7 @@ public class GetBrandsQueryHandler(
     {
         var brands = await context.Brands
             .AsNoTracking()
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .ProjectTo<BrandDto>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

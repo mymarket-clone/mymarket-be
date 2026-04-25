@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Views.Commands.View;
@@ -8,16 +8,23 @@ public record ViewPostCommand(int PostId) : IRequest<Unit>;
 
 public class ViewPostCommandHandler(
     IApplicationDbContext context,
-    ICurrentUser currentUser,
-    IMemoryCache cache) : IRequestHandler<ViewPostCommand, Unit>
+    ICurrentUser currentUser) : IRequestHandler<ViewPostCommand, Unit>
 {
     public async Task<Unit> Handle(ViewPostCommand request, CancellationToken cancellationToken)
     {
-        var identity = currentUser.Id?.ToString() ?? currentUser.SessionId?.ToString();
-        var key = $"post-view:{request.PostId}:{identity}";
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        if (cache.TryGetValue(key, out _)) return Unit.Value;
-
+        await context.GetDatabase().ExecuteSqlInterpolatedAsync($"""
+            INSERT INTO "PostViews" ("PostId", "UserId", "SessionId", "ViewDate", "ViewedAt")
+            VALUES (
+                {request.PostId}, 
+                {currentUser.Id}, 
+                {(currentUser.Id.HasValue ? null : currentUser.SessionId)}, 
+                {today}, 
+                {DateTime.UtcNow}
+            )
+            ON CONFLICT DO NOTHING
+        """, cancellationToken);
 
         return Unit.Value;
     }
