@@ -70,11 +70,47 @@ public class GetPostsCommandHandler(
 
         query = request.SortType switch
         {
-            SortType.DateAsc => query.OrderByDescending(p => p.PromoType).ThenBy(p => p.CreatedAt),
-            SortType.PriceDesc => query.OrderByDescending(p => p.PromoType).ThenByDescending(p => p.Price * (1 - p.SalePercentage / 100.0)),
-            SortType.PriceAsc => query.OrderByDescending(p => p.PromoType).ThenBy(p => p.Price * (1 - p.SalePercentage / 100.0)),
-            SortType.WithDiscount => query.OrderByDescending(p => p.PromoType).ThenByDescending(p => p.SalePercentage),
-            _ => query.OrderByDescending(p => p.PromoType).ThenByDescending(p => p.CreatedAt)
+            SortType.DateDesc => query
+                .OrderBy(p =>
+                    p.PromoType == PromoType.SUPER_VIP ? 0 :
+                    p.PromoType == PromoType.VIP_PLUS ? 1 :
+                    p.PromoType == PromoType.VIP ? 2 : 3)
+                .ThenByDescending(p => p.CreatedAt),
+
+            SortType.DateAsc => query
+                .OrderBy(p => p.CreatedAt),
+
+            SortType.PriceDesc => query
+                .OrderBy(p => p.IsNegotiable ? 1 : 0)
+                .ThenByDescending(p =>
+                    p.IsNegotiable ? null : p.Price * (1 - p.SalePercentage / 100.0)
+                ),
+
+            SortType.PriceAsc => query
+                .OrderBy(p => p.IsNegotiable ? 0 : 1)
+                .ThenBy(p =>
+                    p.IsNegotiable ? null : p.Price * (1 - p.SalePercentage / 100.0)
+                ),
+
+            SortType.WithDiscount => query
+                .OrderByDescending(p => p.SalePercentage)
+                .ThenByDescending(p => p.CreatedAt),
+
+
+            SortType.ViewsDesc => query
+                .OrderByDescending(p => p.PostViews.Count())
+                .ThenByDescending(p => p.CreatedAt),
+                
+            SortType.ViewsAsc => query
+                .OrderBy(p => p.PostViews.Count())
+                .ThenBy(p => p.CreatedAt),
+
+            _ => query
+                .OrderBy(p =>
+                    p.PromoType == PromoType.SUPER_VIP ? 0 :
+                    p.PromoType == PromoType.VIP_PLUS ? 1 :
+                    p.PromoType == PromoType.VIP ? 2 : 3)
+                .ThenByDescending(p => p.CreatedAt)
         };
 
         var skip = (request.Page - 1) * pageSize;
@@ -146,7 +182,7 @@ public class GetPostsCommandHandler(
                     ? p.Price.Value * (1 - p.SalePercentage / 100.0)
                     : null,
                 Images = x.Images,
-                IsFavorite = favoritePostIds.Contains(p.Id)
+                IsFavorite = favoritePostIds.Contains(p.Id),
             };
         }).ToList();
 

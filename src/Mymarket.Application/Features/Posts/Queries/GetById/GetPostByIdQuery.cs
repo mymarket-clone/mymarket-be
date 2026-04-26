@@ -150,7 +150,8 @@ public class GetPostByIdQueryHandler(
             City = cityName,
             User = userDto,
             IsFavorite = post.IsFavorite,
-            ViewsCount = post.ViewsCount
+            ViewsCount = post.ViewsCount,
+            CreatedAt = post.Post.CreatedAt
         };
     }
 

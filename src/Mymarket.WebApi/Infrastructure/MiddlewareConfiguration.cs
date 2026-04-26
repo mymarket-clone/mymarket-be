@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Localization;
-using Mymarket.Application.Resources;
+using Mymarket.WebApi.Middlewares;
 using Scalar.AspNetCore;
 using System.Globalization;
 
@@ -37,6 +36,7 @@ public static class MiddlewareConfiguration
         // Middlewares
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+        app.UseMiddleware<SessionMiddleware>();
         app.UseHttpsRedirection();
         app.UseCors("CorsPolicy");
         app.UseAuthorization();
