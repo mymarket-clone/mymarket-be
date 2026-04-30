@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Mymarket.Application.Contexts;
 using Mymarket.Application.Features.Posts.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
@@ -22,6 +21,7 @@ public class GetLitePostsQueryHandler(
     {
         var posts = await context.Posts
             .AsNoTracking()
+            .Where(x => x.Status == PostStatus.Active)
             .Select(x => new
             {
                 x.PromoType,

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260427123148_AddPostStatus")]
+    partial class AddPostStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +144,7 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AttributeUnits", (string)null);
+                    b.ToTable("AttributeUnits");
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.BrandEntity", b =>
@@ -334,7 +337,7 @@ namespace Mymarket.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Favorites", (string)null);
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.HomeCategoriesEntity", b =>
@@ -904,7 +907,7 @@ namespace Mymarket.Infrastructure.Migrations
                     b.HasOne("Mymarket.Domain.Entities.UserEntity", "User")
                         .WithMany("PostViews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Post");
 

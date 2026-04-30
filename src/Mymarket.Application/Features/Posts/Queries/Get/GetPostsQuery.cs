@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using EFCoreSecondLevelCacheInterceptor;
+﻿using EFCoreSecondLevelCacheInterceptor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common;
@@ -12,7 +10,7 @@ using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Posts.Queries.Get;
 
-public record GetPostsCommand(
+public record GetPostsQuery(
     int? PriceFrom,
     int? PriceTo,
     bool? OfferPrice,
@@ -29,14 +27,12 @@ public record GetPostsCommand(
     int PageSize
 ) : IRequest<PostSearchDto>;
 
-
-public class GetPostsCommandHandler(
+public class GetPostsQueryHandler(
     IApplicationDbContext context,
     ILanguageContext languageContext,
-    ICurrentUser currentUser
-) : IRequestHandler<GetPostsCommand, PostSearchDto>
+    ICurrentUser currentUser) : IRequestHandler<GetPostsQuery, PostSearchDto>
 {
-    public async Task<PostSearchDto> Handle(GetPostsCommand request, CancellationToken cancellationToken)
+    public async Task<PostSearchDto> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         var pageSize = Math.Clamp(request.PageSize, 1, 100);
 
@@ -150,7 +146,7 @@ public class GetPostsCommandHandler(
 
         var postCounts = await context.Posts
             .AsNoTracking()
-            .Where(p => scopeCategoryIds.Contains(p.CategoryId))
+            .Where(p => scopeCategoryIds.Contains(p.CategoryId) && p.Status == PostStatus.Active)
             .GroupBy(p => p.CategoryId)
             .Select(g => new { CategoryId = g.Key, Count = g.Count() })
             .ToDictionaryAsync(x => x.CategoryId, x => x.Count, cancellationToken);
@@ -245,7 +241,7 @@ public class GetPostsCommandHandler(
         };
     }
 
-    public static IQueryable<PostEntity> ApplyFilters(IQueryable<PostEntity> query, GetPostsCommand request)
+    public static IQueryable<PostEntity> ApplyFilters(IQueryable<PostEntity> query, GetPostsQuery request)
     {
         if (request.PriceFrom is not null)
         {

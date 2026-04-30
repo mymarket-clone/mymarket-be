@@ -32,7 +32,7 @@ public class PostViewEntityConfiguration : IEntityTypeConfiguration<PostViewEnti
         builder.HasOne(x => x.User)
             .WithMany(u => u.PostViews)
             .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Restrict); ;
+            .OnDelete(DeleteBehavior.Cascade); ;
 
         builder.HasIndex(x => new { x.PostId, x.UserId, x.ViewDate })
             .IsUnique()

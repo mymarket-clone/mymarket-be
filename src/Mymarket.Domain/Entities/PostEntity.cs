@@ -36,6 +36,7 @@ public class PostEntity : BaseEntity<int>
     public int? AutoRenewalOnceIn { get; set; }
     public int? AutoRenewalAtTime { get; set; }
     public int? BrandId { get; set; }
+    public PostStatus Status { get; set; } = PostStatus.Active;
     public BrandEntity? Brand { get; set; }
     public ICollection<PostsImagesEntity> PostsImages { get; set; } = [];
     public ICollection<FavoritesEntity> Favorites { get; set; } = [];

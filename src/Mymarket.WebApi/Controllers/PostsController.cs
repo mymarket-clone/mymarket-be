@@ -5,9 +5,13 @@ using Mymarket.Application.Features.Favorites.Commands.Add;
 using Mymarket.Application.Features.Favorites.Commands.Remove;
 using Mymarket.Application.Features.Favorites.Query;
 using Mymarket.Application.Features.Posts.Commands.Add;
+using Mymarket.Application.Features.Posts.Commands.Delete;
+using Mymarket.Application.Features.Posts.Commands.Disable;
+using Mymarket.Application.Features.Posts.Commands.Enable;
 using Mymarket.Application.Features.Posts.Queries.Get;
 using Mymarket.Application.Features.Posts.Queries.GetById;
 using Mymarket.Application.Features.Posts.Queries.GetLite;
+using Mymarket.Application.Features.Posts.Queries.GetMy;
 using Mymarket.Application.Features.Views.Commands.View;
 using Mymarket.Domain.Enums;
 using Mymarket.WebApi.Infrastructure;
@@ -42,7 +46,7 @@ public class PostsController(IMediator mediator) : BaseController
         [FromQuery] int Page = 1,
         [FromQuery] int PageSize = 20)
     {
-        var result = await mediator.Send(new GetPostsCommand(
+        var result = await mediator.Send(new GetPostsQuery(
             PriceFrom,
             PriceTo,
             OfferPrice,
@@ -84,6 +88,22 @@ public class PostsController(IMediator mediator) : BaseController
     }
 
     [Authorize]
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyPosts(
+        [FromQuery] int Page = 1,
+        [FromQuery] int PageSize = 10,
+        [FromQuery] PostStatus PostStatus = PostStatus.Active)
+    {
+        var result = await mediator.Send(new GetMyPostsQuery(
+            Page,
+            PageSize,
+            PostStatus
+        ));
+        return Ok(result);
+    }
+
+
+    [Authorize]
     [HttpGet("favorite")]
     public async Task<IActionResult> GetMyFavorites(
         [FromQuery] int Page = 1,
@@ -109,6 +129,30 @@ public class PostsController(IMediator mediator) : BaseController
     public async Task<IActionResult> RemoveFromFavorite([FromRoute] int id)
     {
         await mediator.Send(new RemoveFromFavouriteCommand(id));
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePost([FromRoute] int id)
+    {
+        await mediator.Send(new DeletePostCommand(id));
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id}/disable")]
+    public async Task<IActionResult> DisablePost([FromRoute] int id)
+    {
+        await mediator.Send(new DisablePostCommand(id));
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id}/enable")]
+    public async Task<IActionResult> EnablePost([FromRoute] int id)
+    {
+        await mediator.Send(new EnablePostCommand(id));
         return NoContent();
     }
 }

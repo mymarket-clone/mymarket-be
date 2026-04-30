@@ -23,7 +23,7 @@ public class GetPostByIdQueryHandler(
     {
         var post = await context.Posts
             .AsNoTracking()
-            .Where(x => x.Id == request.Id)
+            .Where(x => x.Id == request.Id && x.Status == PostStatus.Active)
             .Select(p => new
             {
                 Post = p,
