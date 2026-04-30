@@ -90,12 +90,12 @@ public class GlobalExceptionHandlerMiddleware(
         }
         catch (EmailNotVerifiedException ex)
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
             var problem = new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
                 Title = "Email not verified",
-                Status = StatusCodes.Status401Unauthorized,
+                Status = StatusCodes.Status403Forbidden,
                 Instance = $"{context.Request.Method} {context.Request.Path}"
             };
 

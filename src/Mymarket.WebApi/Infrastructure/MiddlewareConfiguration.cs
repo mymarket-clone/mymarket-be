@@ -39,6 +39,7 @@ public static class MiddlewareConfiguration
         app.UseMiddleware<SessionMiddleware>();
         app.UseHttpsRedirection();
         app.UseCors("CorsPolicy");
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
 

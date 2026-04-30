@@ -13,7 +13,7 @@ public class SessionMiddleware(RequestDelegate next)
             context.Response.Cookies.Append(key, sid, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false,
+                Secure = context.Request.IsHttps,
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTimeOffset.UtcNow.AddYears(1)
             });

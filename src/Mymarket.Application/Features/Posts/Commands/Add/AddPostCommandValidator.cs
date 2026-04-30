@@ -55,6 +55,12 @@ public class AddPostCommandValidator : AbstractValidator<AddPostCommand>
             .NotEmpty().WithMessage("Choose city")
             .MustAsync(CityExists).WithMessage("Selected city does not exist.");
 
+        RuleFor(x => x)
+            .Must(x =>
+                x.MainImage is { Length: > 0 } ||
+                (x.Images is not null && x.Images.Any(image => image.Length > 0)))
+            .WithMessage("Upload at least one image.");
+
         RuleFor(x => x.Price)
             .NotNull().WithMessage("Enter price")
             .GreaterThanOrEqualTo(0).WithMessage("Price cannot be negative");

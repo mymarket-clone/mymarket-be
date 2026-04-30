@@ -17,18 +17,22 @@ public class DeleteCategoryCommandHandler(
         DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = await context.Categories
+            .Include(c => c.Logo)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
         if (category is null)
             throw new KeyNotFoundException(SharedResources.IdDoesnotExist);
 
+        var logo = category.Logo;
+
         context.Categories.Remove(category!);
         await context.SaveChangesAsync(cancellationToken);
 
-        if (category?.Logo is not null)
+        if (logo is not null)
         {
-            context.Images.Remove(category!.Logo);
-            await imageService.DeleteAsync(category!.Logo, cancellationToken);
+            context.Images.Remove(logo);
+            await context.SaveChangesAsync(cancellationToken);
+            await imageService.DeleteAsync(logo, cancellationToken);
         }
 
         return Unit.Value;

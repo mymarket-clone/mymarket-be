@@ -12,7 +12,7 @@ namespace Mymarket.Application.features.Users.Commands.VerifyEmailCodeCommand;
 
 public record VerifyEmailCodeCommand(
     string Email,
-    int Code
+    string Code
 ) : IRequest<AuthDto>;
 
 public class VerifyEmailCodeCommandHandler(
@@ -33,7 +33,7 @@ public class VerifyEmailCodeCommandHandler(
         if (isExpired) 
             throw new ValidationException(SharedResources.CodeInvalidOrExpired);
 
-        var inputCodeHash = CryptoHelper.HashVerificationCode(request.Code.ToString());
+        var inputCodeHash = CryptoHelper.HashVerificationCode(request.Code);
 
         if (inputCodeHash != record.CodeHash) 
             throw new ValidationException(SharedResources.CodeInvalidOrExpired);

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
 using Mymarket.Application.Interfaces;
-using System.Security.Claims;
 
 namespace Mymarket.WebApi.Services;
 
@@ -10,7 +8,10 @@ public class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUse
     {
         get
         {
-            var strId = httpContextAccessor.HttpContext?.User?.FindFirstValue(Domain.Constants.ClaimTypes.Id);
+            var strId = httpContextAccessor.HttpContext?.User?
+                .FindFirst(Domain.Constants.ClaimTypes.Id)?
+                .Value;
+
             return int.TryParse(strId, out var id) ? id : null;
         }
     }

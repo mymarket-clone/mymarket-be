@@ -1,8 +1,10 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common.Exceptions;
+using Mymarket.Application.features.Users.Common.Helpers;
 using Mymarket.Application.features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
+using Mymarket.Application.Resources;
 using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.features.Users.Commands.LoginUser;
@@ -23,16 +25,20 @@ public class LoginUserCommandHandler(
                 x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
                 cancellationToken);
 
+        if (user is null || !CryptoHelper.VerifyPassword(user.PasswordHash, request.Password))
+        {
+            throw new UnauthorizedAccessException(SharedResources.InvalidUserOrPassword);
+        }
 
-        if (user is not null && !user.EmailVerified)
+        if (!user.EmailVerified)
         {
             throw new EmailNotVerifiedException(user.Email);
         }
 
         var userModel = new UserModel
         {
-            Id = user!.Id,
-            Name = user!.Firstname,
+            Id = user.Id,
+            Name = user.Firstname,
             Lastname = user.LastName,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,

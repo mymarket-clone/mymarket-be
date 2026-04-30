@@ -53,7 +53,14 @@ public sealed class AddPostCommandHandler(
     {
         await using var transaction = await context.BeginTransactionAsync(cancellationToken);
 
-        var uploadedImages = await imageService.UploadAsync(request.Images, cancellationToken);
+        var imagesToUpload = request.Images?.Where(image => image.Length > 0).ToList() ?? [];
+
+        if (imagesToUpload.Count == 0 && request.MainImage is { Length: > 0 })
+        {
+            imagesToUpload.Add(request.MainImage);
+        }
+
+        var uploadedImages = await imageService.UploadAsync(imagesToUpload, cancellationToken);
 
         try
         {
@@ -101,7 +108,7 @@ public sealed class AddPostCommandHandler(
                 );
 
             var attributeMeta = await context.CategoryAttributes
-                .Where(ca => ca.CategoryId == request.CategoryId && attributeIds.Contains(ca.AttributeId))
+                .Where(ca => ca.CategoryId == request.CategoryId)
                 .Select(ca => new
                 {
                     Id = ca.AttributeId,
@@ -117,9 +124,27 @@ public sealed class AddPostCommandHandler(
             foreach (var id in missingInCategory)
                 AddError(errors, id.ToString(), "Attribute is not allowed for this category.");
 
+            var attributesById = attributes
+                .GroupBy(a => a.Id)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            var missingRequired = attributeMeta
+                .Where(meta => meta.IsRequired &&
+                    (!attributesById.TryGetValue(meta.Id, out var attr) || IsEmpty(attr.Value)))
+                .Select(meta => meta.Id)
+                .ToList();
+
+            foreach (var id in missingRequired)
+                AddError(errors, id.ToString(), "Value is required.");
+
             foreach (var attr in attributes)
             {
                 var key = attr.Id.ToString();
+
+                if (!metaById.TryGetValue(attr.Id, out var meta))
+                {
+                    continue;
+                }
 
                 if (!attributeTypeById.TryGetValue(attr.Id, out var type))
                 {
@@ -165,8 +190,6 @@ public sealed class AddPostCommandHandler(
 
                     case AttributeType.Select:
                         {
-                            var meta = metaById[attr.Id];
-
                             var isEmpty =
                                 attr.Value.ValueKind == JsonValueKind.Null ||
                                 (attr.Value.ValueKind == JsonValueKind.String && string.IsNullOrWhiteSpace(attr.Value.GetString()));
@@ -265,6 +288,7 @@ public sealed class AddPostCommandHandler(
             await context.SaveChangesAsync(cancellationToken);
 
             var postAttributes = attributes
+                .Where(a => metaById.ContainsKey(a.Id))
                 .Select(a => new { a, meta = metaById[a.Id] })
                 .Where(x => !IsEmpty(x.a.Value))
                 .Select(x => new PostAttributesEntity
