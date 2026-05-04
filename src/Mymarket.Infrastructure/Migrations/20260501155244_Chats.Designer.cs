@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mymarket.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mymarket.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260501155244_Chats")]
+    partial class Chats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,28 +301,28 @@ namespace Mymarket.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BuyerId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("PostId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("SellerId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("User1Id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("User2Id")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("BuyerId");
 
-                    b.HasIndex("User2Id");
+                    b.HasIndex("SellerId");
 
-                    b.HasIndex("User1Id", "User2Id", "PostId")
+                    b.HasIndex("PostId", "BuyerId")
                         .IsUnique();
 
                     b.ToTable("Chats", (string)null);
@@ -882,29 +885,29 @@ namespace Mymarket.Infrastructure.Migrations
 
             modelBuilder.Entity("Mymarket.Domain.Entities.ChatEntity", b =>
                 {
+                    b.HasOne("Mymarket.Domain.Entities.UserEntity", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Mymarket.Domain.Entities.PostEntity", "Post")
                         .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mymarket.Domain.Entities.UserEntity", "User1")
+                    b.HasOne("Mymarket.Domain.Entities.UserEntity", "Seller")
                         .WithMany()
-                        .HasForeignKey("User1Id")
+                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Mymarket.Domain.Entities.UserEntity", "User2")
-                        .WithMany()
-                        .HasForeignKey("User2Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Buyer");
 
                     b.Navigation("Post");
 
-                    b.Navigation("User1");
-
-                    b.Navigation("User2");
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Mymarket.Domain.Entities.ChatMessageEntity", b =>

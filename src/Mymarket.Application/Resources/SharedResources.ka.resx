@@ -285,4 +285,13 @@
   <data name="RecordAlredyExists" xml:space="preserve">
     <value>ჩანაწერი უკვე არსებობს</value>
   </data>
+  <data name="PositiveValueRequired" xml:space="preserve">
+    <value>საჭიროა დადებითი მნიშვნელობა</value>
+  </data>
+  <data name="UsersMustBeDifferent" xml:space="preserve">
+    <value>ჩატის დაწყება შესაძლებელია მხოლოდ სხვა მომხმარებელთან</value>
+  </data>
+  <data name="ChatAlreadyExists" xml:space="preserve">
+    <value>ჩატი უკვე არსებობს</value>
+  </data>
 </root>

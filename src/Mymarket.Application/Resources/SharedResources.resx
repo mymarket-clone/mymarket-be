@@ -285,4 +285,13 @@
   <data name="RecordAlredyExists" xml:space="preserve">
     <value>Record already exists</value>
   </data>
+  <data name="PositiveValueRequired" xml:space="preserve">
+    <value>Positive value required</value>
+  </data>
+  <data name="UsersMustBeDifferent" xml:space="preserve">
+    <value>You cannot start a chat with yourself</value>
+  </data>
+  <data name="ChatAlreadyExists" xml:space="preserve">
+    <value>Chat already exists</value>
+  </data>
 </root>

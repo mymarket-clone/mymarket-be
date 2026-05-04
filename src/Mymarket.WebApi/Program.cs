@@ -1,6 +1,7 @@
 using Mymarket.Application;
 using Mymarket.Domain;
 using Mymarket.Infrastructure;
+using Mymarket.Infrastructure.SignalR.Chat;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi;
@@ -19,6 +20,8 @@ public class Program
         var app = builder.Build();
 
         app.ConfigureMiddleware();
+
+        app.MapHub<ChatHub>("/hubs/chat");
 
         app.Run();
     }

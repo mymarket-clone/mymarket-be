@@ -28,6 +28,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<AttributeOptionsEntity> AttributeOptions => Set<AttributeOptionsEntity>();
     public DbSet<HomeCategoriesEntity> HomeCategories => Set<HomeCategoriesEntity>();
     public DbSet<FavoritesEntity> Favorites => Set<FavoritesEntity>();
+    public DbSet<ChatEntity> Chats => Set<ChatEntity>();
+    public DbSet<ChatMessageEntity> ChatMessages => Set<ChatMessageEntity>();
 
     public DatabaseFacade GetDatabase() => base.Database;
 

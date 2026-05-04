@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Mymarket.Domain.Entities;
-using System.Data;
 
 namespace Mymarket.Application.Interfaces;
 
@@ -25,6 +24,9 @@ public interface IApplicationDbContext
     DbSet<AttributeOptionsEntity> AttributeOptions { get; }
     DbSet<HomeCategoriesEntity> HomeCategories { get; }
     DbSet<FavoritesEntity> Favorites { get; }
+    DbSet<ChatEntity> Chats { get; }
+    DbSet<ChatMessageEntity> ChatMessages { get; }
+
     DatabaseFacade GetDatabase();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);

@@ -285,4 +285,13 @@
   <data name="RecordAlredyExists" xml:space="preserve">
     <value>Запись уже существует</value>
   </data>
+  <data name="PositiveValueRequired" xml:space="preserve">
+    <value>Необходимо положительное значение</value>
+  </data>
+  <data name="UsersMustBeDifferent" xml:space="preserve">
+    <value>Невозможно начать чат с самим собой</value>
+  </data>
+  <data name="ChatAlreadyExists" xml:space="preserve">
+    <value>Чат уже существует</value>
+  </data>
 </root>

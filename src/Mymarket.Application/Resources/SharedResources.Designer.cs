@@ -160,6 +160,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat already exists.
+        /// </summary>
+        public static string ChatAlreadyExists {
+            get {
+                return ResourceManager.GetString("ChatAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code have already sent.
         /// </summary>
         public static string CodeAlreadySent {
@@ -520,6 +529,15 @@ namespace Mymarket.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Positive value required.
+        /// </summary>
+        public static string PositiveValueRequired {
+            get {
+                return ResourceManager.GetString("PositiveValueRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record already exists.
         /// </summary>
         public static string RecordAlredyExists {
@@ -543,6 +561,15 @@ namespace Mymarket.Application.Resources {
         public static string UnitLength {
             get {
                 return ResourceManager.GetString("UnitLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot start a chat with yourself.
+        /// </summary>
+        public static string UsersMustBeDifferent {
+            get {
+                return ResourceManager.GetString("UsersMustBeDifferent", resourceCulture);
             }
         }
         
