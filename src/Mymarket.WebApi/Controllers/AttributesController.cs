@@ -12,7 +12,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Authorize]
-[Route("api/attributes")]
+[Route("api/attributes")]   
 public class AttributesController(IMediator mediator) : BaseController
 {
     [HttpGet]
@@ -46,7 +46,7 @@ public class AttributesController(IMediator mediator) : BaseController
     [HttpPut("{id}")]
     public async Task<IActionResult> EditAttribute(
         [FromRoute] int Id,
-        [FromBody] EditAttributeCommand command)
+        [FromBody] EditAttributeCommand command)    
     {
         await mediator.Send(command with { Id = Id });
         return NoContent();

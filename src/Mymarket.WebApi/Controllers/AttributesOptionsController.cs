@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.AttributeOptions.Commands.Add;
 using Mymarket.Application.Features.AttributeOptions.Commands.Delete;
@@ -8,7 +7,6 @@ using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers
 {
-    [Authorize]
     [Route("api/attribute-options")]
     public class AttributesOptionsController(IMediator mediator) : BaseController
     {

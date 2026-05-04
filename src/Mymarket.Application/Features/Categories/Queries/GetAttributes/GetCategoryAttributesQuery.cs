@@ -45,7 +45,7 @@ public class GetCategoryAttributesQueryHandler(
                     Id = combined.Id,
                     CategoryId = combined.CategoryId,
                     AttributeId = combined.AttributeId,
-                    AttributeName = combined.AttributeName,
+                    AttributeName = combined.AttributeName!,
                     AttributeType = combined.AttributeType,
                     UnitName = combined.UnitName,
                     IsRequired = combined.IsRequired,
