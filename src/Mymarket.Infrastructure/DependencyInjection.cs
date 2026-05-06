@@ -13,6 +13,7 @@ using Mymarket.Infrastructure.Authentication;
 using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;
 using Mymarket.Infrastructure.Services;
+using Mymarket.Infrastructure.SignalR.Chat;
 using Supabase;
 using System.Text;
 
@@ -41,6 +42,8 @@ public static class DependencyInjection
 
         // SignalR
         builder.Services.AddSignalR();
+
+        builder.Services.AddTransient<IChatNotifier, ChatNotifier>();
 
         // Problem details RFC 7807
         builder.Services.AddProblemDetails();

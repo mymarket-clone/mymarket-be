@@ -1,4 +1,6 @@
-﻿namespace Mymarket.Application.features.Users.Common.Models;
+﻿using Mymarket.Domain.Enums;
+
+namespace Mymarket.Application.features.Users.Common.Models;
 
 public record UserDto(
     int Id,
@@ -6,5 +8,8 @@ public record UserDto(
     string Lastname,
     string Email,
     bool EmailVerified,
-    int FavoritesCount
+    int FavoritesCount,
+    string Number,
+    GenderType GenderType,
+    int BirthYear
 );

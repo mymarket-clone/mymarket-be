@@ -3,6 +3,7 @@ using Mymarket.Application.features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
 using Microsoft.EntityFrameworkCore;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Users.Queries.GetCurrent;
 
@@ -24,7 +25,10 @@ public class GetCurrentUserQueryHanlder(
             Lastname: user.LastName,
             Email: user.Email,
             EmailVerified: user.EmailVerified,
-            FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id)
+            FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
+            Number: user.PhoneNumber,
+            GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
+            BirthYear: user.BirthYear
         );
 
         return userDto;

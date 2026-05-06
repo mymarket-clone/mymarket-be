@@ -23,6 +23,7 @@ public record GetPostsQuery(
     int? CatId,
     int? BrandId,
     SortType? SortBy,
+    string Keyword,
     int Page,
     int PageSize
 ) : IRequest<PostSearchDto>;
@@ -62,6 +63,23 @@ public class GetPostsQueryHandler(
         {
             var categoryIds = GetAllDescendants(request.CatId.Value);
             query = query.Where(p => categoryIds.Contains(p.CategoryId));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Keyword))
+        {
+            var keyword = request.Keyword.Trim().ToLower();
+
+            query = query.Where(p =>
+                (p.Title != null && p.Title.ToLower().Contains(keyword)) ||
+                (p.TitleEn != null && p.TitleEn.ToLower().Contains(keyword)) ||
+                (p.TitleRu != null && p.TitleRu.ToLower().Contains(keyword)) ||
+
+                (p.Description != null && p.Description.ToLower().Contains(keyword)) ||
+                (p.DescriptionEn != null && p.DescriptionEn.ToLower().Contains(keyword)) ||
+                (p.DescriptionRu != null && p.DescriptionRu.ToLower().Contains(keyword)) ||
+
+                (p.Name != null && p.Name.ToLower().Contains(keyword))
+            );
         }
 
         query = request.SortType switch

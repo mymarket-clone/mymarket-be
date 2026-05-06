@@ -27,6 +27,7 @@ public class PostDetailsDto
     public bool IsFavorite { get; set; }
     public int ViewsCount { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool ChatExists { get; set; }
     public List<CategoryBreadcrumbDto> Breadcrumb { get; set; } = [];
     public List<PostAttributeDto> Attributes { get; set; } = [];
     public List<string> Images { get; set; } = [];

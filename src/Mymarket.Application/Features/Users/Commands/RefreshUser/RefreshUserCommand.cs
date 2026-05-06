@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
+using Mymarket.Domain.Enums;
 using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.Features.Users.Commands.RefreshUser;
@@ -58,7 +59,10 @@ public class RefreshUserCommandHandler(
                 Lastname: user.LastName,
                 Email: user.Email,
                 EmailVerified: user.EmailVerified,
-                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id)
+                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
+                Number: user.PhoneNumber,
+                GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
+                BirthYear: user.BirthYear
             )
         );
     }

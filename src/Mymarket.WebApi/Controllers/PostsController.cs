@@ -43,6 +43,7 @@ public class PostsController(IMediator mediator) : BaseController
         [FromQuery] int? CatId,
         [FromQuery] int? BrandId,
         [FromQuery] SortType? SortBy,
+        [FromQuery] string? Keyword,
         [FromQuery] int Page = 1,
         [FromQuery] int PageSize = 20)
     {
@@ -59,6 +60,7 @@ public class PostsController(IMediator mediator) : BaseController
             CatId,
             BrandId,
             SortBy,
+            Keyword,
             Page,
             PageSize
         ));

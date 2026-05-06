@@ -63,6 +63,14 @@ public class GetPostByIdQueryHandler(
             .Select(c => c.Name)
             .FirstOrDefaultAsync(cancellationToken);
 
+        var postUserId = (byte)(post.User!.Id);
+        var currentUserId = (byte)(currentUser.Id ?? 0);
+
+        var u1 = Math.Min(currentUserId, postUserId);
+        var u2 = Math.Max(currentUserId, postUserId);
+
+        var chatExists = await context.Chats.AnyAsync(x => x.User1Id == u1 && x.User2Id == u2, cancellationToken);
+
         var postAttrById = post.PostAttributes.ToDictionary(x => x.AttributeId);
 
         var selectedOptionIds = post.PostAttributes
@@ -151,7 +159,8 @@ public class GetPostByIdQueryHandler(
             User = userDto,
             IsFavorite = post.IsFavorite,
             ViewsCount = post.ViewsCount,
-            CreatedAt = post.Post.CreatedAt
+            CreatedAt = post.Post.CreatedAt,
+            ChatExists = chatExists
         };
     }
 

@@ -2,7 +2,7 @@
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Entities;
 
-namespace Mymarket.Application.Features.Chat.Commands;
+namespace Mymarket.Application.Features.Chat.Commands.CreateChat;
 
 public record CreateChatCommand(
     int Reciever,

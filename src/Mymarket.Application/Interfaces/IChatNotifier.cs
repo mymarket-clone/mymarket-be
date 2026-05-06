@@ -2,5 +2,5 @@
 
 public interface IChatNotifier
 {
-    Task SendMessage(string chatId, string message);
+    Task SendMessage(string chatId, object message);
 }

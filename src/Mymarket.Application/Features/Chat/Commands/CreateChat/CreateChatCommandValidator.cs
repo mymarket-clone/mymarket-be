@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
 
-namespace Mymarket.Application.Features.Chat.Commands;
+namespace Mymarket.Application.Features.Chat.Commands.CreateChat;
 
 public class CreateChatCommandValidator : AbstractValidator<CreateChatCommand>
 {

@@ -5,6 +5,7 @@ using Mymarket.Application.features.Users.Common.Helpers;
 using Mymarket.Application.features.Users.Common.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Application.Resources;
+using Mymarket.Domain.Enums;
 using Mymarket.Domain.Models;
 
 namespace Mymarket.Application.features.Users.Commands.LoginUser;
@@ -66,7 +67,10 @@ public class LoginUserCommandHandler(
                 Lastname: user.LastName,
                 Email: user.Email,
                 EmailVerified: user.EmailVerified,
-                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id)
+                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
+                Number: user.PhoneNumber,
+                GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
+                BirthYear: user.BirthYear
             )
         );
     }

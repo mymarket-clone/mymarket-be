@@ -12,9 +12,16 @@ public class ChatHub : Hub
         await base.OnConnectedAsync();
     }
 
-    public Task JoinChat(string chatId)
+    public async Task JoinChat(string chatId)
     {
-        return Groups.AddToGroupAsync(Context.ConnectionId, chatId);
+        await Groups.AddToGroupAsync(Context.ConnectionId, chatId);
+
+        await Clients.Caller.SendAsync("ChatJoined", new
+        {
+            chatId,
+            connectionId = Context.ConnectionId,
+            status = "joined"
+        });
     }
 
     public Task LeaveChat(string chatId)
