@@ -61,7 +61,7 @@ public class AddCategoryCommandHandler(
 
             await transaction.CommitAsync(cancellationToken);
 
-            var dto = new CategoryDto
+            return new CategoryDto
             {
                 Id = category.Id,
                 ParentId = category.ParentId,
@@ -78,8 +78,6 @@ public class AddCategoryCommandHandler(
                         .Select(i => i.Url)
                         .FirstOrDefault() ?? string.Empty
             };
-
-            return dto;
         }
         catch
         {

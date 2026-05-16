@@ -7,12 +7,11 @@ namespace Mymarket.Application.Features.HomeCategories.Commands.Delete;
 
 public record DeleteHomeCategoryCommand(
     int Id
-) : IRequest<Unit>;
+) : IRequest;
 
-public class DeleteHomeCategoryCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<DeleteHomeCategoryCommand, Unit>
+public class DeleteHomeCategoryCommandHandler(IApplicationDbContext context) : IRequestHandler<DeleteHomeCategoryCommand>
 {
-    public async Task<Unit> Handle(
+    public async Task Handle(
         DeleteHomeCategoryCommand request, CancellationToken cancellationToken)
     {
         var homeCategory = await context.HomeCategories
@@ -23,7 +22,5 @@ public class DeleteHomeCategoryCommandHandler(
 
         context.HomeCategories.Remove(homeCategory);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

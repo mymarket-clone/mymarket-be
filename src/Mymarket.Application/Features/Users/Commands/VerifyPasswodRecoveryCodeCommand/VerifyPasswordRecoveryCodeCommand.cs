@@ -8,12 +8,12 @@ namespace Mymarket.Application.features.Users.Commands.VerifyPasswodRecoveryCode
 public record VerifyPasswordRecoveryCodeCommand(
     string Email,
     string Code
-) : IRequest<Unit>;
+) : IRequest;
 
 public class VerifyPasswordRecoveryCodeCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<VerifyPasswordRecoveryCodeCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<VerifyPasswordRecoveryCodeCommand>
 {
-    public async Task<Unit> Handle(
+    public async Task Handle(
         VerifyPasswordRecoveryCodeCommand request,
         CancellationToken cancellationToken)
     {
@@ -24,7 +24,5 @@ public class VerifyPasswordRecoveryCodeCommandHandler(
         record.IsVerified = true;
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

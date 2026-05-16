@@ -5,14 +5,12 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Attributes.Commands.Delete;
 
-public record DeleteAttributeCommand(
-    int Id
-) : IRequest<Unit>;
+public record DeleteAttributeCommand(int Id) : IRequest;
 
 public class DeleteAttributeCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<DeleteAttributeCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<DeleteAttributeCommand>
 {
-    public async Task<Unit> Handle(DeleteAttributeCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteAttributeCommand request, CancellationToken cancellationToken)
     {
         var attribute = await context.Attributes
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
@@ -24,7 +22,5 @@ public class DeleteAttributeCommandHandler(
 
         context.Attributes.Remove(attribute!);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

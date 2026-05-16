@@ -1,6 +1,5 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using EFCoreSecondLevelCacheInterceptor;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Cities.Models;
@@ -10,18 +9,14 @@ namespace Mymarket.Application.Features.Cities.Queries;
 
 public record GetCitiesQuery : IRequest<List<CityDto>>;
 
-public class GetAllCitiesQueryHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<GetCitiesQuery, List<CityDto>>
+public class GetAllCitiesQueryHandler(IApplicationDbContext context) : IRequestHandler<GetCitiesQuery, List<CityDto>>
 {
-    public async Task<List<CityDto>> Handle( GetCitiesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CityDto>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
     {
-        var result = await context.Cities
+        return await context.Cities
             .AsNoTracking()
             .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromHours(1))
-            .ProjectTo<CityDto>(mapper.ConfigurationProvider)
+            .ProjectToType<CityDto>()
             .ToListAsync(cancellationToken);
-
-        return result;
     }
 }

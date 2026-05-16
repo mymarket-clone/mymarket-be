@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using MediatR;
 using Mymarket.Application.Features.CategoryBrands.Models;
 using Mymarket.Application.Interfaces;
@@ -12,8 +12,7 @@ public record AddMultipleCategoryBrandsCommand(
 ) : IRequest<List<CategoryBrandDto>>;
 
 public class AddMultipleCategorBrandsCommandHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<AddMultipleCategoryBrandsCommand, List<CategoryBrandDto>>
+    IApplicationDbContext context) : IRequestHandler<AddMultipleCategoryBrandsCommand, List<CategoryBrandDto>>
 {
     public async Task<List<CategoryBrandDto>> Handle(AddMultipleCategoryBrandsCommand request, CancellationToken cancellationToken)
     {
@@ -33,6 +32,6 @@ public class AddMultipleCategorBrandsCommandHandler(
         await context.CategoryBrands.AddRangeAsync(entities, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return mapper.Map<List<CategoryBrandDto>>(entities);
+        return entities.Adapt<List<CategoryBrandDto>>();
     }
 }

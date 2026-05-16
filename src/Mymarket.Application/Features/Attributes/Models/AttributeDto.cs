@@ -1,9 +1,10 @@
 ﻿using Mymarket.Domain.Enums;
 using Mymarket.Domain.Entities;
+using Mapster;
 
 namespace Mymarket.Application.Features.Attributes.Models;
 
-public class AttributeDto
+public class AttributeDto : IMapFrom<AttributeEntity>
 {
     public int Id { get; set; }
     public required string Code { get; set; }
@@ -12,11 +13,4 @@ public class AttributeDto
     public string? NameRu { get; set; }
     public AttributeType AttributeType { get; set; }
     public int? UnitId { get; set; }
-    public sealed class Mapping : AutoMapper.Profile
-    {
-        public Mapping()
-        {
-            CreateMap<AttributeEntity, AttributeDto>();
-        }
-    }
 }

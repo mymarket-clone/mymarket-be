@@ -21,6 +21,8 @@ public class GetPostByIdQueryHandler(
 {
     public async Task<PostDetailsDto?> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
+        var lang = languageContext.Language;
+
         var post = await context.Posts
             .AsNoTracking()
             .Where(x => x.Id == request.Id && x.Status == PostStatus.Active)
@@ -91,7 +93,13 @@ public class GetPostByIdQueryHandler(
         foreach (var categoryAttr in categoryAttributes)
         {
             postAttrById.TryGetValue(categoryAttr.AttributeId, out var postAttr);
-            var attributeName = languageContext.LocalizeProperty<AttributeEntity>("Name")(categoryAttr.Attribute)!;
+
+            var attribute = categoryAttr.Attribute;
+            var attributeName =
+                lang == "en" ? (attribute!.NameEn ?? attribute.Name) :
+                lang == "ru" ? (attribute!.NameRu ?? attribute.Name) :
+                attribute!.Name;
+
             string? value = null;
 
             if (postAttr != null)
@@ -100,7 +108,10 @@ public class GetPostByIdQueryHandler(
                 {
                     var optionId = int.Parse(postAttr.Value);
                     if (optionById.TryGetValue(optionId, out var option))
-                        value = languageContext.LocalizeProperty<AttributeOptionsEntity>("Name")(option);
+                        value =
+                            lang == "en" ? (option.NameEn ?? option.Name) :
+                            lang == "ru" ? (option.NameRu ?? option.Name) :
+                            option.Name;
                 }
                 else
                 {
@@ -133,8 +144,8 @@ public class GetPostByIdQueryHandler(
         return new PostDetailsDto
         {
             Id = post.Post.Id,
-            Title = languageContext.LocalizeProperty<PostEntity>("Title")(post.Post)!,
-            Description = languageContext.LocalizeProperty<PostEntity>("Description")(post.Post),
+            Title = languageContext.Get(post.Post.TitleEn, post.Post.TitleRu, post.Post.Title),
+            Description = languageContext.Get(post.Post.DescriptionEn, post.Post.DescriptionRu, post.Post.Description),
             CategoryId = post.Post.CategoryId,
             Breadcrumb = BreadcrumbBuilder.Build(post.Post.CategoryId, categories, languageContext),
             Name = post.Post.Name,

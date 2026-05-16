@@ -7,12 +7,11 @@ namespace Mymarket.Application.Features.CategoryBrands.Commands.Add;
 public record AddCategoryBrandCommand(
     int CategoryId,
     int BrandId
-) : IRequest<Unit>;
+) : IRequest;
 
-public class AddCategoryBrandCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<AddCategoryBrandCommand, Unit>
+public class AddCategoryBrandCommandHandler(IApplicationDbContext context) : IRequestHandler<AddCategoryBrandCommand>
 {
-    public async Task<Unit> Handle(AddCategoryBrandCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddCategoryBrandCommand request, CancellationToken cancellationToken)
     {
         var entity = new CategoryBrandsEntity
         {
@@ -22,8 +21,6 @@ public class AddCategoryBrandCommandHandler(
 
         await context.CategoryBrands.AddAsync(entity, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

@@ -1,27 +1,21 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.CategoryAttributes.Models;
 using Mymarket.Application.Interfaces;
 
-namespace Mymarket.Application.Features.CategoryAttributes.Queries.GetAttributes
+namespace Mymarket.Application.Features.CategoryAttributes.Queries.Get
 {
     public record GetAttributesQuery: IRequest<List<CategoryAttributeDto>?>;
 
-    public class GetCategoryAttributeByIdQueryHandler(
-        IApplicationDbContext _context,
-        IConfigurationProvider _mapper) : IRequestHandler<GetAttributesQuery, List<CategoryAttributeDto>?>
+    public class GetCategoryAttributeByIdQueryHandler(IApplicationDbContext context) : IRequestHandler<GetAttributesQuery, List<CategoryAttributeDto>?>
     {
-        public async Task<List<CategoryAttributeDto>?> Handle(
-            GetAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<List<CategoryAttributeDto>?> Handle(GetAttributesQuery request, CancellationToken cancellationToken)
         {
-            var result = await _context.CategoryAttributes
+            return await context.CategoryAttributes
                 .AsNoTracking()
-                .ProjectTo<CategoryAttributeDto>(_mapper)
+                .ProjectToType<CategoryAttributeDto>()
                 .ToListAsync(cancellationToken);
-
-            return result;
         }
     }
 }

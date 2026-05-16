@@ -9,12 +9,11 @@ public record EditCategoryAttributesCommand(
     int? AttributeId,
     bool? IsRequired,
     int? Order
-) : IRequest<Unit>;
+) : IRequest;
 
-public class EditCategoryAttributesCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<EditCategoryAttributesCommand, Unit>
+public class EditCategoryAttributesCommandHandler(IApplicationDbContext context) : IRequestHandler<EditCategoryAttributesCommand>
 {
-    public async Task<Unit> Handle(EditCategoryAttributesCommand request, CancellationToken cancellationToken)
+    public async Task Handle(EditCategoryAttributesCommand request, CancellationToken cancellationToken)
     {
         var category = await context.CategoryAttributes
                 .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
@@ -24,7 +23,5 @@ public class EditCategoryAttributesCommandHandler(
         category!.Order = request.Order ?? category.Order;
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

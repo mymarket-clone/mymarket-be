@@ -9,13 +9,13 @@ namespace Mymarket.Application.Features.Favorites.Commands.Add;
 
 public record AddToFavoriteCommand(
    int PostId
-) : IRequest<Unit>;
+) : IRequest;
 
 public class AddToFavoriteCommandHandler(
     IApplicationDbContext context,
-    ICurrentUser currentUser) : IRequestHandler<AddToFavoriteCommand, Unit>
+    ICurrentUser currentUser) : IRequestHandler<AddToFavoriteCommand>
 {
-    public async Task<Unit> Handle(AddToFavoriteCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddToFavoriteCommand request, CancellationToken cancellationToken)
     {
         var existingFavorite = await context.Favorites
             .FirstOrDefaultAsync(x => x.PostId == request.PostId && x.UserId == (int)currentUser.Id!, cancellationToken);
@@ -25,7 +25,7 @@ public class AddToFavoriteCommandHandler(
             throw new ValidationException(SharedResources.RecordAlredyExists);
         }
 
-            var favorite = new FavoritesEntity
+        var favorite = new FavoritesEntity
         {
             UserId = (int)currentUser.Id!,
             PostId = request.PostId,
@@ -33,8 +33,6 @@ public class AddToFavoriteCommandHandler(
 
         await context.Favorites.AddAsync(favorite, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

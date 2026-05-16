@@ -26,7 +26,7 @@ public class GetHomeCategoriesQueryHandler(
                 CategoryId = x.CategoryId,
                 Order = x.Order,
                 LogoUrl = x.Category != null && x.Category.Logo != null ? x.Category.Logo.Url : null,
-                Name = languageContext.LocalizeProperty<CategoryEntity>("Name")(x.Category)
+                Name = languageContext.Get(x.Category.NameEn, x.Category.NameRu, x.Category.Name)
             })
             .ToListAsync(cancellationToken);
 

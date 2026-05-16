@@ -6,9 +6,7 @@ using System.Data.Entity;
 
 namespace Mymarket.Application.Features.Users.Queries.GetById;
 
-public record GetUserByIdQuery(
-    int Id
-) : IRequest<UserInfoDto>;
+public record GetUserByIdQuery(int Id) : IRequest<UserInfoDto>;
 
 public class GetUserByIdQueryHandler(
     IApplicationDbContext context) : IRequestHandler<GetUserByIdQuery, UserInfoDto>

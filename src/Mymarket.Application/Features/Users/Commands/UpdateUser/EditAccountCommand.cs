@@ -13,13 +13,13 @@ public record EditAccountCommand(
     GenderType Gender,
     int BirthYear,
     string PhoneNumber
-) : IRequest<Unit>;
+) : IRequest;
 
 public class EditAccountCommandHandler(
     IApplicationDbContext context,
-    ICurrentUser currentUser) : IRequestHandler<EditAccountCommand, Unit>
+    ICurrentUser currentUser) : IRequestHandler<EditAccountCommand>
 {
-    public async Task<Unit> Handle(EditAccountCommand request, CancellationToken cancellationToken)
+    public async Task Handle(EditAccountCommand request, CancellationToken cancellationToken)
     {
         var userId = (int)currentUser.Id!;
 
@@ -36,7 +36,5 @@ public class EditAccountCommandHandler(
         user.PhoneNumber = request.PhoneNumber;
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

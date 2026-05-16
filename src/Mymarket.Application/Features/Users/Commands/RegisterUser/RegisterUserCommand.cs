@@ -15,12 +15,12 @@ public record RegisterUserCommand(
     string PhoneNumber,
     string Password,
     string PasswordConfirm
-) : IRequest<Unit>;
+) : IRequest;
 
 public class RegisterUserHandler(
-    IApplicationDbContext context) : IRequestHandler<RegisterUserCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<RegisterUserCommand>
 {
-    public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var userToSave = new UserEntity
         {
@@ -37,7 +37,5 @@ public class RegisterUserHandler(
 
         context.Users.Add(userToSave);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

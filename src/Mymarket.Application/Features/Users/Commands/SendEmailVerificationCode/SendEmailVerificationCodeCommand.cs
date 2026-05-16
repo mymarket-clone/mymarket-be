@@ -7,15 +7,13 @@ using Mymarket.Domain.Entities;
 
 namespace Mymarket.Application.features.Users.Commands.SendEmailVerificationCode;
 
-public record SendEmailVerificationCodeCommand(
-    string Email
-) : IRequest<Unit>;
+public record SendEmailVerificationCodeCommand(string Email) : IRequest;
 
 public class SendEmailVerificationCodeHandler(
     IApplicationDbContext context, 
-    IEmailSender emailSender) : IRequestHandler<SendEmailVerificationCodeCommand, Unit>
+    IEmailSender emailSender) : IRequestHandler<SendEmailVerificationCodeCommand>
 {
-    public async Task<Unit> Handle(SendEmailVerificationCodeCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SendEmailVerificationCodeCommand request, CancellationToken cancellationToken)
     {
         var user = await context.Users
             .AsNoTracking()
@@ -72,7 +70,5 @@ public class SendEmailVerificationCodeHandler(
         else {
             throw new ApplicationException("User not provided");
         }
-        
-        return Unit.Value;
     }
 }

@@ -35,6 +35,8 @@ public class GetPostsQueryHandler(
 {
     public async Task<PostSearchDto> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
+        var lang = languageContext.Language;
+
         var pageSize = Math.Clamp(request.PageSize, 1, 100);
 
         var categories = await context.Categories
@@ -174,13 +176,13 @@ public class GetPostsQueryHandler(
             var p = x.Post;
             return new PostDto
             {
-                Id = p.Id,
+                Id = p.Id,  
                 AutoRenewal = p.AutoRenewal,
                 CanOfferPrice = p.CanOfferPrice,
                 CategoryId = p.CategoryId,
                 ConditionType = p.ConditionType,
                 CurrencyType = p.CurrencyType,
-                Description = languageContext.LocalizeProperty<PostEntity>("Description")(p),
+                Description = languageContext.Get(p.DescriptionEn, p.DescriptionRu, p.Description),
                 ForDisabledPerson = p.ForDisabledPerson,
                 IsColored = p.IsColored,
                 IsNegotiable = p.IsNegotiable,
@@ -190,7 +192,7 @@ public class GetPostsQueryHandler(
                 Price = p.Price,
                 PromoType = p.PromoType,
                 SalePercentage = p.SalePercentage,
-                Title = languageContext.LocalizeProperty<PostEntity>("Title")(p)!,
+                Title = languageContext.Get(p.TitleEn, p.TitleRu, p.Title),
                 BrandId = p.BrandId,
                 PriceAfterDiscount = p.Price.HasValue
                     ? p.Price.Value * (1 - p.SalePercentage / 100.0)
@@ -232,7 +234,7 @@ public class GetPostsQueryHandler(
                 return new CategoryLiteDto
                 {
                     Id = c.Id,
-                    Name = languageContext.LocalizeProperty<CategoryEntity>("Name")(c) ?? string.Empty,
+                    Name = languageContext.Get(c.NameEn, c.NameRu, c.Name),
                     Count = total,
                     HasChildren = childrenLookup.ContainsKey(c.Id)
                 };

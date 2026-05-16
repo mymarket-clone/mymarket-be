@@ -5,14 +5,14 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Brands.Commands.Delete;
 
-public record DeleteBrandCommand(int Id) : IRequest<Unit>;
+public record DeleteBrandCommand(int Id) : IRequest;
 
 public class DeleteBrandCommandHandler(
     IApplicationDbContext context,
     IImageService imageService
-) : IRequestHandler<DeleteBrandCommand, Unit>
+) : IRequestHandler<DeleteBrandCommand>
 {
-    public async Task<Unit> Handle(DeleteBrandCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteBrandCommand request, CancellationToken cancellationToken)
     {
         var brand = await context.Brands
             .Include(x => x.Logo)
@@ -48,7 +48,5 @@ public class DeleteBrandCommandHandler(
         {
             await imageService.DeleteAsync(logo, cancellationToken);
         }
-
-        return Unit.Value;
     }
 }

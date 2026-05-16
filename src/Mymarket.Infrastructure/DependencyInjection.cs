@@ -1,6 +1,4 @@
 ﻿using EFCoreSecondLevelCacheInterceptor;
-using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Mymarket.Application.features.Users.Commands.RegisterUser;
 using Mymarket.Application.Interfaces;
 using Mymarket.Infrastructure.Authentication;
 using Mymarket.Infrastructure.Authentication.Policies;
-using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;
 using Mymarket.Infrastructure.Services;
 using Mymarket.Infrastructure.SignalR.Chat;
@@ -39,9 +35,6 @@ public static class DependencyInjection
 
         builder.Services.AddEFSecondLevelCache(options =>options.UseMemoryCacheProvider().UseCacheKeyPrefix("EF_") );
 
-        // MediatR
-        builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
-
         // SignalR
         builder.Services.AddSignalR();
 
@@ -49,11 +42,6 @@ public static class DependencyInjection
 
         // Problem details RFC 7807
         builder.Services.AddProblemDetails();
-            
-        // Fluent validation
-        builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
-        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 
         // Jwt authentication
         builder.Services.AddScoped<ITokenProvider, TokenProvider>();

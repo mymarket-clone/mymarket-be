@@ -1,17 +1,10 @@
-﻿using AutoMapper;
-using Mymarket.Domain.Entities;
+﻿using Mymarket.Domain.Entities;
+using Mapster;
 
 namespace Mymarket.Application.Features.Cities.Models;
 
-public class CityDto
+public class CityDto : IMapFrom<CityEntity>
 {
     public int Id { get; set; }
     public required string Name { get; set; }
-    public sealed class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<CityEntity, CityDto>();
-        }
-    }
 }

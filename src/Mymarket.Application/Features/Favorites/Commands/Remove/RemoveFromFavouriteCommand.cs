@@ -6,13 +6,13 @@ namespace Mymarket.Application.Features.Favorites.Commands.Remove;
 
 public record RemoveFromFavouriteCommand(
     int PostId
-) : IRequest<Unit>;
+) : IRequest;
 
 public class RemoveFromFavouriteCommandHandler(
     IApplicationDbContext context,
-    ICurrentUser currentUser) : IRequestHandler<RemoveFromFavouriteCommand, Unit>
+    ICurrentUser currentUser) : IRequestHandler<RemoveFromFavouriteCommand>
 {
-    public async Task<Unit> Handle(RemoveFromFavouriteCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RemoveFromFavouriteCommand request, CancellationToken cancellationToken)
     {
         var record = await context.Favorites
             .FirstOrDefaultAsync(x => x.PostId == request.PostId && x.UserId == (int)currentUser.Id!, cancellationToken);
@@ -22,7 +22,5 @@ public class RemoveFromFavouriteCommandHandler(
             context.Favorites.Remove(record);
             await context.SaveChangesAsync(cancellationToken);
         }
-
-        return Unit.Value;
     }
 }

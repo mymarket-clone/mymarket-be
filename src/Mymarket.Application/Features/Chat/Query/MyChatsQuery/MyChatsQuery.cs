@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Mymarket.Application.Features.Chat.Query.Models;
+using Mymarket.Application.Features.Chat.Models;
 using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Chat.Query.MyChatsQuery;

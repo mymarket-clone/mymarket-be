@@ -6,15 +6,15 @@ using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Posts.Commands.Enable;
 
-public record EnablePostCommand(int PostId) : IRequest<Unit>;
+public record EnablePostCommand(int PostId) : IRequest;
 
 public class EnablePostCommandHandler(
-    IApplicationDbContext context,
-    ICurrentUser currentUser) : IRequestHandler<EnablePostCommand, Unit>
+    IApplicationDbContext context, ICurrentUser currentUser) : IRequestHandler<EnablePostCommand>
 {
-    public async Task<Unit> Handle(EnablePostCommand request, CancellationToken cancellationToken)
+    public async Task Handle(EnablePostCommand request, CancellationToken cancellationToken)
     {
         var post = await context.Posts.FirstOrDefaultAsync(x => x.Id == request.PostId, cancellationToken);
+
         if (post == null || post.UserId != currentUser.Id)
         {
             throw new KeyNotFoundException(SharedResources.IdDoesnotExist);
@@ -23,7 +23,5 @@ public class EnablePostCommandHandler(
         post.Status = PostStatus.Active;
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

@@ -7,12 +7,11 @@ namespace Mymarket.Application.Features.CategoryBrands.Commands.Remove;
 public record RemoveCategoryBrandCommand(
     int CategoryId,
     int BrandId
-) : IRequest<Unit>;
+) : IRequest;
 
-public class RemoveCategoryBrandCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<RemoveCategoryBrandCommand, Unit>
+public class RemoveCategoryBrandCommandHandler(IApplicationDbContext context) : IRequestHandler<RemoveCategoryBrandCommand>
 {
-    public async Task<Unit> Handle(RemoveCategoryBrandCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RemoveCategoryBrandCommand request, CancellationToken cancellationToken)
     {
         var category = await context.CategoryBrands
                 .FirstOrDefaultAsync(c => 
@@ -31,8 +30,6 @@ public class RemoveCategoryBrandCommandHandler(
 
         context.CategoryBrands.Remove(category!);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }
 

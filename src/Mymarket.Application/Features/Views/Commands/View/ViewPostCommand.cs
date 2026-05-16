@@ -4,13 +4,13 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.Features.Views.Commands.View;
 
-public record ViewPostCommand(int PostId) : IRequest<Unit>;
+public record ViewPostCommand(int PostId) : IRequest;
 
 public class ViewPostCommandHandler(
     IApplicationDbContext context,
-    ICurrentUser currentUser) : IRequestHandler<ViewPostCommand, Unit>
+    ICurrentUser currentUser) : IRequestHandler<ViewPostCommand>
 {
-    public async Task<Unit> Handle(ViewPostCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ViewPostCommand request, CancellationToken cancellationToken)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -25,7 +25,5 @@ public class ViewPostCommandHandler(
             )
             ON CONFLICT DO NOTHING
         """, cancellationToken);
-
-        return Unit.Value;
     }
 }

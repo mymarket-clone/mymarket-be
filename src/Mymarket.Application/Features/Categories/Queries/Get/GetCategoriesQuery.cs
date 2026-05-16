@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using EFCoreSecondLevelCacheInterceptor;
+﻿using EFCoreSecondLevelCacheInterceptor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Categories.Models;
@@ -11,25 +10,25 @@ public record GetCategoriesQuery : IRequest<List<CategoryFlatDto>>;
 
 public class GetCategoriesQueryHandler(
     IApplicationDbContext context,
-    ILanguageContext languageContext,
-    IMapper mapper) : IRequestHandler<GetCategoriesQuery, List<CategoryFlatDto>>
+    ILanguageContext languageContext) : IRequestHandler<GetCategoriesQuery, List<CategoryFlatDto>>
 {
-    public async Task<List<CategoryFlatDto>> Handle(
-         GetCategoriesQuery request, CancellationToken cancellationToken)
+    public async Task<List<CategoryFlatDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var entities = await context.Categories
+        return await context.Categories
             .AsNoTracking()
-            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .Include(x => x.Logo)
+            .Select(x => new CategoryFlatDto
+            {
+                Id = x.Id,
+                ParentId = x.ParentId,
+                CategoryPostType = x.CategoryPostType,
+                LogoUrl = x.Logo != null ? x.Logo.Url : null,
+                BrandRequired = x.BrandRequired,
+                Name = languageContext.Language == "en" ? (x.NameEn ?? x.Name) :
+                       languageContext.Language == "ru" ? (x.NameRu ?? x.Name) :
+                       x.Name
+            })
+            .Cacheable(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
             .ToListAsync(cancellationToken);
-
-        var categories = entities
-            .Select(c => mapper.Map<CategoryFlatDto>(
-                c,
-                opt => opt.Items["lang"] = languageContext.Language
-            ))
-            .ToList();
-
-        return categories;
     }
 }

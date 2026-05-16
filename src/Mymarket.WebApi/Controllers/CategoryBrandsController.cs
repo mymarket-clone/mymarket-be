@@ -54,14 +54,14 @@ public class CategoryBrandsController(
         [FromRoute] int id,
         [FromBody] EditCategoryBrandCommand command)
     {
-        var result = await mediator.Send(command with { Id = id });
-        return Ok(result);
+        await mediator.Send(command with { Id = id });
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategoryBrand([FromRoute] int id)
     {
-        var result = await mediator.Send(new DeleteCategoryBrandCommand(id));
-        return Ok(result);
+        await mediator.Send(new DeleteCategoryBrandCommand(id));
+        return NoContent();
     }
 }

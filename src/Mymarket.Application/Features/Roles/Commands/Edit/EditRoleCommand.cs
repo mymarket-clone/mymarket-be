@@ -1,4 +1,4 @@
-using AutoMapper;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Roles.Models;
@@ -14,8 +14,7 @@ public record EditRoleCommand(
 ) : IRequest<RoleDto>;
 
 public class EditRoleCommandHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<EditRoleCommand, RoleDto>
+    IApplicationDbContext context) : IRequestHandler<EditRoleCommand, RoleDto>
 {
     public async Task<RoleDto> Handle(EditRoleCommand request, CancellationToken cancellationToken)
     {
@@ -43,6 +42,6 @@ public class EditRoleCommandHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return mapper.Map<RoleDto>(role);
+        return role.Adapt<RoleDto>();
     }
 }

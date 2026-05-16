@@ -17,12 +17,10 @@ public static class BreadcrumbBuilder
 
         while (lookup.TryGetValue(currentId, out var category))
         {
-            var name = languageContext.LocalizeProperty<CategoryEntity>("Name")(category);
-
             result.Add(new CategoryBreadcrumbDto
             {
                 Id = category.Id,
-                Name = name!,
+                Name = languageContext.Get(category.NameEn, category.NameRu, category.Name),
                 HasChildren = categories.Any(c => c.ParentId == category.Id)
             });
 

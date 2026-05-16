@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Mymarket.Domain.Enums;
-using Mymarket.Domain.Entities;
+﻿using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Categories.Models;
 
@@ -12,25 +10,4 @@ public class CategoryFlatDto
     public CategoryPostType CategoryPostType { get; set; }
     public bool? BrandRequired { get; set; }
     public string? LogoUrl { get; set; } = null;
-    public sealed class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<CategoryEntity, CategoryFlatDto>()
-                .ForMember(
-                    d => d.Name,
-                    opt => opt.MapFrom((src, dest, _, context) =>
-                    {
-                        var lang = context.Items["lang"] as string ?? "ka";
-                        return lang == "en" ? src.NameEn ?? src.Name
-                             : lang == "ru" ? src.NameRu ?? src.Name
-                             : src.Name;
-                    })
-                )
-                .ForMember(
-                    d => d.LogoUrl,
-                    opt => opt.MapFrom(src => src.Logo != null ? src.Logo.Url : null)
-                );
-        }
-    }
 }

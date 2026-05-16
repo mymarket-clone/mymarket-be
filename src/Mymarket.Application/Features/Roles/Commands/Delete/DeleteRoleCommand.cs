@@ -5,12 +5,12 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Roles.Commands.Delete;
 
-public record DeleteRoleCommand(int Id) : IRequest<Unit>;
+public record DeleteRoleCommand(int Id) : IRequest;
 
 public class DeleteRoleCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<DeleteRoleCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<DeleteRoleCommand>
 {
-    public async Task<Unit> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
         var role = await context.Roles
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
@@ -22,7 +22,5 @@ public class DeleteRoleCommandHandler(
 
         context.Roles.Remove(role);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

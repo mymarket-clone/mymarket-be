@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Categories.Models;
@@ -9,18 +8,14 @@ namespace Mymarket.Application.Features.Categories.Queries.GetById;
 
 public record GetCategoryByIdQuery(int Id) : IRequest<CategoryDto?>;
 
-public class GetCategoryByIdQueryHandler(
-    IApplicationDbContext _context,
-    IConfigurationProvider _mapper) : IRequestHandler<GetCategoryByIdQuery, CategoryDto?>
+public class GetCategoryByIdQueryHandler(IApplicationDbContext context) : IRequestHandler<GetCategoryByIdQuery, CategoryDto?>
 {
     public async Task<CategoryDto?> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
     {
-        var category = await _context.Categories
+        return await context.Categories
             .AsNoTracking()
-            .ProjectTo<CategoryDto>(_mapper)
+            .ProjectToType<CategoryDto>()
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-
-        return category;
     }
 }
      

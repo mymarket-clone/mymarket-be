@@ -35,7 +35,7 @@ public class GetMyPostsQueryHandler(
             .Select(x => new PostMyItemDto
             {
                 Id = x.Id,
-                Title = languageContext.LocalizeProperty<PostEntity>("Title")(x)!,
+                Title = languageContext.Get(x.TitleEn, x.TitleRu, x.Title),
                 Price = (double)x.Price!,
                 ImageUrl = x.PostsImages!
                     .Select(pi => pi.Image!.Url)

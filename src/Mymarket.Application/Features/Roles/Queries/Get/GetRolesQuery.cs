@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Roles.Models;
@@ -13,8 +13,7 @@ public record GetRolesQuery(
 ) : IRequest<PaginatedResult<RoleDto>>;
 
 public class GetRolesQueryHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<GetRolesQuery, PaginatedResult<RoleDto>>
+    IApplicationDbContext context) : IRequestHandler<GetRolesQuery, PaginatedResult<RoleDto>>
 {
     public async Task<PaginatedResult<RoleDto>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
     {
@@ -28,7 +27,7 @@ public class GetRolesQueryHandler(
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
 
-        var dtos = mapper.Map<List<RoleDto>>(items);
+        var dtos = items.Adapt<List<RoleDto>>();
 
         return new PaginatedResult<RoleDto>
         {

@@ -9,8 +9,7 @@ public record AddHomeCategoryCommand(
    int Order
 ) : IRequest<HomeCategoriesEntity>;
 
-public class AddHomeCategoryCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<AddHomeCategoryCommand, HomeCategoriesEntity>
+public class AddHomeCategoryCommandHandler(IApplicationDbContext context) : IRequestHandler<AddHomeCategoryCommand, HomeCategoriesEntity>
 {
     public async Task<HomeCategoriesEntity> Handle(AddHomeCategoryCommand request, CancellationToken cancellationToken)
     {

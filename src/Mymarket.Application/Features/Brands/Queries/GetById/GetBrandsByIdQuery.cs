@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Features.Brands.Models;
@@ -10,14 +9,13 @@ namespace Mymarket.Application.Features.Brands.Queries.GetById;
 public record GetBrandsByIdQuery(int Id) : IRequest<BrandDto?>;
 
 public class GetBrandsByIdQueryHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<GetBrandsByIdQuery, BrandDto?>
+    IApplicationDbContext context) : IRequestHandler<GetBrandsByIdQuery, BrandDto?>
 {
     public async Task<BrandDto?> Handle(GetBrandsByIdQuery request, CancellationToken cancellationToken)
     {
         var brand = await context.Brands
             .AsNoTracking()
-            .ProjectTo<BrandDto>(mapper.ConfigurationProvider)
+            .ProjectToType<BrandDto>()
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         return brand;

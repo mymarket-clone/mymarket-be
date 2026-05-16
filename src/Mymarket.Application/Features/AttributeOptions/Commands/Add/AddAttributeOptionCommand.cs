@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using MediatR;
 using Mymarket.Application.Features.AttributeOptions.Models;
 using Mymarket.Application.Interfaces;
@@ -15,13 +15,12 @@ public record AddAttributeOptionCommand(
 ) : IRequest<AttributeOptionDto>;
 
 public class AddAttributeOptionCommandHandler(
-    IApplicationDbContext context,
-    IMapper mapper) : IRequestHandler<AddAttributeOptionCommand, AttributeOptionDto>
+    IApplicationDbContext context) : IRequestHandler<AddAttributeOptionCommand, AttributeOptionDto>
 {
     public async Task<AttributeOptionDto> Handle(
         AddAttributeOptionCommand request, CancellationToken cancellationToken)
     {
-        var AttributeOption = new AttributeOptionsEntity
+        var attributeOption = new AttributeOptionsEntity
         {
             AttributeId = request.AttributeId,
             Order = request.Order,
@@ -30,9 +29,9 @@ public class AddAttributeOptionCommandHandler(
             NameRu = request.NameRu,
         };
 
-        await context.AttributeOptions.AddAsync(AttributeOption, cancellationToken);
+        await context.AttributeOptions.AddAsync(attributeOption, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return mapper.Map<AttributeOptionDto>(AttributeOption);
+        return attributeOption.Adapt<AttributeOptionDto>();
     }
 }

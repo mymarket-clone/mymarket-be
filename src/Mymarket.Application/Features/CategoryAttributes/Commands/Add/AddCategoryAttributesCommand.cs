@@ -12,8 +12,7 @@ public record AddCategoryAttributesCommand(
     int Order
 ) : IRequest<CategoryAttributeDto>;
 
-public class AddCategoryAttributesCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<AddCategoryAttributesCommand, CategoryAttributeDto>
+public class AddCategoryAttributesCommandHandler(IApplicationDbContext context) : IRequestHandler<AddCategoryAttributesCommand, CategoryAttributeDto>
 {
     public async Task<CategoryAttributeDto> Handle(AddCategoryAttributesCommand request, CancellationToken cancellationToken)
     {
@@ -28,7 +27,7 @@ public class AddCategoryAttributesCommandHandler(
         await context.CategoryAttributes.AddAsync(entity, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        var dto = new CategoryAttributeDto
+        return new CategoryAttributeDto
         {
             Id = entity.Id,
             CategoryId = entity.CategoryId,
@@ -36,7 +35,5 @@ public class AddCategoryAttributesCommandHandler(
             IsRequired = entity.IsRequired,
             Order = entity.Order
         };
-
-        return dto;
     }
 }

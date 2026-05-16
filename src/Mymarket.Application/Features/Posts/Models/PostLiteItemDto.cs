@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Mymarket.Domain.Entities;
 using Mymarket.Domain.Enums;
 
@@ -15,27 +15,19 @@ public class PostLiteItemDto
     public bool IsNegotiable { get; set; }
     public bool IsFavorite { get; set; }
 
-    private sealed class MappingProfile : Profile
+    public static void Mapper(TypeAdapterConfig config)
     {
-        public MappingProfile()
-        {
-            CreateMap<PostEntity, PostLiteItemDto>()
-                .ForMember(
-                    d => d.PriceAfterDiscount,
-                    opt => opt.MapFrom(s =>
-                        s.SalePercentage > 0
-                            ? s.Price * (1 - (double)s.SalePercentage / 100) : null
-                    )
-                )
-                .ForMember(
-                    d => d.Images,
-                    opt => opt.MapFrom(s =>
-                        s.PostsImages
-                            .Where(pi => pi.Image != null && pi.Image.Url != null)
-                            .Select(pi => pi.Image!.Url!)
-                            .ToList()
-                    )
-                );
-        }
+        config.NewConfig<PostEntity, PostLiteItemDto>()
+            .Map(dest => dest.PriceAfterDiscount,
+                src => src.Price.HasValue && src.SalePercentage > 0
+                    ? src.Price.Value * (1 - (double)src.SalePercentage / 100.0)
+                    : (double?)null
+            )
+            .Map(dest => dest.Images,
+                src => src.PostsImages
+                    .Where(pi => pi.Image != null && pi.Image.Url != null)
+                    .Select(pi => pi.Image!.Url!)
+                    .ToList()
+            );
     }
 }

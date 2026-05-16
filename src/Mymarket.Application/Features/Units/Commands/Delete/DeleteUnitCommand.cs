@@ -5,13 +5,11 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Units.Commands.Delete;
 
-public record DeleteUnitCommand(
-    int Id
-) : IRequest<Unit>;
+public record DeleteUnitCommand(int Id) : IRequest;
 
-public class DeleteUnitCommandHandler(IApplicationDbContext context) : IRequestHandler<DeleteUnitCommand, Unit>
+public class DeleteUnitCommandHandler(IApplicationDbContext context) : IRequestHandler<DeleteUnitCommand>
 {
-    public async Task<Unit> Handle(DeleteUnitCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteUnitCommand request, CancellationToken cancellationToken)
     {
         var unit = await context.AttributeUnits
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
@@ -23,7 +21,5 @@ public class DeleteUnitCommandHandler(IApplicationDbContext context) : IRequestH
 
         context.AttributeUnits.Remove(unit!);
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

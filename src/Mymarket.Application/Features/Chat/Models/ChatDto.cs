@@ -1,4 +1,4 @@
-﻿namespace Mymarket.Application.Features.Chat.Query.Models;
+﻿namespace Mymarket.Application.Features.Chat.Models;
 
 public class ChatDto
 {

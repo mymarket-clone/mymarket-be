@@ -42,14 +42,14 @@ public record AddPostCommand(
     int? AutoRenewalOnceIn,
     int? AutoRenewalAtTime,
     string? AttributesJson
-) : IRequest<Unit>;
+) : IRequest;
 
 public sealed class AddPostCommandHandler(
     IApplicationDbContext context,
     ICurrentUser currentUser,
-    IImageService imageService) : IRequestHandler<AddPostCommand, Unit>
+    IImageService imageService) : IRequestHandler<AddPostCommand>
 {
-    public async Task<Unit> Handle(AddPostCommand request, CancellationToken cancellationToken)
+    public async Task Handle(AddPostCommand request, CancellationToken cancellationToken)
     {
         await using var transaction = await context.BeginTransactionAsync(cancellationToken);
 
@@ -305,8 +305,6 @@ public sealed class AddPostCommandHandler(
 
             await context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
-
-            return Unit.Value;
         }
         catch (Exception ex)
         {

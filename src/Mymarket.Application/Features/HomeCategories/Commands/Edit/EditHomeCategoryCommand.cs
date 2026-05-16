@@ -12,8 +12,7 @@ public record EditHomeCategoryCommand(
     int Order
 ) : IRequest<HomeCategoryDto>;
 
-public class EditHomeCategoryCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<EditHomeCategoryCommand, HomeCategoryDto>
+public class EditHomeCategoryCommandHandler(IApplicationDbContext context) : IRequestHandler<EditHomeCategoryCommand, HomeCategoryDto>
 {
     public async Task<HomeCategoryDto> Handle(EditHomeCategoryCommand request, CancellationToken cancellationToken)
     {

@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using Mymarket.Domain.Enums;
+﻿using Mapster;
 using Mymarket.Domain.Entities;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Posts.Models;
 
-public class PostDto
+public class PostDto : IMapFrom<PostEntity> 
 {
     public int Id { get; set; }
     public bool AutoRenewal { get; set; }
@@ -27,24 +27,20 @@ public class PostDto
     public int? BrandId { get; set; }
     public List<string> Images { get; set; } = [];
     public bool IsFavorite { get; set; }
-
-    public sealed class Mapping : Profile
+    public static void Mapping(TypeAdapterConfig config)
     {
-        public Mapping() 
-        {
-            CreateMap<PostEntity, PostDto>()
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src =>
-                    src.PostsImages
-                        .Where(pi => pi.Image != null && pi.Image.Url != null)
-                        .OrderBy(pi => pi.Order)
-                        .OrderBy(pi => pi.Order)
-                        .Select(pi => pi.Image!.Url)
-                ))
-                .ForMember(dest => dest.PriceAfterDiscount, opt => opt.MapFrom(src =>
-                    src.Price.HasValue
-                        ? src.Price.Value * (1 - src.SalePercentage / 100.0)
-                        : (double?)null
-                ));
-        }
+        config.NewConfig<PostEntity, PostDto>()
+            .Map(dest => dest.Images, src =>
+                src.PostsImages
+                    .Where(pi => pi.Image != null && pi.Image.Url != null)
+                    .OrderBy(pi => pi.Order)
+                    .Select(pi => pi.Image!.Url)
+                    .ToList()
+            )
+            .Map(dest => dest.PriceAfterDiscount, src =>
+                src.Price.HasValue
+                    ? src.Price.Value * (1 - src.SalePercentage / 100.0)
+                    : (double?)null
+            );
     }
 }

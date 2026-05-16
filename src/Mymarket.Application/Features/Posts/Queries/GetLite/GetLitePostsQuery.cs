@@ -28,7 +28,7 @@ public class GetLitePostsQueryHandler(
                 Item = new PostLiteItemDto
                 {
                     Id = x.Id,
-                    Title = languageContext.LocalizeProperty<PostEntity>("Title")(x)!,
+                    Title = languageContext.Get(x.TitleEn, x.TitleRu, x.Title),
                     Price = x.Price,
                     IsNegotiable = x.IsNegotiable,
                     PriceAfterDiscount = x.SalePercentage > 0 ? x.Price * (1 - (double)x.SalePercentage / 100) : null,

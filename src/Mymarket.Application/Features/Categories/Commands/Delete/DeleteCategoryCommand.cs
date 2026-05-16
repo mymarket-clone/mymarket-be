@@ -5,16 +5,13 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Categories.Commands.Delete;
 
-public record DeleteCategoryCommand(
-    int Id
-) : IRequest<Unit>;
+public record DeleteCategoryCommand(int Id) : IRequest;
 
 public class DeleteCategoryCommandHandler(
     IApplicationDbContext context,
-    IImageService imageService) : IRequestHandler<DeleteCategoryCommand, Unit>
+    IImageService imageService) : IRequestHandler<DeleteCategoryCommand>
 {
-    public async Task<Unit> Handle(
-        DeleteCategoryCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = await context.Categories
             .Include(c => c.Logo)
@@ -34,7 +31,5 @@ public class DeleteCategoryCommandHandler(
             await context.SaveChangesAsync(cancellationToken);
             await imageService.DeleteAsync(logo, cancellationToken);
         }
-
-        return Unit.Value;
     }
 }

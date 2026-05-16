@@ -8,12 +8,11 @@ public record EditCategoryBrandCommand(
     int Id,
     int CategoryId,
     int BrandId
-) : IRequest<Unit>;
+) : IRequest;
 
-public class EditCategoryBrandCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<EditCategoryBrandCommand, Unit>
+public class EditCategoryBrandCommandHandler(IApplicationDbContext context) : IRequestHandler<EditCategoryBrandCommand>
 {
-    public async Task<Unit> Handle(EditCategoryBrandCommand request, CancellationToken cancellationToken)
+    public async Task Handle(EditCategoryBrandCommand request, CancellationToken cancellationToken)
     {
         var categoryBrand = await context.CategoryBrands
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
@@ -22,7 +21,5 @@ public class EditCategoryBrandCommandHandler(
         categoryBrand!.CategoryId = request.CategoryId;
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

@@ -10,12 +10,12 @@ public record PasswordRecoveryCommand(
     string Code,
     string Password,
     string PasswordConfirm
-) : IRequest<Unit>;
+) : IRequest;
 
 public class PasswordRecoveryCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<PasswordRecoveryCommand, Unit>
+    IApplicationDbContext context) : IRequestHandler<PasswordRecoveryCommand>
 {
-    public async Task<Unit> Handle(PasswordRecoveryCommand request, CancellationToken cancellationToken)
+    public async Task Handle(PasswordRecoveryCommand request, CancellationToken cancellationToken)
     {
         var codeHash = CryptoHelper.HashVerificationCode(request.Code.ToString());
 
@@ -30,7 +30,5 @@ public class PasswordRecoveryCommandHandler(
             user.User!.PasswordHash = CryptoHelper.HashPassword(request.Password);
             await context.SaveChangesAsync(cancellationToken);
         }
-
-        return Unit.Value;
     }
 }

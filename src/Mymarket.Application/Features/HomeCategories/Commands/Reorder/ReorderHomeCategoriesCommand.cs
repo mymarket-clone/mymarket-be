@@ -7,16 +7,15 @@ using Mymarket.Application.Resources;
 namespace Mymarket.Application.Features.HomeCategories.Commands.Reorder;
 public record ReorderHomeCategoriesCommand(
     List<HomeCategoryDto> Items
-) : IRequest<Unit>;
+) : IRequest;
 
 public class ReorderHomeCategoriesCommandHandler(
     IApplicationDbContext context
-) : IRequestHandler<ReorderHomeCategoriesCommand, Unit>
+) : IRequestHandler<ReorderHomeCategoriesCommand>
 {
-    public async Task<Unit> Handle(ReorderHomeCategoriesCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ReorderHomeCategoriesCommand request, CancellationToken cancellationToken)
     {
-        if (request.Items is null || request.Items.Count == 0)
-            return Unit.Value;
+        if (request.Items is null || request.Items.Count == 0) return;
 
         var ids = request.Items.Select(x => x.Id).ToList();
 
@@ -35,7 +34,5 @@ public class ReorderHomeCategoriesCommandHandler(
         }
 
         await context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

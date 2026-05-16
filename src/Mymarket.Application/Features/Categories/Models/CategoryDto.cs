@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Mymarket.Domain.Enums;
-using Mymarket.Domain.Entities;
+﻿using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Categories.Models;
 
@@ -16,14 +14,4 @@ public class CategoryDto
     public bool BrandVisible { get; set; } = false;
     public CategoryPostType CategoryPostType { get; set; }
     public string? LogoUrl { get; set; } = null; 
-    public sealed class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<CategoryEntity, CategoryDto>()
-                .ForMember(
-                    dest => dest.HasChildren,
-                    opt => opt.MapFrom(src => src.Children.Any()));
-        }
-    }
 }

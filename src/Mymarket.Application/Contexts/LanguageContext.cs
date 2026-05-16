@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Mymarket.Application.Interfaces;
-using System.Reflection;
 
 namespace Mymarket.Application.Contexts;
 
@@ -22,31 +21,13 @@ public class LanguageContext : ILanguageContext
         };
     }
 
-    public Func<T?, string?> LocalizeProperty<T>(string? basePropertyName)
+    public string Get(string? en, string? ru, string? fallback)
     {
-        return entity =>
+        return Language switch
         {
-            if (entity == null || basePropertyName == null) return null;
-
-            var propertyName = Language switch
-            {
-                "en" => basePropertyName + "En",
-                "ru" => basePropertyName + "Ru",
-                _ => basePropertyName
-            };
-
-            var prop = typeof(T).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance) 
-                ?? throw new InvalidOperationException($"Property '{propertyName}' not found on type {typeof(T).Name}");
-
-            var value = prop.GetValue(entity) as string;
-
-            if (string.IsNullOrEmpty(value))
-            {
-                var baseProp = typeof(T).GetProperty(basePropertyName, BindingFlags.Public | BindingFlags.Instance);
-                value = baseProp?.GetValue(entity) as string;
-            }
-
-            return value ?? string.Empty;
+            "en" => en ?? fallback ?? String.Empty,
+            "ru" => ru ?? fallback ?? String.Empty,
+            _ => fallback ?? String.Empty
         };
     }
 }

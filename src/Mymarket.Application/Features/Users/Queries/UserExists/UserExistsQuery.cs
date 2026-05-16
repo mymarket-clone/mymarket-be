@@ -4,9 +4,7 @@ using Mymarket.Application.Interfaces;
 
 namespace Mymarket.Application.features.Users.Queries.UserExists;
 
-public record UserExistsQuery(
-    string Email
-): IRequest<bool>;
+public record UserExistsQuery(string Email): IRequest<bool>;
 
 public class UserExistsQueryHandler(
     IApplicationDbContext context) : IRequestHandler<UserExistsQuery, bool>

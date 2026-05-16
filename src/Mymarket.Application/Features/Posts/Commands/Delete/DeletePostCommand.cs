@@ -5,14 +5,14 @@ using Mymarket.Application.Resources;
 
 namespace Mymarket.Application.Features.Posts.Commands.Delete;
 
-public record DeletePostCommand(int PostId) : IRequest<Unit>;
+public record DeletePostCommand(int PostId) : IRequest;
 
 public class DeletePostCommandHandler(
     IApplicationDbContext context,
     ICurrentUser currentUser,
-    IImageService imageService) : IRequestHandler<DeletePostCommand, Unit>
+    IImageService imageService) : IRequestHandler<DeletePostCommand>
 {
-    public async Task<Unit> Handle(DeletePostCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
         var post = await context.Posts
             .Include(x => x.PostsImages)
@@ -31,13 +31,11 @@ public class DeletePostCommandHandler(
             .ToList();
 
         var postViews = context.PostViews.Where(x => x.PostId == request.PostId);
+
         context.PostViews.RemoveRange(postViews);
-
         context.Posts.Remove(post);
+
         await context.SaveChangesAsync(cancellationToken);
-
         await imageService.DeleteAsync(images, cancellationToken);
-
-        return Unit.Value;
     }
 }
