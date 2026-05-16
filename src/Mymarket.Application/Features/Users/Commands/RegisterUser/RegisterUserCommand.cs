@@ -32,6 +32,7 @@ public class RegisterUserHandler(
             PhoneNumber = request.PhoneNumber,
             EmailVerified = false,
             PasswordHash = CryptoHelper.HashPassword(request.Password),
+            AccessLevel = AccessLevelType.User
         };
 
         context.Users.Add(userToSave);

@@ -5,6 +5,8 @@ using Mymarket.Application.Features.Brands.Commands.Delete;
 using Mymarket.Application.Features.Brands.Commands.Edit;
 using Mymarket.Application.Features.Brands.Queries.Get;
 using Mymarket.Application.Features.Brands.Queries.GetById;
+using Mymarket.Domain.Enums;
+using Mymarket.Infrastructure.Authentication.Policies;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -29,6 +31,7 @@ public class BrandsController(IMediator mediator) : BaseController
     }
 
     [HttpPost]
+    [HasPermission(Permissions.BrandsAdd)]
     public async Task<IActionResult> AddBrand([FromForm] AddBrandCommand command)
     {
         var result = await mediator.Send(command);
@@ -36,6 +39,7 @@ public class BrandsController(IMediator mediator) : BaseController
     }
 
     [HttpPut("{id}")]
+    [HasPermission(Permissions.BrandsEdit)]
     public async Task<IActionResult> EditBrand([FromRoute] int id, [FromForm] EditBrandCommand command)
     {
         var result  = await mediator.Send(command with { Id = id });
@@ -43,6 +47,7 @@ public class BrandsController(IMediator mediator) : BaseController
     }
 
     [HttpDelete("{id}")]
+    [HasPermission(Permissions.BrandsDelete)]
     public async Task<IActionResult> DeleteBrand([FromRoute] int Id)
     {
         await mediator.Send(new DeleteBrandCommand(Id));

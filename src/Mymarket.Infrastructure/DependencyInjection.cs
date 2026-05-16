@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mymarket.Application.features.Users.Commands.RegisterUser;
 using Mymarket.Application.Interfaces;
 using Mymarket.Infrastructure.Authentication;
+using Mymarket.Infrastructure.Authentication.Policies;
 using Mymarket.Infrastructure.Behaviours;
 using Mymarket.Infrastructure.Data;
 using Mymarket.Infrastructure.Services;
@@ -54,7 +56,7 @@ public static class DependencyInjection
         ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 
         // Jwt authentication
-        builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
+        builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
         var jwtOptions = builder.Configuration
             .GetSection(nameof(JwtOptions))
@@ -127,5 +129,9 @@ public static class DependencyInjection
             client.InitializeAsync().GetAwaiter().GetResult();
             return client;
         });
+
+        // Permissions 
+        builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
     }
 }

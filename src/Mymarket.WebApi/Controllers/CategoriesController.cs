@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Categories.Commands.Add;
 using Mymarket.Application.Features.Categories.Commands.Delete;
@@ -9,6 +8,8 @@ using Mymarket.Application.Features.Categories.Queries.GetAttributes;
 using Mymarket.Application.Features.Categories.Queries.GetBrands;
 using Mymarket.Application.Features.Categories.Queries.GetById;
 using Mymarket.Application.Features.Categories.Queries.GetLocalized;
+using Mymarket.Domain.Enums;
+using Mymarket.Infrastructure.Authentication.Policies;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -20,7 +21,6 @@ public class CategoriesController(IMediator mediator) : BaseController
     public async Task<IActionResult> GetCategories()
     {
         var result = await mediator.Send(new GetCategoriesQuery());
-
         return Ok(result);
     }
 
@@ -28,7 +28,6 @@ public class CategoriesController(IMediator mediator) : BaseController
     public async Task<IActionResult> GetCategoriesLocalized()
     {
         var result = await mediator.Send(new GetCategoriesLocalizedQuery());
-
         return Ok(result);
     }
 
@@ -36,16 +35,13 @@ public class CategoriesController(IMediator mediator) : BaseController
     public async Task<IActionResult> GetCategoryById([FromRoute] int id)
     {
         var result = await mediator.Send(new GetCategoryByIdQuery(id));
-
-        if (result is null) return NotFound();
-        return Ok(result);
+        return result is null ? NotFound() : Ok(result);
     }
 
     [HttpGet("{id}/attributes")]
     public async Task<IActionResult> GetCategoryAttributes([FromRoute] int id)
     {
         var result = await mediator.Send(new GetCategoryAttributesQuery(id));
-
         return Ok(result);
     }
 
@@ -53,20 +49,19 @@ public class CategoriesController(IMediator mediator) : BaseController
     public async Task<IActionResult> GetCategoryBrands([FromRoute] int id)
     {
         var result = await mediator.Send(new GetCategoryBrandsQuery(id));
-
         return Ok(result);
     }
 
-    [Authorize]
     [HttpPost]
+    [HasPermission(Permissions.CategoriesAdd)]
     public async Task<IActionResult> AddCategory([FromForm] AddCategoryCommand command)
     {
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
-    [Authorize]
     [HttpPut("{id}")]
+    [HasPermission(Permissions.CategoriesEdit)]
     public async Task<IActionResult> EditCategory(
         [FromRoute] int id,
         [FromForm] EditCategoryCommand command)
@@ -75,8 +70,8 @@ public class CategoriesController(IMediator mediator) : BaseController
         return Ok(result);
     }
 
-    [Authorize]
     [HttpDelete("{id}")]
+    [HasPermission(Permissions.CategoriesDelete)]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
         await mediator.Send(new DeleteCategoryCommand(id));

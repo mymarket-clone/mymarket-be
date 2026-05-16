@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Attributes.Commands.Add;
+using Mymarket.Application.Features.Attributes.Commands.Delete;
 using Mymarket.Application.Features.Attributes.Commands.Edit;
 using Mymarket.Application.Features.Attributes.Queries.Get;
 using Mymarket.Application.Features.Attributes.Queries.GetById;
 using Mymarket.Application.Features.Attributes.Queries.GetOptions;
 using Mymarket.Application.Features.Units.Commands.Delete;
+using Mymarket.Domain.Enums;
+using Mymarket.Infrastructure.Authentication.Policies;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -37,6 +40,7 @@ public class AttributesController(IMediator mediator) : BaseController
     }
 
     [HttpPost]
+    [HasPermission(Permissions.AttributeAdd)]
     public async Task<IActionResult> AddAttribute(AddAttributeCommand command)
     {
         var result = await mediator.Send(command);
@@ -44,6 +48,7 @@ public class AttributesController(IMediator mediator) : BaseController
     }
 
     [HttpPut("{id}")]
+    [HasPermission(Permissions.AttributeEdit)]
     public async Task<IActionResult> EditAttribute(
         [FromRoute] int Id,
         [FromBody] EditAttributeCommand command)    
@@ -53,9 +58,10 @@ public class AttributesController(IMediator mediator) : BaseController
     }
 
     [HttpDelete("{id}")]
+    [HasPermission(Permissions.AttributeDelete)]
     public async Task<IActionResult> DeleteAttribute(int id)
     {
-        await mediator.Send(new DeleteUnitCommand(id));
+        await mediator.Send(new DeleteAttributeCommand(id));
         return NoContent();
     }
 }

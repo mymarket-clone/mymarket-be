@@ -6,6 +6,8 @@ using Mymarket.Application.Features.Units.Commands.Delete;
 using Mymarket.Application.Features.Units.Commands.Edit;
 using Mymarket.Application.Features.Units.Queries.Get;
 using Mymarket.Application.Features.Units.Queries.GetById;
+using Mymarket.Domain.Enums;
+using Mymarket.Infrastructure.Authentication.Policies;
 using Mymarket.WebApi.Infrastructure;
 
 namespace Mymarket.WebApi.Controllers;
@@ -29,6 +31,7 @@ public class UnitsController(IMediator mediator) : BaseController
     }
 
     [HttpPost]
+    [HasPermission(Permissions.UnitsAdd)]
     public async Task<IActionResult> AddUnit(AddUnitCommand command)
     {
         await mediator.Send(command);
@@ -36,6 +39,7 @@ public class UnitsController(IMediator mediator) : BaseController
     }
 
     [HttpPut("{id}")]
+    [HasPermission(Permissions.UnitsEdit)]
     public async Task<IActionResult> EditUnit(
         [FromRoute] int Id,
         [FromBody] EditUnitCommand command)
@@ -45,6 +49,7 @@ public class UnitsController(IMediator mediator) : BaseController
     }
 
     [HttpDelete("{id}")]
+    [HasPermission(Permissions.UnitsDelete)]
     public async Task<IActionResult> DeleteUnit(int id)
     {
         await mediator.Send(new DeleteUnitCommand(id));

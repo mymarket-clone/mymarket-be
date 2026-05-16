@@ -1,5 +1,6 @@
 ﻿using Mymarket.Domain.Common;
 using Mymarket.Domain.Enums;
+using System.Data;
 
 namespace Mymarket.Domain.Entities;
 
@@ -14,7 +15,9 @@ public class UserEntity : BaseEntity<int>
     public required string PasswordHash { get; set; }
     public bool EmailVerified { get; set; }
     public string? RefreshToken { get; set; }   
+    public AccessLevelType AccessLevel { get; set; } = AccessLevelType.User;
     public DateTime RefreshTokenExpiry { get; set; }
+    public ICollection<RoleEntity> Roles { get; set; } = [];
     public ICollection<PostEntity> Posts { get; set; } = [];
     public ICollection<PostViewEntity> PostViews { get; set; } = [];
 }

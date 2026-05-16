@@ -26,6 +26,9 @@ public interface IApplicationDbContext
     DbSet<FavoritesEntity> Favorites { get; }
     DbSet<ChatEntity> Chats { get; }
     DbSet<ChatMessageEntity> ChatMessages { get; }
+    DbSet<RoleEntity> Roles { get; }
+    DbSet<PermissionEntity> Permissions { get; }
+
 
     DatabaseFacade GetDatabase();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

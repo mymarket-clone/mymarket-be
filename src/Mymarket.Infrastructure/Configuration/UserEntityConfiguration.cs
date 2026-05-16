@@ -42,6 +42,34 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Property(x => x.EmailVerified)
             .IsRequired();
+
+        builder
+            .HasMany(x => x.Posts)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(x => x.PostViews)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Roles)
+            .WithMany(x => x.Users)
+            .UsingEntity<Dictionary<string, object>>(
+                "UserRoles",
+                j => j.HasOne<RoleEntity>()
+                      .WithMany()
+                      .HasForeignKey("RoleId"),
+                j => j.HasOne<UserEntity>()
+                      .WithMany()
+                      .HasForeignKey("UserId"),
+                j =>
+                {
+                    j.HasKey("UserId", "RoleId");
+                    j.ToTable("UserRoles");
+                });
     }
 }
 

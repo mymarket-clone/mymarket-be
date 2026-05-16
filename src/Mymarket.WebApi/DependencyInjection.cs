@@ -25,7 +25,9 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
+        builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
+
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApi();
