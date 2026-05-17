@@ -14,8 +14,14 @@ public class GetCategoryBrandsQueryHandler(IApplicationDbContext context) : IReq
     {
         var categoryBrand = await context.CategoryBrands
             .AsNoTracking()
-            .ProjectToType<CategoryBrandDto>()
             .Where(x => x.CategoryId == request.Id)
+            .Select(x => new CategoryBrandDto
+            {
+                Id = x.Id,
+                CategoryId = x.CategoryId,
+                BrandId = x.BrandId,
+                Name = x.Brand.Name
+            })
             .ToListAsync(cancellationToken);
 
         return categoryBrand;

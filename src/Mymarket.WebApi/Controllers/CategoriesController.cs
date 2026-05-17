@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Categories.Commands.Add;
 using Mymarket.Application.Features.Categories.Commands.Delete;

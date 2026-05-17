@@ -11,6 +11,11 @@ public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionReq
     {
         var accessLevelClaim = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.AccessLevel);
 
+        if (accessLevelClaim != null && (AccessLevelType)int.Parse(accessLevelClaim.Value) == AccessLevelType.SuperAdmin) {
+            context.Succeed(requirement);
+            return Task.CompletedTask;
+        }   
+
         if (accessLevelClaim == null ||
             !int.TryParse(accessLevelClaim.Value, CultureInfo.InvariantCulture, out var accessLevelValue))
         {

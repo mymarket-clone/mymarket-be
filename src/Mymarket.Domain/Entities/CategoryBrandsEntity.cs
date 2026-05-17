@@ -5,7 +5,7 @@ namespace Mymarket.Domain.Entities;
 public class CategoryBrandsEntity : BaseEntity<int>
 {
     public required int CategoryId { get; set; }
-    public CategoryEntity? Category { get; set; }
+    public CategoryEntity Category { get; set; } = null!;
     public required int BrandId { get; set; }
-    public BrandEntity? Brand { get; set; }
+    public BrandEntity Brand { get; set; } = null!;
 }

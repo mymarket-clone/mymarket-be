@@ -134,9 +134,6 @@ public sealed class AddPostCommandHandler(
                 .Select(meta => meta.Id)
                 .ToList();
 
-            foreach (var id in missingRequired)
-                AddError(errors, id.ToString(), "Value is required.");
-
             foreach (var attr in attributes)
             {
                 var key = attr.Id.ToString();
@@ -197,7 +194,7 @@ public sealed class AddPostCommandHandler(
                             if (isEmpty)
                             {
                                 if (meta.IsRequired)
-                                    AddError(errors, key, "Value is required.");
+                                    AddError(errors, key, "Value is required");
                                 break;
                             }
 
@@ -211,6 +208,8 @@ public sealed class AddPostCommandHandler(
 
                     case AttributeType.Bool:
                         {
+
+
                             int b;
                             if (attr.Value.ValueKind == JsonValueKind.Number && attr.Value.TryGetInt32(out var n))
                                 b = n;
