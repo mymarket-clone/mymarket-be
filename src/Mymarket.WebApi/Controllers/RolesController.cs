@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Roles.Commands.Add;
 using Mymarket.Application.Features.Roles.Commands.Delete;
 using Mymarket.Application.Features.Roles.Commands.Edit;
+using Mymarket.Application.Features.Roles.Commands.SetRolePermissions;
 using Mymarket.Application.Features.Roles.Queries.Get;
+using Mymarket.Application.Features.Roles.Queries.GetPermissions;
 using Mymarket.Domain.Enums;
 using Mymarket.Infrastructure.Authentication.Policies;
 using Mymarket.WebApi.Infrastructure;
@@ -27,6 +29,14 @@ public class RolesController(IMediator mediator) : BaseController
         return Ok(result);
     }
 
+    [HttpGet("{id}/permissions")]
+    [HasPermission(default, AccessLevelType.SuperAdmin)]
+    public async Task<IActionResult> GetPermissions([FromRoute] int id)
+    {
+        var result = await mediator.Send(new GetRolePermissionsQuery(id));
+        return result is null ? NotFound() : Ok(result);
+    }
+
     [HttpPost]
     [HasPermission(default, AccessLevelType.SuperAdmin)]
     public async Task<IActionResult> AddRole(AddRoleCommand command)
@@ -48,6 +58,15 @@ public class RolesController(IMediator mediator) : BaseController
     public async Task<IActionResult> DeleteRole([FromRoute] int id)
     {
         await mediator.Send(new DeleteRoleCommand(id));
+        return NoContent();
+    }
+
+    [HttpPost("{id}/permissions")]
+    public async Task<IActionResult> SetPermissions(
+        [FromRoute] int id,
+        [FromBody] SetRolePermissionsCommand command)
+    {
+        await mediator.Send(new SetRolePermissionsCommand(id, command.Permissions));
         return NoContent();
     }
 }
