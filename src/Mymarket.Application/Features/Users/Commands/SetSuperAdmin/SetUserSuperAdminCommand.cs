@@ -14,10 +14,17 @@ public record SetUserSuperAdminCommand(
 ) : IRequest;
 
 public class SetUserSuperAdminCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<SetUserSuperAdminCommand>
+    IApplicationDbContext context,
+    ICurrentUser currentUser) : IRequestHandler<SetUserSuperAdminCommand>
 {
     public async Task Handle(SetUserSuperAdminCommand request, CancellationToken cancellationToken)
     {
+        if (!request.IsSuperAdmin && currentUser.Id == request.Id)
+        {
+            throw new ValidationException(
+                [new ValidationFailure(nameof(request.IsSuperAdmin), "Cannot remove your own SuperAdmin access.")]);
+        }
+
         var user = await context.Users
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
             ?? throw new KeyNotFoundException(SharedResources.IdDoesnotExist);

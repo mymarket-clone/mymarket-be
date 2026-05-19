@@ -1,16 +1,19 @@
-﻿using Mymarket.Domain.Enums;
+using Mymarket.Domain.Enums;
 
 namespace Mymarket.Application.Features.Users.Common.Models;
 
-public record UserInfoDto(
+public record AdminUserDto(
     int Id,
-    string FirstName,
+    string Firstname,
     string Lastname,
     string Email,
-    GenderType GenderType,
+    GenderType Gender,
     int BirthYear,
     string PhoneNumber,
     bool EmailVerified,
+    bool IsBlocked,
+    AccessLevelType AccessLevel,
     int PostsCount,
-    bool IsBlocked
+    DateTime CreatedAt,
+    DateTime? UpdatedAt
 );

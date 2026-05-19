@@ -138,7 +138,8 @@ public class GetPostByIdQueryHandler(
             BirthYear: u.BirthYear,
             PhoneNumber: u.PhoneNumber,
             EmailVerified: u.EmailVerified,
-            PostsCount: post.UserPostsCount
+            PostsCount: post.UserPostsCount,
+            IsBlocked: u.IsBlocked
         );
 
         return new PostDetailsDto

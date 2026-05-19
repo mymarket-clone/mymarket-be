@@ -25,7 +25,8 @@ public class GetUserByIdQueryHandler(
             BirthYear: user.BirthYear,
             PhoneNumber: user.PhoneNumber,
             EmailVerified: user.EmailVerified,
-            PostsCount: context.Posts.Count(p => p.UserId == user.Id)
+            PostsCount: context.Posts.Count(p => p.UserId == user.Id),
+            IsBlocked: user.IsBlocked
         ); 
 
         return userDto;

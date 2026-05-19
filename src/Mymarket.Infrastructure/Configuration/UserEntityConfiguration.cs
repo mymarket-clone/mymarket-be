@@ -43,6 +43,9 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(x => x.EmailVerified)
             .IsRequired();
 
+        builder.Property(x => x.IsBlocked)
+            .IsRequired();
+
         builder
             .HasMany(x => x.Posts)
             .WithOne(x => x.User)

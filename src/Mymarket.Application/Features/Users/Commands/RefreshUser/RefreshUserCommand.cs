@@ -28,6 +28,9 @@ public class RefreshUserCommandHandler(
         if (user is null)
             throw new UnauthorizedAccessException(SharedResources.InvalidRefreshOrUser);
 
+        if (user.IsBlocked)
+            throw new UnauthorizedAccessException(SharedResources.InvalidRefreshOrUser);
+
         var userModel = new UserModel
         {
             Id = user!.Id,
@@ -62,7 +65,8 @@ public class RefreshUserCommandHandler(
                 FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
                 Number: user.PhoneNumber,
                 GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
-                BirthYear: user.BirthYear
+                BirthYear: user.BirthYear,
+                IsBlocked: user.IsBlocked
             )
         );
     }

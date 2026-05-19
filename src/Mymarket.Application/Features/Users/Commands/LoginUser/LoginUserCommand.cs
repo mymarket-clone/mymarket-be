@@ -70,7 +70,8 @@ public class LoginUserCommandHandler(
                 FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
                 Number: user.PhoneNumber,
                 GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
-                BirthYear: user.BirthYear
+                BirthYear: user.BirthYear,
+                IsBlocked: user.IsBlocked
             )
         );
     }

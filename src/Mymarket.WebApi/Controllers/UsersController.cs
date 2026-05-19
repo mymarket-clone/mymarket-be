@@ -1,13 +1,10 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mymarket.Application.Features.Users.Commands.SetSuperAdmin;
 using Mymarket.Application.Features.Users.Commands.UpdateUser;
 using Mymarket.Application.Features.Users.Queries.GetById;
 using Mymarket.Application.Features.Users.Queries.GetCurrent;
 using Mymarket.Application.Features.Users.Queries.GetPhoneNumber;
-using Mymarket.Domain.Enums;
-using Mymarket.Infrastructure.Authentication.Policies;
 
 namespace Mymarket.WebApi.Controllers;
 
@@ -42,16 +39,6 @@ public class UsersController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> EditAccount(EditAccountCommand command)
     {
         await mediator.Send(command);
-        return NoContent();
-    }
-
-    [HttpPut("{id}/superadmin")]
-    [HasPermission(default, AccessLevelType.SuperAdmin)]
-    public async Task<IActionResult> SetSuperAdmin(
-        [FromRoute] int id,
-        SetUserSuperAdminCommand command)
-    {
-        await mediator.Send(command with { Id = id });
         return NoContent();
     }
 }

@@ -11,5 +11,6 @@ public record UserDto(
     int FavoritesCount,
     string Number,
     GenderType GenderType,
-    int BirthYear
+    int BirthYear,
+    bool IsBlocked
 );
