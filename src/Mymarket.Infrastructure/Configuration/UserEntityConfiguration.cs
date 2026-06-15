@@ -51,6 +51,10 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(x => x.IsBlocked)
             .IsRequired();
 
+        builder.Property(x => x.Balance)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
         builder
             .HasMany(x => x.Posts)
             .WithOne(x => x.User)

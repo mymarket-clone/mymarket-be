@@ -20,6 +20,7 @@ public static class DependencyInjection
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ILanguageContext, LanguageContext>();
         builder.Services.AddScoped<IAuthSessionService, AuthSessionService>();
+        builder.Services.AddScoped<IListingPricingService, ListingPricingService>();
         builder.Services.AddSingleton<IEmailNormalizer, EmailNormalizer>();
         builder.Services.AddMemoryCache();
 

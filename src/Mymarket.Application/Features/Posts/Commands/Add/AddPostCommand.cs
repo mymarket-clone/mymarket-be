@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Mymarket.Application.Common.Exceptions;
+using Mymarket.Application.Features.Pricing.Models;
 using Mymarket.Application.Interfaces;
 using Mymarket.Domain.Constants;
 using Mymarket.Domain.Entities;
@@ -47,6 +48,7 @@ public record AddPostCommand(
 public sealed class AddPostCommandHandler(
     IApplicationDbContext context,
     ICurrentUser currentUser,
+    IListingPricingService listingPricingService,
     IImageService imageService) : IRequestHandler<AddPostCommand>
 {
     public async Task Handle(AddPostCommand request, CancellationToken cancellationToken)
@@ -67,6 +69,36 @@ public sealed class AddPostCommandHandler(
             if (currentUser.Id is null)
             {
                 throw new UnauthorizedAccessException("No user found");
+            }
+
+            var listingPrice = await listingPricingService.CalculateAsync(
+                new ListingPricingSelection(
+                    request.PromoType,
+                    request.PromoDays,
+                    request.IsColored,
+                    request.ColorDays,
+                    request.AutoRenewal,
+                    request.AutoRenewalOnceIn),
+                cancellationToken);
+
+            var currentBalance = await context.Users
+                .Where(x => x.Id == currentUser.Id)
+                .Select(x => (decimal?)x.Balance)
+                .FirstOrDefaultAsync(cancellationToken)
+                ?? throw new UnauthorizedAccessException("No user found");
+
+            if (listingPrice.TotalPrice > 0)
+            {
+                var deductedRows = await context.Users
+                    .Where(x => x.Id == currentUser.Id && x.Balance >= listingPrice.TotalPrice)
+                    .ExecuteUpdateAsync(
+                        setters => setters.SetProperty(x => x.Balance, x => x.Balance - listingPrice.TotalPrice),
+                        cancellationToken);
+
+                if (deductedRows == 0)
+                {
+                    throw new InsufficientBalanceException(listingPrice.TotalPrice, currentBalance);
+                }
             }
 
             List<AttributeItem> attributes;

@@ -27,6 +27,7 @@ public class AdminGetUserByIdQueryHandler(
                 x.EmailVerified,
                 x.IsBlocked,
                 x.AccessLevel,
+                x.Balance,
                 x.Posts.Count(),
                 x.CreatedAt,
                 x.UpdatedAt))

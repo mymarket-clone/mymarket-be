@@ -15,6 +15,7 @@ public class UserEntity : BaseEntity<int>
     public string? PasswordHash { get; set; }
     public bool EmailVerified { get; set; }
     public bool IsBlocked { get; set; }
+    public decimal Balance { get; set; }
     public string? RefreshToken { get; set; }   
     public AccessLevelType AccessLevel { get; set; } = AccessLevelType.User;
     public DateTime RefreshTokenExpiry { get; set; }

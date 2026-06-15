@@ -13,6 +13,7 @@ public record AdminUserDto(
     bool EmailVerified,
     bool IsBlocked,
     AccessLevelType AccessLevel,
+    decimal Balance,
     int PostsCount,
     DateTime CreatedAt,
     DateTime? UpdatedAt

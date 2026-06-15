@@ -29,6 +29,7 @@ public interface IApplicationDbContext
     DbSet<ChatMessageEntity> ChatMessages { get; }
     DbSet<RoleEntity> Roles { get; }
     DbSet<PermissionEntity> Permissions { get; }
+    DbSet<ListingServicePriceEntity> ListingServicePrices { get; }
 
 
     DatabaseFacade GetDatabase();

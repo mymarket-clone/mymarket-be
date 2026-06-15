@@ -83,7 +83,8 @@ public class VerifyEmailCodeCommandHandler(
                 Number: user.PhoneNumber,
                 GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
                 BirthYear: user.BirthYear,
-                IsBlocked: user.IsBlocked
+                IsBlocked: user.IsBlocked,
+                Balance: user.Balance
             )
         );
     }

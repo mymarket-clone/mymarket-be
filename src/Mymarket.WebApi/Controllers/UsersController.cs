@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mymarket.Application.Features.Users.Commands.UpdateUser;
+using Mymarket.Application.Features.Users.Commands.TopUpBalance;
 using Mymarket.Application.Features.Users.Queries.GetById;
 using Mymarket.Application.Features.Users.Queries.GetCurrent;
 using Mymarket.Application.Features.Users.Queries.GetPhoneNumber;
@@ -32,6 +33,14 @@ public class UsersController(IMediator mediator) : ControllerBase
     {
         var result = await mediator.Send(new GetCurrentUserQuery());
         return result is null ? NotFound() : Ok(result);
+    }
+
+    [Authorize]
+    [HttpPost("balance/top-up")]
+    public async Task<IActionResult> TopUpBalance(TopUpBalanceCommand command)
+    {
+        var result = await mediator.Send(command);
+        return Ok(result);
     }
 
     [Authorize]

@@ -33,6 +33,7 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<ChatMessageEntity> ChatMessages => Set<ChatMessageEntity>();
     public DbSet<RoleEntity> Roles => Set<RoleEntity>();
     public DbSet<PermissionEntity> Permissions => Set<PermissionEntity>();
+    public DbSet<ListingServicePriceEntity> ListingServicePrices => Set<ListingServicePriceEntity>();
 
     public DatabaseFacade GetDatabase() => base.Database;
 

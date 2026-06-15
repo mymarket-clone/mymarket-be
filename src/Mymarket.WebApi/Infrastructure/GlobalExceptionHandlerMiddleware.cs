@@ -104,6 +104,26 @@ public class GlobalExceptionHandlerMiddleware(
 
             await context.Response.WriteAsJsonAsync(problem);
         }
+        catch (InsufficientBalanceException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/problem+json";
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                Title = "Insufficient balance",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = ex.Message,
+                Instance = $"{context.Request.Method} {context.Request.Path}"
+            };
+
+            problem.Extensions["code"] = "InsufficientBalance";
+            problem.Extensions["requiredAmount"] = ex.RequiredAmount;
+            problem.Extensions["currentBalance"] = ex.CurrentBalance;
+
+            await context.Response.WriteAsJsonAsync(problem);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception occurred");

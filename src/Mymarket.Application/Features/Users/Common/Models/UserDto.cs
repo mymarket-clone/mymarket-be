@@ -12,5 +12,6 @@ public record UserDto(
     string? Number,
     GenderType GenderType,
     int BirthYear,
-    bool IsBlocked
+    bool IsBlocked,
+    decimal Balance
 );
