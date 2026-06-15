@@ -8,6 +8,7 @@ namespace Mymarket.Application.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<UserEntity> Users { get; }
+    DbSet<UserExternalLoginEntity> UserExternalLogins { get; }
     DbSet<VerificationCodeEntity> VerificationCode { get; }
     DbSet<CategoryEntity> Categories { get; }
     DbSet<CategoryAttributesEntity> CategoryAttributes { get; }

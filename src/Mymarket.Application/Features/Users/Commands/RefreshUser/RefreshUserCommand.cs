@@ -15,7 +15,7 @@ public record RefreshUserCommand(
 
 public class RefreshUserCommandHandler(
     IApplicationDbContext context,
-    ITokenProvider tokenProvider) : IRequestHandler<RefreshUserCommand, AuthDto>
+    IAuthSessionService authSessionService) : IRequestHandler<RefreshUserCommand, AuthDto>
 {
     public async Task<AuthDto> Handle(
         RefreshUserCommand request, CancellationToken cancellationToken)
@@ -31,43 +31,6 @@ public class RefreshUserCommandHandler(
         if (user.IsBlocked)
             throw new UnauthorizedAccessException(SharedResources.InvalidRefreshOrUser);
 
-        var userModel = new UserModel
-        {
-            Id = user!.Id,
-            Name = user!.Firstname,
-            Lastname = user.LastName,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            Password = user.PasswordHash,
-            EmailVerified = user.EmailVerified,
-        };
-
-        var (accessToken, accessTokenTtl) = tokenProvider.CreateAccessToken(userModel!);
-        var (refreshToken, refreshTokenTtl) = tokenProvider.CreateRefreshToken();
-
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = refreshTokenTtl;
-
-        await context.SaveChangesAsync(cancellationToken);
-
-        return new AuthDto
-        (
-            AccessToken: accessToken,
-            RefreshToken: refreshToken,
-            ExpiresAt: accessTokenTtl,
-            User: new UserDto
-            (
-                Id: user.Id,
-                Name: user.Firstname,
-                Lastname: user.LastName,
-                Email: user.Email,
-                EmailVerified: user.EmailVerified,
-                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
-                Number: user.PhoneNumber,
-                GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
-                BirthYear: user.BirthYear,
-                IsBlocked: user.IsBlocked
-            )
-        );
+        return await authSessionService.CreateSessionAsync(user, cancellationToken);
     }
 }

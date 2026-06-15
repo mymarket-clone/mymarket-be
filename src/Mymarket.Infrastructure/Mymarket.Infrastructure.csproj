@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
     <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.14.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />

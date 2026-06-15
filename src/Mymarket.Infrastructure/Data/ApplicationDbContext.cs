@@ -12,6 +12,7 @@ namespace Mymarket.Infrastructure.Data;
 public class ApplicationDbContext(DbContextOptions options) : DbContext(options), IApplicationDbContext
 {
     public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<UserExternalLoginEntity> UserExternalLogins => Set<UserExternalLoginEntity>();
     public DbSet<VerificationCodeEntity> VerificationCode => Set<VerificationCodeEntity>();
     public DbSet<CategoryEntity> Categories => Set<CategoryEntity>();
     public DbSet<CategoryAttributesEntity> CategoryAttributes => Set<CategoryAttributesEntity>();

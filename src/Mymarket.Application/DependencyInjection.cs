@@ -9,6 +9,7 @@ using Mymarket.Application.features.Users.Commands.RegisterUser;
 using Mymarket.Application.Interfaces;
 using System.Reflection;
 using Mymarket.Application.Common.Behaviours;
+using Mymarket.Application.Services;
 
 namespace Mymarket.Application;
 
@@ -18,6 +19,8 @@ public static class DependencyInjection
     {
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ILanguageContext, LanguageContext>();
+        builder.Services.AddScoped<IAuthSessionService, AuthSessionService>();
+        builder.Services.AddSingleton<IEmailNormalizer, EmailNormalizer>();
         builder.Services.AddMemoryCache();
 
         // Mapster

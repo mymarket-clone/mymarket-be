@@ -24,7 +24,8 @@ public record AddAdminUserCommand(
 ) : IRequest<int>;
 
 public class AddAdminUserCommandHandler(
-    IApplicationDbContext context) : IRequestHandler<AddAdminUserCommand, int>
+    IApplicationDbContext context,
+    IEmailNormalizer emailNormalizer) : IRequestHandler<AddAdminUserCommand, int>
 {
     public async Task<int> Handle(AddAdminUserCommand request, CancellationToken cancellationToken)
     {
@@ -53,8 +54,10 @@ public class AddAdminUserCommandHandler(
 
     private async Task EnsureUniqueUserAsync(string email, string phoneNumber, int? userId, CancellationToken cancellationToken)
     {
+        var normalizedEmail = emailNormalizer.Normalize(email);
+
         var existing = await context.Users
-            .Where(x => x.Email == email || x.PhoneNumber == phoneNumber)
+            .Where(x => x.Email.ToUpper() == normalizedEmail || x.PhoneNumber == phoneNumber)
             .Where(x => userId == null || x.Id != userId)
             .Select(x => new { x.Email, x.PhoneNumber })
             .FirstOrDefaultAsync(cancellationToken);
@@ -62,8 +65,12 @@ public class AddAdminUserCommandHandler(
         if (existing is null)
             return;
 
-        var propertyName = existing.Email == email ? nameof(AddAdminUserCommand.Email) : nameof(AddAdminUserCommand.PhoneNumber);
-        var message = existing.Email == email ? SharedResources.EmailAlreadyExists : SharedResources.PhoneNumberAlreadyExists;
+        var propertyName = emailNormalizer.Normalize(existing.Email) == normalizedEmail
+            ? nameof(AddAdminUserCommand.Email)
+            : nameof(AddAdminUserCommand.PhoneNumber);
+        var message = propertyName == nameof(AddAdminUserCommand.Email)
+            ? SharedResources.EmailAlreadyExists
+            : SharedResources.PhoneNumberAlreadyExists;
 
         throw new ValidationException([new ValidationFailure(propertyName, message)]);
     }

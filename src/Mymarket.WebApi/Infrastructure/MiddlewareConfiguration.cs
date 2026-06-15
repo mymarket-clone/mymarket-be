@@ -37,7 +37,11 @@ public static class MiddlewareConfiguration
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
         app.UseMiddleware<SessionMiddleware>();
-        app.UseHttpsRedirection();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHttpsRedirection();
+        }
+
         app.UseCors("CorsPolicy");
         app.UseAuthentication();
         app.UseMiddleware<BlockedUserMiddleware>();

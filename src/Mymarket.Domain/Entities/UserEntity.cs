@@ -11,8 +11,8 @@ public class UserEntity : BaseEntity<int>
     public required string Email { get; set; }
     public required GenderType Gender { get; set; }
     public required int BirthYear { get; set; }
-    public required string PhoneNumber {  get; set; }
-    public required string PasswordHash { get; set; }
+    public string? PhoneNumber {  get; set; }
+    public string? PasswordHash { get; set; }
     public bool EmailVerified { get; set; }
     public bool IsBlocked { get; set; }
     public string? RefreshToken { get; set; }   
@@ -21,4 +21,5 @@ public class UserEntity : BaseEntity<int>
     public ICollection<RoleEntity> Roles { get; set; } = [];
     public ICollection<PostEntity> Posts { get; set; } = [];
     public ICollection<PostViewEntity> PostViews { get; set; } = [];
+    public ICollection<UserExternalLoginEntity> ExternalLogins { get; set; } = [];
 }

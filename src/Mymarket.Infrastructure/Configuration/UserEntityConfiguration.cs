@@ -29,6 +29,11 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .HasMaxLength(256);
 
+        builder.Property(x => x.PhoneNumber)
+            .HasColumnType("text")
+            .IsRequired(false)
+            .HasMaxLength(64);
+
         builder.Property(x => x.Gender)
             .IsRequired();
 
@@ -38,7 +43,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Property(x => x.PasswordHash)
             .HasColumnType("text")
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(x => x.EmailVerified)
             .IsRequired();
@@ -54,6 +59,12 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder
             .HasMany(x => x.PostViews)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(x => x.ExternalLogins)
             .WithOne(x => x.User)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);

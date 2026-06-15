@@ -17,7 +17,7 @@ public record LoginUserCommand(
 
 public class LoginUserCommandHandler(
     IApplicationDbContext context,
-    ITokenProvider tokenProvider) : IRequestHandler<LoginUserCommand, AuthDto>
+    IAuthSessionService authSessionService) : IRequestHandler<LoginUserCommand, AuthDto>
 {
     public async Task<AuthDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
@@ -26,7 +26,7 @@ public class LoginUserCommandHandler(
                 x => x.Email.ToLower() == request.EmailOrPhone.ToLower() || x.PhoneNumber == request.EmailOrPhone,
                 cancellationToken);
 
-        if (user is null || !CryptoHelper.VerifyPassword(user.PasswordHash, request.Password))
+        if (user is null || string.IsNullOrWhiteSpace(user.PasswordHash) || !CryptoHelper.VerifyPassword(user.PasswordHash, request.Password))
         {
             throw new UnauthorizedAccessException(SharedResources.InvalidUserOrPassword);
         }
@@ -36,43 +36,6 @@ public class LoginUserCommandHandler(
             throw new EmailNotVerifiedException(user.Email);
         }
 
-        var userModel = new UserModel
-        {
-            Id = user.Id,
-            Name = user.Firstname,
-            Lastname = user.LastName,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            Password = user.PasswordHash,
-            EmailVerified = user.EmailVerified,
-        };
-
-        var (accessToken, accessTokenTtl) = tokenProvider.CreateAccessToken(userModel);
-        var (refreshToken, refreshTokenTtl) = tokenProvider.CreateRefreshToken();
-
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = refreshTokenTtl;
-
-        await context.SaveChangesAsync(cancellationToken);
-
-        return new AuthDto
-        (
-            AccessToken: accessToken,
-            RefreshToken: refreshToken,
-            ExpiresAt: accessTokenTtl,
-            User: new UserDto
-            (
-                Id: user.Id,
-                Name: user.Firstname,
-                Lastname: user.LastName,
-                Email: user.Email,
-                EmailVerified: user.EmailVerified,
-                FavoritesCount: context.Favorites.Count(x => x.UserId == user.Id),
-                Number: user.PhoneNumber,
-                GenderType: user.Gender == GenderType.Male ? GenderType.Male : GenderType.Female,
-                BirthYear: user.BirthYear,
-                IsBlocked: user.IsBlocked
-            )
-        );
+        return await authSessionService.CreateSessionAsync(user, cancellationToken);
     }
 }

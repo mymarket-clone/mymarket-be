@@ -9,7 +9,7 @@ public record UserDto(
     string Email,
     bool EmailVerified,
     int FavoritesCount,
-    string Number,
+    string? Number,
     GenderType GenderType,
     int BirthYear,
     bool IsBlocked

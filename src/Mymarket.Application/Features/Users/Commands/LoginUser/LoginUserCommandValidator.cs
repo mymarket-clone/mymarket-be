@@ -39,6 +39,8 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
                 x => x.Email.ToLower() == emailOrPhone.ToLower() || x.PhoneNumber == emailOrPhone,
                 cancellationToken);
 
-        return user is not null && CryptoHelper.VerifyPassword(user.PasswordHash, cmd.Password);
+        return user is not null
+            && !string.IsNullOrWhiteSpace(user.PasswordHash)
+            && CryptoHelper.VerifyPassword(user.PasswordHash, cmd.Password);
     }
 }

@@ -9,9 +9,12 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 {
     private readonly IApplicationDbContext _context;
 
-    public RegisterUserCommandValidator(IApplicationDbContext context)
+    private readonly IEmailNormalizer _emailNormalizer;
+
+    public RegisterUserCommandValidator(IApplicationDbContext context, IEmailNormalizer emailNormalizer)
     {
         _context = context;
+        _emailNormalizer = emailNormalizer;
 
         RuleFor(x => x.Firstname)
             .NotEmpty().WithMessage(SharedResources.NameRequired)
@@ -55,7 +58,8 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 
     private async Task<bool> EmailAlreadyExist(string email, CancellationToken cancellationToken)
     {
-        return !await _context.Users.AnyAsync(x => x.Email.Equals(email), cancellationToken);
+        var normalizedEmail = _emailNormalizer.Normalize(email);
+        return !await _context.Users.AnyAsync(x => x.Email.ToUpper() == normalizedEmail, cancellationToken);
     }
 
     private async Task<bool> PhoneNumberAlreadyExist(string phoneNumber, CancellationToken cancellationToken)

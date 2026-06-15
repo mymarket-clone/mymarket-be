@@ -45,6 +45,8 @@ public static class DependencyInjection
 
         // Jwt authentication
         builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+        builder.Services.AddHttpClient();
+        builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 
         var jwtOptions = builder.Configuration
             .GetSection(nameof(JwtOptions))
@@ -52,6 +54,13 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException("JwtOptions configuration is missing");
 
         builder.Services.AddSingleton(jwtOptions);
+
+        var googleOptions = builder.Configuration
+            .GetSection("Authentication:Google")
+            .Get<GoogleOptions>()
+            ?? new GoogleOptions();
+
+        builder.Services.AddSingleton(googleOptions);
 
         // Smtp
         builder.Services.AddSingleton<IEmailSender, EmailSender>();

@@ -36,7 +36,7 @@ Main backend capabilities:
 
 ## Runtime Configuration
 
-`src/Mymarket.WebApi/appsettings.json` only contains logging and `AllowedHosts`. The infrastructure layer expects additional configuration at runtime:
+`src/Mymarket.WebApi/appsettings.json` contains logging, `AllowedHosts`, and a non-secret Google configuration shape. The infrastructure layer expects additional configuration at runtime:
 
 ```json
 {
@@ -53,11 +53,24 @@ Main backend capabilities:
   "Supabase": {
     "Url": "https://...",
     "AnonKey": "..."
+  },
+  "Authentication": {
+    "Google": {
+      "ClientId": "google OAuth client id",
+      "ClientSecret": "google OAuth client secret",
+      "PublicOrigin": "http://localhost:5281"
+    }
   }
 }
 ```
 
 The exact values are environment-specific and should be provided via user secrets, environment variables, or deployment configuration.
+
+Google OAuth uses backend authorization-code exchange. `Authentication:Google:PublicOrigin` controls the backend origin used to build the Google callback URL. Configure this redirect URI in Google Cloud Console for local development:
+
+- Backend callback: `http://localhost:5281/api/auth/google/callback`
+
+Production redirect URIs must use the matching deployed backend origin and `/api/auth/google/callback` path. The frontend does not store or send the Google client id; it opens backend start endpoints, and the backend builds the Google authorization URL from server configuration.
 
 ## Middleware Pipeline
 
@@ -117,6 +130,14 @@ Access tokens include these custom claims:
 | `prm` | Permission id; one claim per permission |
 
 Refresh tokens are stored on the user record with an expiry timestamp.
+
+Google authentication endpoints:
+
+- `GET /api/auth/google/client/start`
+- `GET /api/auth/google/panel/start`
+- `GET /api/auth/google/callback`
+
+The start endpoints accept a `returnUrl` query parameter pointing to the frontend callback page. The backend redirects to Google, validates the callback state cookie, exchanges the Google authorization code, validates the ID token, requires a verified email, links the stable Google `sub` through `UserExternalLogins`, issues normal access and refresh tokens, then redirects to the frontend callback with the auth payload. Client login may create a regular user if no email match exists. Panel login never creates users and requires existing `Admin` or `SuperAdmin` access.
 
 ## Authorization
 
@@ -344,8 +365,8 @@ Represents an application user.
 | `Email` | `string` | Required, max 256, unique |
 | `Gender` | `GenderType` | Required |
 | `BirthYear` | `int` | Required |
-| `PhoneNumber` | `string` | Required, unique |
-| `PasswordHash` | `string` | Required |
+| `PhoneNumber` | `string?` | Unique when present |
+| `PasswordHash` | `string?` | Null for Google-created accounts until a password is set |
 | `EmailVerified` | `bool` | Required |
 | `RefreshToken` | `string?` | Current refresh token |
 | `RefreshTokenExpiry` | `DateTime` | Refresh token expiry |
@@ -353,6 +374,24 @@ Represents an application user.
 | `Roles` | `ICollection<RoleEntity>` | Many-to-many via `UserRoles` |
 | `Posts` | `ICollection<PostEntity>` | User posts |
 | `PostViews` | `ICollection<PostViewEntity>` | User views |
+| `ExternalLogins` | `ICollection<UserExternalLoginEntity>` | Linked external identities |
+
+### `UserExternalLoginEntity`
+
+Links a user to an external identity provider.
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `Id` | `Guid` | Primary key |
+| `UserId` | `int` | Required user id |
+| `Provider` | `string` | Required, max 64, e.g. `Google` |
+| `ProviderUserId` | `string` | Required, max 255, Google `sub` |
+| `ProviderEmail` | `string?` | Max 256 |
+
+Unique indexes:
+
+- `(Provider, ProviderUserId)`
+- `(UserId, Provider)`
 
 ### `RoleEntity`
 
@@ -701,6 +740,43 @@ Response:
 
 - `200 OK` with `AuthDto`.
 - `403 Forbidden` with `EmailNotVerified` if email is not verified.
+
+#### `GET /api/auth/google/client/start`
+
+Starts client Google authentication.
+
+Auth: Public
+
+Request:
+
+```http
+GET /api/auth/google/client/start?returnUrl=http://localhost:4200/user/google-callback
+```
+
+Response:
+
+- Redirects to Google.
+- After Google callback, redirects to the frontend return URL with either an `auth` payload or `error`/`message`.
+- Creates a regular client user only when no existing user matches the verified Google email.
+
+#### `GET /api/auth/google/panel/start`
+
+Starts panel Google authentication.
+
+Auth: Public
+
+Request:
+
+```http
+GET /api/auth/google/panel/start?returnUrl=http://localhost:5173/google-callback
+```
+
+Response:
+
+- Redirects to Google.
+- After Google callback, redirects to the frontend return URL with either an `auth` payload or `error`/`message`.
+- Returns `No panel account is associated with this Google email.` if no panel account exists for the Google email.
+- Returns `You do not have access to the panel.` if the user does not have panel access.
 
 #### `POST /api/auth/send-password-recovery`
 
@@ -2310,6 +2386,7 @@ The EF Core context exposes these sets:
 - `Favorites`
 - `Roles`
 - `Permissions`
+- `UserExternalLogins`
 
 Chat tables are present in the codebase but intentionally omitted from this documentation.
 
@@ -2330,6 +2407,9 @@ Caching:
 | POST | `/api/auth/send-email-verification-code` | Public | None |
 | POST | `/api/auth/verify-email-code` | Public | None |
 | POST | `/api/auth/login-user` | Public | None |
+| GET | `/api/auth/google/client/start` | Public | None |
+| GET | `/api/auth/google/panel/start` | Public | None |
+| GET | `/api/auth/google/callback` | Public | None |
 | POST | `/api/auth/send-password-recovery` | Public | None |
 | POST | `/api/auth/verify-password-code` | Public | None |
 | POST | `/api/auth/password-recovery` | Public | None |
@@ -2410,4 +2490,3 @@ Caching:
 - Some management routes, such as category-brand and category-attribute mutations, are public in the current controller code.
 - `POST /api/units` returns `204 No Content` even though its command returns `UnitDto`.
 - `UserExistsQuery` fields should be checked in the source before client integration because only the controller binding was inspected here.
-
