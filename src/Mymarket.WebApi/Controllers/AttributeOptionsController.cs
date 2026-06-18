@@ -10,7 +10,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Route("api/attribute-options")]
-public class AttributesOptionsController(IMediator mediator) : BaseController
+public class AttributeOptionsController(IMediator mediator) : BaseController
 {
     [HttpPost]
     [HasPermission(Permissions.AttributeOptionsAdd)]
@@ -21,7 +21,7 @@ public class AttributesOptionsController(IMediator mediator) : BaseController
     }
 
     [HttpDelete("{id}")]
-    [HasPermission(Permissions.AttributeOptionsEdit)]
+    [HasPermission(Permissions.AttributeOptionsDelete)]
     public async Task<IActionResult> DeleteAttributeOption(int id)
     {
         await mediator.Send(new DeleteAttributeOptionCommand(id));
@@ -29,7 +29,7 @@ public class AttributesOptionsController(IMediator mediator) : BaseController
     }
 
     [HttpPut("{id}")]
-    [HasPermission(Permissions.AttributeOptionsDelete)]
+    [HasPermission(Permissions.AttributeOptionsEdit)]
     public async Task<IActionResult> EditAttributeOption(
         [FromRoute] int Id,
         [FromBody] EditAttributeOptionCommand command)

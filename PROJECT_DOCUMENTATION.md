@@ -2486,7 +2486,6 @@ Caching:
 - Role and permission support is partially implemented. Roles can be created/edited/deleted; permissions are seeded and checked; user-role assignment endpoints are not present.
 - `LinkPermissionCommand` exists but is not implemented and has no controller route.
 - `AttributesController.DELETE /api/attributes/{id}` currently sends `DeleteUnitCommand`; this appears inconsistent with the endpoint name.
-- `AttributesOptionsController` has edit/delete permission attributes swapped in the current code.
 - Some management routes, such as category-brand and category-attribute mutations, are public in the current controller code.
 - `POST /api/units` returns `204 No Content` even though its command returns `UnitDto`.
 - `UserExistsQuery` fields should be checked in the source before client integration because only the controller binding was inspected here.

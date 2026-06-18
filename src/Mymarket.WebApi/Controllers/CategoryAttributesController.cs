@@ -9,7 +9,7 @@ using Mymarket.WebApi.Infrastructure;
 namespace Mymarket.WebApi.Controllers;
 
 [Route("api/category-attributes")]
-public class CategoryAttrributesController(IMediator mediator) : BaseController
+public class CategoryAttributesController(IMediator mediator) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetCategoryAttributes(GetAttributesQuery query)

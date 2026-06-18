@@ -61,7 +61,7 @@ public class RolesController(IMediator mediator) : BaseController
         return NoContent();
     }
 
-    [HttpPost("{id}/permissions")]
+    [HttpPut("{id}/permissions")]
     public async Task<IActionResult> SetPermissions(
         [FromRoute] int id,
         [FromBody] SetRolePermissionsCommand command)
