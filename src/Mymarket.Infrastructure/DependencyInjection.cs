@@ -114,7 +114,7 @@ public static class DependencyInjection
 
             var options = new SupabaseOptions
             {
-                AutoConnectRealtime = true
+                AutoConnectRealtime = false
             };
 
             var client = new Client(

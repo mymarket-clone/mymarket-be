@@ -16,11 +16,19 @@ internal sealed class TokenProvider(
 {
     public (string, DateTime) CreateAccessToken(UserModel user)
     {
-        var permissions = context.Users
+        var rolePermissions = context.Users
             .Where(u => u.Id == user.Id)
             .SelectMany(u => u.Roles)
             .SelectMany(r => r.Permissions)
-            .Select(p => p.Id)
+            .Select(p => p.Id);
+
+        var directPermissions = context.Users
+            .Where(u => u.Id == user.Id)
+            .SelectMany(u => u.Permissions)
+            .Select(p => p.Id);
+
+        var permissions = rolePermissions
+            .Union(directPermissions)
             .Distinct()
             .ToList();
 

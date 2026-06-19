@@ -20,6 +20,7 @@ public class UserEntity : BaseEntity<int>
     public AccessLevelType AccessLevel { get; set; } = AccessLevelType.User;
     public DateTime RefreshTokenExpiry { get; set; }
     public ICollection<RoleEntity> Roles { get; set; } = [];
+    public ICollection<PermissionEntity> Permissions { get; set; } = [];
     public ICollection<PostEntity> Posts { get; set; } = [];
     public ICollection<PostViewEntity> PostViews { get; set; } = [];
     public ICollection<UserExternalLoginEntity> ExternalLogins { get; set; } = [];

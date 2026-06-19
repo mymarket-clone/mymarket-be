@@ -88,6 +88,24 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
                     j.HasKey("UserId", "RoleId");
                     j.ToTable("UserRoles");
                 });
+
+        builder.HasMany(x => x.Permissions)
+            .WithMany(x => x.Users)
+            .UsingEntity<Dictionary<string, object>>(
+                "UserPermissions",
+                j => j.HasOne<PermissionEntity>()
+                      .WithMany()
+                      .HasForeignKey("PermissionId")
+                      .OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<UserEntity>()
+                      .WithMany()
+                      .HasForeignKey("UserId")
+                      .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasKey("UserId", "PermissionId");
+                    j.ToTable("UserPermissions");
+                });
     }
 }
 

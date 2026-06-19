@@ -5,9 +5,11 @@ using Mymarket.Application.Features.Users.Commands.Add;
 using Mymarket.Application.Features.Users.Commands.Block;
 using Mymarket.Application.Features.Users.Commands.Delete;
 using Mymarket.Application.Features.Users.Commands.Edit;
+using Mymarket.Application.Features.Users.Commands.SetPermissions;
 using Mymarket.Application.Features.Users.Commands.SetSuperAdmin;
 using Mymarket.Application.Features.Users.Queries.Get;
 using Mymarket.Application.Features.Users.Queries.GetAdminById;
+using Mymarket.Application.Features.Users.Queries.GetPermissions;
 using Mymarket.Domain.Enums;
 using Mymarket.Infrastructure.Authentication.Policies;
 
@@ -86,6 +88,32 @@ public class UserManagementController(IMediator mediator) : ControllerBase
         try
         {
             await mediator.Send(command with { Id = id });
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(CreateToastValidationProblem(ex));
+        }
+
+        return NoContent();
+    }
+
+    [HttpGet("{id}/permissions")]
+    [HasPermission(Permissions.UsersEdit, AccessLevelType.SuperAdmin)]
+    public async Task<IActionResult> GetPermissions([FromRoute] int id)
+    {
+        var result = await mediator.Send(new GetUserPermissionsQuery(id));
+        return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpPut("{id}/permissions")]
+    [HasPermission(Permissions.UsersEdit, AccessLevelType.SuperAdmin)]
+    public async Task<IActionResult> SetPermissions(
+        [FromRoute] int id,
+        [FromBody] SetUserPermissionsCommand command)
+    {
+        try
+        {
+            await mediator.Send(new SetUserPermissionsCommand(id, command.Permissions));
         }
         catch (ValidationException ex)
         {
